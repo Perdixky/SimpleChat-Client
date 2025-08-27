@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/example.benchmark.static_thread_pool_bulk_enqueue.dir/link.d CMakeFiles/example.benchmark.static_thread_pool_bulk_enqueue.dir/benchmark/static_thread_pool_bulk_enqueue.cpp.o -o example.benchmark.static_thread_pool_bulk_enqueue

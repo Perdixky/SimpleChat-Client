@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/example.server_theme.on_transfer.dir/link.d CMakeFiles/example.server_theme.on_transfer.dir/server_theme/on_transfer.cpp.o -o example.server_theme.on_transfer

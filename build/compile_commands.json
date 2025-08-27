@@ -1,0 +1,620 @@
+[
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/Async/EventLoop.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/Async/EventLoop.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/Async/EventLoop.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/Async/EventLoop.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/Async/EventLoop.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/Network/Connect.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/Network/Connect.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/Network/Connect.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/Network/Connect.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/Network/Connect.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/Network/SentRequest.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/Network/SentRequest.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/Network/SentRequest.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/Network/SentRequest.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/Network/SentRequest.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/TUI/home.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/TUI/home.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/TUI/home.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/TUI/home.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/TUI/home.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/TUI/login.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/TUI/login.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/TUI/login.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/TUI/login.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/TUI/login.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/TUI/screen.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/TUI/screen.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/TUI/screen.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/TUI/screen.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/TUI/screen.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/Utils/test.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/Utils/test.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/Utils/test.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/Utils/test.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/Utils/test.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fsanitize=address,undefined -fno-omit-frame-pointer -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/main.dir/src/main.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/main.dir/src/main.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/src/main.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/src/main.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DTBB_USE_DEBUG -I/home/perdixky/Codes/SimpleChat/Client/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fcoroutines -fconcepts-diagnostics-depth=10 -fmodules-ts -fmodule-mapper=CMakeFiles/test.dir/test.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/test.dir/test.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/test.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/test.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/test.dir/test.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/include -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/include -g -std=c++20 -fcoroutines -fconcepts-diagnostics-depth=10 -o _deps/stdexec-build/CMakeFiles/system_context.dir/src/system_context/system_context.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/src/system_context/system_context.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-src/src/system_context/system_context.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/stdexec-build/CMakeFiles/system_context.dir/src/system_context/system_context.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/box.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/box.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/color.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/color.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/image.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/image.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/string.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/string.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/automerge.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/automerge.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/selection_style.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/selection_style.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/blink.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/blink.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/bold.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/bold.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/border.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/border.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/box_helper.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/box_helper.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/canvas.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/canvas.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/clear_under.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/clear_under.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/color.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/color.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/composite_decorator.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/composite_decorator.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/dbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/dbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/dim.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/dim.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flex.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flex.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox_config.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox_config.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox_helper.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/flexbox_helper.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/focus.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/focus.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/frame.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/frame.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/gauge.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/gauge.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/graph.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/graph.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/gridbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/gridbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/hbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/hbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/hyperlink.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/hyperlink.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/inverted.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/inverted.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/italic.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/italic.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/italic.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/italic.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/linear_gradient.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/linear_gradient.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/node.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/node.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/node_decorator.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/node_decorator.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/paragraph.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/paragraph.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/reflect.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/reflect.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/scroll_indicator.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/scroll_indicator.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/selection.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/selection.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/separator.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/separator.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/size.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/size.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/spinner.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/spinner.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/strikethrough.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/strikethrough.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/table.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/table.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/text.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/text.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/underlined.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/underlined.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/underlined_double.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/underlined_double.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/util.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/util.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/vbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/dom/vbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/animation.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/animation.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/button.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/button.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/catch_event.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/catch_event.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/checkbox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/checkbox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/collapsible.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/collapsible.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/component.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/component.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/component_options.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/component_options.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/container.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/container.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/dropdown.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/dropdown.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/event.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/event.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/hoverable.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/hoverable.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/input.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/input.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/loop.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/loop.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/maybe.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/maybe.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/menu.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/menu.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/modal.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/modal.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/radiobox.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/radiobox.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/renderer.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/renderer.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/resizable_split.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/resizable_split.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/screen_interactive.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/screen_interactive.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/slider.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/slider.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task_queue.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task_queue.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task_queue.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task_queue.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task_runner.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task_runner.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/task_runner.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/task_runner.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/terminal_input_parser.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/terminal_input_parser.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/util.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/util.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src -isystem /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/include -g -std=gnu++23 -fPIC -o _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/window.cpp",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-src/src/ftxui/component/window.cpp",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -Dfmtlog_shared_EXPORTS -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -fPIC -Wall -O3 -std=c++17 -o _deps/fmtlog-build/CMakeFiles/fmtlog-shared.dir/fmtlog.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmtlog.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmtlog.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/CMakeFiles/fmtlog-shared.dir/fmtlog.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/CMakeFiles/fmtlog-static.dir/fmtlog.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmtlog.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmtlog.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/CMakeFiles/fmtlog-static.dir/fmtlog.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/fmt/CMakeFiles/fmt.dir/src/format.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/src/format.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/src/format.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/fmt/CMakeFiles/fmt.dir/src/format.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/fmt/CMakeFiles/fmt.dir/src/os.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/src/os.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/src/os.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/fmt/CMakeFiles/fmt.dir/src/os.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/static_lib.dir/lib.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/static_lib.dir/lib.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DFMTLOG_HEADER_ONLY -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/static_header_lib.dir/lib.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/static_header_lib.dir/lib.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -Dshared_lib_EXPORTS -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -fPIC -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/shared_lib.dir/lib.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/shared_lib.dir/lib.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DFMTLOG_HEADER_ONLY -Dshared_header_lib_EXPORTS -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -fPIC -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/shared_header_lib.dir/lib.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/lib.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/shared_header_lib.dir/lib.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_static_static.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_static_static.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_static_shared.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_static_shared.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_shared_static.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_shared_static.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_shared_shared.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_shared_shared.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DFMTLOG_HEADER_ONLY -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_header_static.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_header_static.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DFMTLOG_HEADER_ONLY -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/link_header_shared.dir/link_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/link_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/link_header_shared.dir/link_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/log_test.dir/log_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/log_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/log_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/log_test.dir/log_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/enc_dec_test.dir/enc_dec_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/enc_dec_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/enc_dec_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/enc_dec_test.dir/enc_dec_test.cc.o"
+},
+{
+  "directory": "/home/perdixky/Codes/SimpleChat/Client/build",
+  "command": "/usr/bin/c++ -DFMTLOG_HEADER_ONLY -I/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/fmt/include -g -std=gnu++23 -Wall -O3 -std=c++17 -o _deps/fmtlog-build/test/CMakeFiles/multithread_test.dir/multithread_test.cc.o -c /home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/multithread_test.cc",
+  "file": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-src/test/multithread_test.cc",
+  "output": "/home/perdixky/Codes/SimpleChat/Client/build/_deps/fmtlog-build/test/CMakeFiles/multithread_test.dir/multithread_test.cc.o"
+}
+]

@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/perdixky/Codes/SimpleChat/Client/build/_deps/proxy-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

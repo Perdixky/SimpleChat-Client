@@ -1,0 +1,3 @@
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/msft_proxy4-populate.dir
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/edit_cache.dir
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/rebuild_cache.dir

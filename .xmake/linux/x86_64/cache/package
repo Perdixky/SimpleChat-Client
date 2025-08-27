@@ -1,0 +1,62 @@
+{
+    ftxui = {
+        version = "v6.1.9",
+        libfiles = {
+            "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/lib/libftxui-component.a",
+            "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/lib/libftxui-dom.a",
+            "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/lib/libftxui-screen.a"
+        },
+        syslinks = "pthread",
+        envs = {
+            PATH = {
+                "/home/perdixky/.xmake/packages/n/ninja/v1.13.1/e7cc4735aeb048e6870171a23c4ee800/bin",
+                "/home/perdixky/.xmake/packages/c/cmake/4.0.3/b686e3b7911246e2bfa1b52ae27762fe/bin"
+            }
+        },
+        components = {
+            __base = {
+                syslinks = "pthread",
+                linkdirs = {
+                    "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/lib"
+                },
+                sysincludedirs = {
+                    "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/include"
+                }
+            },
+            screen = {
+                links = "ftxui-screen"
+            },
+            dom = {
+                links = "ftxui-dom"
+            },
+            component = {
+                links = "ftxui-component"
+            }
+        },
+        __components_deps = {
+            dom = "screen",
+            component = "dom"
+        },
+        linkdirs = "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/lib",
+        installdir = "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f",
+        __requirestr = "ftxui",
+        links = {
+            "ftxui-component",
+            "ftxui-dom",
+            "ftxui-screen"
+        },
+        __enabled = true,
+        sysincludedirs = "/home/perdixky/.xmake/packages/f/ftxui/v6.1.9/e32f75b14e2841348a64fa1d2a17499f/include",
+        license = "MIT",
+        static = true,
+        __components_orderlist = {
+            "component",
+            "dom",
+            "screen"
+        }
+    },
+    ["stdexec-git"] = {
+        __enabled = false,
+        __requirestr = "stdexec-git"
+    }
+}

@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/CMakeFiles/stdexec-populate"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/CMakeFiles/stdexec-populate.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/CMakeFiles/stdexec-populate-complete.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-build.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-configure.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-download.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-install.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-patch.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-test.rule"
+		},
+		{
+			"file" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-subbuild/stdexec-populate-prefix/src/stdexec-populate-stamp/stdexec-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"stdexec-populate"
+		],
+		"name" : "stdexec-populate"
+	}
+}

@@ -1,0 +1,68 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "/home/perdixky/Codes/SimpleChat/Client/build",
+	"dir-cur-src" : "/home/perdixky/Codes/SimpleChat/Client",
+	"dir-top-bld" : "/home/perdixky/Codes/SimpleChat/Client/build",
+	"dir-top-src" : "/home/perdixky/Codes/SimpleChat/Client",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"/home/perdixky/Codes/SimpleChat/Client/include",
+		"_deps/stdexec-src/include",
+		"_deps/stdexec-build/include",
+		"_deps/ftxui-src/include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/perdixky/Codes/SimpleChat/Client/build/CMakeFiles/main.dir",
+	"sources" : 
+	{
+		"CMakeFiles/main.dir/src/Async/EventLoop.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/Async/EventLoop.cpp"
+		},
+		"CMakeFiles/main.dir/src/Network/Connect.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/Network/Connect.cpp"
+		},
+		"CMakeFiles/main.dir/src/Network/SentRequest.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/Network/SentRequest.cpp"
+		},
+		"CMakeFiles/main.dir/src/TUI/home.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/TUI/home.cpp"
+		},
+		"CMakeFiles/main.dir/src/TUI/login.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/TUI/login.cpp"
+		},
+		"CMakeFiles/main.dir/src/TUI/screen.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/TUI/screen.cpp"
+		},
+		"CMakeFiles/main.dir/src/Utils/test.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/Utils/test.cpp"
+		},
+		"CMakeFiles/main.dir/src/main.cpp.o" : 
+		{
+			"language" : "CXX",
+			"source" : "/home/perdixky/Codes/SimpleChat/Client/src/main.cpp"
+		}
+	}
+}

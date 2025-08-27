@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/example.server_theme.split_bulk.dir/link.d CMakeFiles/example.server_theme.split_bulk.dir/server_theme/split_bulk.cpp.o -o example.server_theme.split_bulk

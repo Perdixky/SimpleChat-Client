@@ -1,0 +1,59 @@
+#include "TUI/login.hpp"
+#include "boost/asio.hpp"
+#include "boost/system/error_code.hpp"
+#include "ftxui/component/component.hpp"
+#include "ftxui/component/component_base.hpp"
+#include "ftxui/component/screen_interactive.hpp"
+#include "ftxui/dom/elements.hpp"
+#include <boost/asio/detail/chrono.hpp>
+#include <boost/system/detail/error_code.hpp>
+#include <boost/asio/steady_timer.hpp>
+
+
+using namespace ftxui;
+
+enum class ScreenState { Login, MainMenu, Settings, Exit };
+
+using namespace ftxui;
+using namespace boost;
+
+ScreenInteractive screen = ScreenInteractive::Fullscreen();
+ScreenState current_state = ScreenState::Login;
+
+template <typename Rep, typename Period>
+class ScreenRefresher {
+public:
+  ScreenRefresher(asio::io_context &io_context, asio::chrono::duration<Rep, Period> interval)
+      : timer_(io_context, interval), // 初始设置间隔
+        interval_(interval) {
+    // 第一次启动心跳定时器
+    timer_.async_wait([this](const system::error_code &error) { this->refresh(error); });
+  }
+
+private:
+  void refresh(const system::error_code &error) {
+    if (!error) {
+      // 重新设置定时器，使其在当前时间 + interval_ 后到期
+      // 使用 expires_at(timer_.expiry() + interval_) 更精确地保持间隔
+      timer_.expires_at(timer_.expiry() + interval_);
+
+      // 再次启动异步等待
+      timer_.async_wait(
+          std::bind(&ScreenRefresher::do_print, this, std::placeholders::_1));
+    } else if (error != asio::error::operation_aborted) {
+      // 处理其他错误（例如 io_context 关闭）
+      screen.Exit();
+    }
+  }
+
+  asio::steady_timer timer_;
+  asio::chrono::duration<Rep, Period> interval_;
+};
+
+auto ScreenLoop() -> void {
+  asio::io_context io_context;
+
+  Component component;
+
+  asio::steady_timer timer(io_context, std::chrono::seconds(1));
+}

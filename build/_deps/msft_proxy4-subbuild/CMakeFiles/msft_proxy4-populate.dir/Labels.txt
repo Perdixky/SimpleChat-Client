@@ -1,0 +1,14 @@
+# Target labels
+ msft_proxy4-populate
+# Source files and their labels
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/msft_proxy4-populate
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/msft_proxy4-populate.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/CMakeFiles/msft_proxy4-populate-complete.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-build.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-configure.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-download.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-install.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-mkdir.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-patch.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-test.rule
+/home/perdixky/Codes/SimpleChat/Client/build/_deps/msft_proxy4-subbuild/msft_proxy4-populate-prefix/src/msft_proxy4-populate-stamp/msft_proxy4-populate-update.rule

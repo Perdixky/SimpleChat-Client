@@ -1,0 +1,32 @@
+#pragma once
+#include "ftxui/component/component_base.hpp"
+#include "ftxui/component/screen_interactive.hpp"
+#include "ftxui/component/loop.hpp"
+#include "TUI/login.hpp"
+
+namespace TUI {
+
+class Screen {
+public:
+
+  static auto runOnce() -> void {
+    loop_.RunOnce();
+  }
+
+  auto setPage(const ftxui::Component page) -> void {
+    loop_ = ftxui::Loop(screen_, page);
+  }
+
+  auto exit() -> void {
+    screen_.Exit();
+  }
+
+private:
+  static ftxui::ScreenInteractive screen_;
+  static ftxui::Loop loop_;
+  static ftxui::Component current_page_;
+};
+
+};
+
+extern TUI::Screen screen;

@@ -1,0 +1,132 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "_deps/stdexec-build/examples/example.benchmark.asio_thread_pool"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries"
+		],
+		"files" : 
+		[
+			"out/Debug/_deps/stdexec-src/examples/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 89,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 90,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++23"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fcoroutines"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fconcepts-diagnostics-depth=10"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-src/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "/home/perdixky/Codes/SimpleChat/Client/out/Debug/_deps/stdexec-build/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					2
+				],
+				"standard" : "23"
+			},
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 2,
+			"id" : "stdexec::@2460fe7e1fa47fb77773"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "stdexec_boost_pool::@2460fe7e1fa47fb77773"
+		}
+	],
+	"id" : "example.benchmark.asio_thread_pool::@89272a7301fca1e2d43b",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "example.benchmark.asio_thread_pool",
+	"nameOnDisk" : "example.benchmark.asio_thread_pool",
+	"paths" : 
+	{
+		"build" : "_deps/stdexec-build/examples",
+		"source" : "out/Debug/_deps/stdexec-src/examples"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "out/Debug/_deps/stdexec-src/examples/benchmark/asio_thread_pool.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/example.scope.dir/link.d CMakeFiles/example.scope.dir/scope.cpp.o -o example.scope
