@@ -1,8 +1,0 @@
-#include <asioexec/use_sender.hpp>
-#include <stdexec/execution.hpp>
-#include <print>
-
-auto main() -> int {
-
-  return 0;
-}

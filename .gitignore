@@ -1,41 +1,70 @@
-# Prerequisites
-*.d
+# ===================================================================
+# A general .gitignore for C++ CMake projects
+# ===================================================================
+
+# Build output directories
+# Common names for build directories
+[Bb]uild/
+[Bb]uild*/
+build-*/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeLists.txt.user
+CTestTestfile.cmake
+compile_commands.json
 
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
+*.lo
+*.slo
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
+# Compiled static libraries
 *.a
 *.lib
 
-# Executables
+# Compiled shared libraries and executables
+*.so
+*.so.*
+*.dll
 *.exe
 *.out
 *.app
 
-# debug information files
-*.dwo
+# User-specific files
+*.user
+
+# Editor and IDE configuration files
+# Visual Studio Code
+.vscode/
+
+# CLion / IntelliJ
+.idea/
+
+# Visual Studio
+.vs/
+*.sln.dotstates
+*.suo
+
+# Dependency directories (e.g., from CPM or FetchContent)
+_deps/
+vcpkg/
+vcpkg_installed/
+
+# Log and temporary files
+*.log
+*.log.*
+*.tmp
+*.swp
+
+# macOS specific files
+.DS_Store
