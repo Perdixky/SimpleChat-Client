@@ -17,12 +17,26 @@ CPMAddPackage(
   GIT_TAG main
 )
 
-# 查找 Boost 库
-# 确保 Boost 已安装在你的系统上，并且 CMake 能够找到它。
-find_package(Boost CONFIG REQUIRED COMPONENTS system thread) # 建议使用大写 'Boost'
-find_package(TBB REQUIRED)
+CPMAddPackage(
+  NAME TBB
+  GIT_REPOSITORY https://github.com/uxlfoundation/oneTBB.git
+  GIT_TAG v2022.2.0
+  OPTIONS "TBB_TEST OFF"
+)
+
+# CPMAddPackage(
+#   NAME OpenSSL
+#   GIT_REPOSITORY https://github.com/openssl/openssl.git
+#   GIT_TAG master
+# )
+
 find_package(OpenSSL REQUIRED)
-# find_package(fmt REQUIRED)
+
+CPMAddPackage(
+  NAME Boost
+  GIT_REPOSITORY https://github.com/boostorg/boost.git
+  GIT_TAG master
+)
 
 CPMAddPackage(
   NAME fmtlog
@@ -47,6 +61,7 @@ target_link_libraries(main
   PRIVATE ftxui::screen
   PRIVATE ftxui::component
   PRIVATE Boost::system
+  PRIVATE Boost::asio
   # PRIVATE reflectcpp
   # PRIVATE fmt::fmt
   PRIVATE fmtlog-static
@@ -67,5 +82,8 @@ target_link_libraries(test
   PRIVATE TBB::tbb
   PRIVATE OpenSSL::SSL
 )
-target_compile_options(main PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
-target_link_options(main PRIVATE -fsanitize=address,undefined)
+
+if (CMAKE_BUILD_TYPE MATCHES "Release|RelWithDebInfo")
+  target_compile_options(main PRIVATE -fsanitize=address,undefined)
+  target_link_options(main PRIVATE -fsanitize=address,undefined)
+endif()

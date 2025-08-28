@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/home/perdixky/Codes/SimpleChat/Client/build/_deps/rapids-cmake-subbuild/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

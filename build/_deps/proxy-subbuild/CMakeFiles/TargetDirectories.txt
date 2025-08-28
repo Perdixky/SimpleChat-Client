@@ -1,3 +1,0 @@
-/home/perdixky/Codes/SimpleChat/Client/build/_deps/proxy-subbuild/CMakeFiles/proxy-populate.dir
-/home/perdixky/Codes/SimpleChat/Client/build/_deps/proxy-subbuild/CMakeFiles/edit_cache.dir
-/home/perdixky/Codes/SimpleChat/Client/build/_deps/proxy-subbuild/CMakeFiles/rebuild_cache.dir
