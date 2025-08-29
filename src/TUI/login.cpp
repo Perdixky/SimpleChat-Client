@@ -2,11 +2,9 @@
 #include <string>
 #include <vector>
 
-#include "Async/EventLoop.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/dom/elements.hpp"
 
-#include "TUI/login.hpp"
 #include "TUI/screen.hpp"
 
 using namespace ftxui;
