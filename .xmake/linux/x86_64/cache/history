@@ -1,9 +1,5 @@
 {
     cmdlines = {
-        "xmake project -k compile_commands",
-        "xmake project -k compile_commands",
-        "xmake ",
-        "xmake ",
         "xmake project --kind=compile_commands build",
         "xmake lua --command \"\9\9\9import(\\\"core.base.json\\\")\
 \9\9\9import(\\\"core.project.config\\\")\
@@ -171,6 +167,10 @@
 \9\9\9config.load()\
 \9\9\9print(json.encode({ current = config.get(\\\"toolchain\\\"), list = toolchain.list() }))\
 \9\9\"",
+        "xmake show --list=targets",
+        "xmake show --list=targets",
+        "xmake show --list=targets",
+        "xmake show --list=targets",
         "xmake show --list=targets",
         "xmake show --list=targets",
         "xmake show --list=targets",

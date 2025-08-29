@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.30) # 或者更高，例如 3.10.0, 3.15.0 等
-set(CMAKE_CXX_STANDARD 23) # 设置 C++ 标准为 C++20
+cmake_minimum_required(VERSION 3.30)
+set(CMAKE_CXX_STANDARD 23)
 project(SimpleChat CXX) # 建议指定语言
 
 include(cmake/CPM.cmake)
-# 现在 CPMAddPackage 命令就可用了
+
 CPMAddPackage(
   NAME stdexec
   GITHUB_REPOSITORY NVIDIA/stdexec
@@ -24,19 +24,7 @@ CPMAddPackage(
   OPTIONS "TBB_TEST OFF"
 )
 
-# CPMAddPackage(
-#   NAME OpenSSL
-#   GIT_REPOSITORY https://github.com/openssl/openssl.git
-#   GIT_TAG master
-# )
-
 find_package(OpenSSL REQUIRED)
-
-CPMAddPackage(
-  NAME Boost
-  GIT_REPOSITORY https://github.com/boostorg/boost.git
-  GIT_TAG master
-)
 
 CPMAddPackage(
   NAME fmtlog
@@ -44,11 +32,15 @@ CPMAddPackage(
   GIT_TAG main
 )
 
-# CPMAddPackage(
-#   NAME reflectcpp
-#   GITHUB_REPOSITORY getml/reflect-cpp
-#   GIT_TAG main
-# )
+CPMAddPackage(
+  NAME reflectcpp
+  GITHUB_REPOSITORY getml/reflect-cpp
+  GIT_TAG main
+  OPTIONS "REFLECTCPP_MSGPACK ON"
+)
+
+find_package(Boost REQUIRED COMPONENTS system thread)
+
 # 收集源文件
 # 确保 'src/' 目录下有 .cpp 文件
 file(GLOB_RECURSE source_files PRIVATE "src/*.cpp")
@@ -61,8 +53,9 @@ target_link_libraries(main
   PRIVATE ftxui::screen
   PRIVATE ftxui::component
   PRIVATE Boost::system
-  PRIVATE Boost::asio
-  # PRIVATE reflectcpp
+  # PRIVATE Boost::asio
+  # PRIVATE Boost::uuid
+  PRIVATE reflectcpp::reflectcpp
   # PRIVATE fmt::fmt
   PRIVATE fmtlog-static
   PRIVATE TBB::tbb
@@ -76,7 +69,7 @@ target_link_libraries(test
   PRIVATE ftxui::screen
   PRIVATE ftxui::component
   PRIVATE Boost::system
-  # PRIVATE reflectcpp
+  PRIVATE reflectcpp
   # PRIVATE fmt::fmt
   PRIVATE fmtlog-static
   PRIVATE TBB::tbb

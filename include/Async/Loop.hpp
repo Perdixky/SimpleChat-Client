@@ -1,19 +1,16 @@
 #pragma once
-#include "stdexec/__detail/__start_detached.hpp"
 #include <boost/asio.hpp>
 #include <boost/system/detail/error_code.hpp>
 #include <concepts>
 #include <print>
 #include <stdexec/execution.hpp>
 
-namespace Async{
+namespace Async {
 class Loop {
 public:
-  Loop()
-      : io_context_(), work_guard_(boost::asio::make_work_guard(io_context_)),
-        timer_(io_context_) {}
 
-  template <std::invocable Func> auto call_soon(const Func &&func) -> void {
+  template <std::invocable Func>
+  static auto call_soon(const Func &&func) -> void {
     boost::asio::post(io_context_, std::forward<Func>(func));
   }
 
@@ -22,10 +19,10 @@ public:
   }
 
   template <std::invocable Func, typename Duration>
-  void startTimer(Func &&func, const Duration &interval) {
+  static auto startTimer(Func &&func, const Duration &interval) -> void {
     std::function<void(const boost::system::error_code &)> handle_timeout;
 
-    handle_timeout = [this, func = std::forward<Func>(func), interval,
+    handle_timeout = [func = std::forward<Func>(func), interval,
                       &handle_timeout](const boost::system::error_code &ec) {
       if (ec) {
         std::print("Timer cancelled or error: {}\n", ec.message());
@@ -45,21 +42,15 @@ public:
     timer_.async_wait(handle_timeout);
   }
 
-  auto cancelTimer() -> void { timer_.cancel(); }
+  static auto cancelTimer() -> void { timer_.cancel(); }
 
-  auto run() -> void { io_context_.run(); }
+  static auto run() -> void { io_context_.run(); }
 
-  auto getIOContext() -> boost::asio::io_context & {
-    return io_context_;
-  }
+  static auto getIOContext() -> boost::asio::io_context & { return io_context_; }
 
 private:
-  boost::asio::io_context io_context_;
-  boost::asio::executor_work_guard<boost::asio::io_context::executor_type>
-      work_guard_;
-  boost::asio::steady_timer timer_;
+  static boost::asio::io_context io_context_;
+  static boost::asio::steady_timer timer_;
 };
 
-extern Loop loop;
-};
-
+}; // namespace Async
