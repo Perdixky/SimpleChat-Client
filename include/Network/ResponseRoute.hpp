@@ -12,10 +12,12 @@
 namespace Network {
 class ResponseRouter {
 public:
-  auto registe(const std::function<void()> &&callback) -> std::string {
-    auto uuid = boost::uuids::to_string(generator_());
-    callbacks_.emplace(uuid, std::move(callback));
-    return uuid;
+  using callback_t = std::function<void()>;
+  auto registe(boost::uuids::uuid uuid, callback_t &&callback) -> void {
+    // auto uuid = boost::uuids::to_string(generator_());
+    callbacks_.emplace(uuid,
+                       std::make_pair(std::chrono::steady_clock::now(),
+                                      std::forward<callback_t>(callback)));
   }
 
   auto route(rfl::Generic::Object &generic) -> void {
@@ -26,6 +28,18 @@ public:
       callbacks_.erase(it);
     } else {
       // TODO: 添加报错信息并考虑服务器异常
+    }
+  }
+
+  auto timeout_check() -> void {
+    auto now = std::chrono::time_point_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now());
+    for (auto it = callbacks_.begin(); it != callbacks_.end();) {
+      if (now - it->second.first > std::chrono::milliseconds(5000)) { // 5秒超时
+        it = callbacks_.erase(it);
+      } else {
+        ++it;
+      }
     }
   }
 
