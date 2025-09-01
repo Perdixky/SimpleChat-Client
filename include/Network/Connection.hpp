@@ -20,7 +20,6 @@ public:
 
     context_.set_verify_mode(boost::asio::ssl::verify_peer, ec);
     if (ec) {
-      // 强烈建议处理错误，而不是忽略它
       throw std::runtime_error("Failed to set verify mode: " + ec.message());
     }
 
@@ -32,19 +31,16 @@ public:
         boost::asio::buffer(certificate, sizeof(certificate) - 1),
         ec); // -1 移除末尾的空字符
     if (ec) {
-      throw std::runtime_error("Failed to add certificate authority: " +
-                               ec.message());
+      // throw std::runtime_error("Failed to add certificate authority: " +
+      //                          ec.message());
+      // TODO 添加错误处理
     }
   }
 
-  // auto stream() -> boost::asio::ssl::stream<boost::asio::ip::tcp::socket> & {
-  //   return stream_;
-  // }
-
-  auto connect() -> bool;
+  auto connect() -> stdexec::sender auto;
 
   template <Network::RequestType T>
-  auto sendRequest(const T &request) -> T::ResponseType;
+  auto sendRequest(const T &request) -> stdexec::sender auto;
 
   auto listen() -> void;
 

@@ -3,7 +3,7 @@
 
 using namespace boost;
 auto Network::Connection::connect()
-    -> bool {
+    -> stdexec::sender auto {
   stdexec::sender auto sender =
       stream_.next_layer().async_connect(endpoint, asioexec::use_sender) |
       stdexec::let_value([this]() {
@@ -23,5 +23,6 @@ auto Network::Connection::connect()
         return true; // 如果没有异常，返回 true
       });
 
-  return std::get<0>(*stdexec::sync_wait(std::move(sender)));
+  return sender;
+  // return std::get<0>(*stdexec::sync_wait(std::move(sender)));
 }
