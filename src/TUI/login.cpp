@@ -31,7 +31,8 @@ auto CreateLogo() -> Element {
          center | color(linear_gradient);
 }
 
-auto loginMenu() -> Component {
+template <Network::ConnectionType C>
+auto TUI::Screen<C>::loginMenu() -> Component {
   // --- 1. 定义状态变量 ---
   // std::string username;
   // std::string password;
@@ -50,10 +51,10 @@ auto loginMenu() -> Component {
   Component password_input = Input(password.get(), password_option);
 
   Component login_button = Button(
-      " Sign in ", [username, password] {  },
+      " Sign in ", [username, password, this] {  },
       ButtonOption::Animated(Color::Green));
   Component quit_button = Button(
-      " Exit ", [] { TUI::Screen::exit(); }, ButtonOption::Animated(Color::Red));
+      " Exit ", [this] { exit(); }, ButtonOption::Animated(Color::Red));
 
   // --- 3. 组织组件布局 ---
   auto component = Container::Vertical({

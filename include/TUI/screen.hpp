@@ -1,22 +1,28 @@
 #pragma once
+#include "Network/Concepts.hpp"
 #include "Network/Connection.hpp"
 #include "ftxui/component/component_base.hpp"
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/dom/elements.hpp"
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
+#include <ftxui/screen/screen.hpp>
 
 namespace TUI {
 
 enum class ScreenState { Login, MainMenu, Settings };
 
-class Screen {
+template <Network::ConnectionType C> class Screen {
 public:
-  Screen(std::shared_ptr<Network::Connection> conn) : connection_(conn) {}
+  Screen(C &conn)
+      : connection_(conn), screen_(ftxui::ScreenInteractive::Fullscreen()) {}
 
-  static auto changePage(const int page_number) -> void {
-    page_number_ = page_number;
-  }
+  // auto static getInstance(C &conn) -> Screen<C> & {
+  //   static Screen screen(conn);
+  //   return screen;
+  // }
+
+  auto changePage(const int page_number) -> void { page_number_ = page_number; }
 
   auto addMessage(const std::string &message) {
     using namespace ftxui;
@@ -34,22 +40,18 @@ public:
     });
   }
 
-  static auto getScreenRef() -> ftxui::ScreenInteractive * { return &screen_; }
+  auto getScreenRef() -> ftxui::ScreenInteractive * { return &screen_; }
 
-  static auto exit() -> void { screen_.Exit(); }
-
-  auto init() -> void {}
+  auto exit() -> void { screen_.Exit(); }
 
   auto loginMenu() -> ftxui::Component;
 
 private:
-  static ftxui::ScreenInteractive screen_;
-  static int page_number_;
+  ftxui::ScreenInteractive screen_;
+  int page_number_;
   ftxui::Component pages_;
   std::vector<ftxui::Element> message_elements_;
-  std::shared_ptr<Network::Connection> connection_;
+  C &connection_;
 };
 
 }; // namespace TUI
-
-extern TUI::Screen screen;

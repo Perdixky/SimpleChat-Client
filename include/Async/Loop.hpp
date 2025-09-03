@@ -2,20 +2,21 @@
 #include <boost/asio.hpp>
 #include <boost/system/detail/error_code.hpp>
 #include <concepts>
+#include <exec/async_scope.hpp>
 #include <print>
 #include <stdexec/execution.hpp>
 
 namespace Async {
 class Loop {
 public:
-
   template <std::invocable Func>
   static auto call_soon(const Func &&func) -> void {
     boost::asio::post(io_context_, std::forward<Func>(func));
   }
 
-  template <stdexec::sender S> auto submit(S &&sender) -> void {
-    stdexec::start_detached(std::forward<S>(sender));
+  template <stdexec::sender S> static auto submit(S &&sender) -> void {
+    // stdexec::start_detached(std::forward<S>(sender));
+    scope_.spawn(std::forward<S>(sender));
   }
 
   template <std::invocable Func, typename Duration>
@@ -46,11 +47,14 @@ public:
 
   static auto run() -> void { io_context_.run(); }
 
-  static auto getIOContext() -> boost::asio::io_context & { return io_context_; }
+  static auto getIOContext() -> boost::asio::io_context & {
+    return io_context_;
+  }
 
 private:
   static boost::asio::io_context io_context_;
   static boost::asio::steady_timer timer_;
+  static exec::async_scope scope_;
 };
 
 }; // namespace Async
