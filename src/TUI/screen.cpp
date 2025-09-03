@@ -14,10 +14,12 @@ using namespace ftxui;
 using namespace boost;
 namespace TUI {
 
-ScreenInteractive Screen::screen_ = ScreenInteractive::Fullscreen();
-int Screen::page_number_ = 0;
-Component Screen::pages_ = Container::Tab({}, &page_number_);
-std::vector<ftxui::Element> Screen::message_elements_;
+// template <Network::ConnectionType C>
+// ScreenInteractive Screen<C>::screen_ = ScreenInteractive::Fullscreen();
+// template <Network::ConnectionType C>
+// int Screen<C>::page_number_ = 0;
+// Component Screen::pages_ = Container::Tab({}, &page_number_);
+// std::vector<ftxui::Element> Screen::message_elements_;
 
 }; // namespace TUI
-TUI::Screen screen;
+// TUI::Screen screen;

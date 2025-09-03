@@ -46,7 +46,7 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 file(GLOB_RECURSE source_files PRIVATE "src/*.cpp")
 add_executable(main ${source_files}) # 修正：使用 ${source_files} 解引用变量
 target_include_directories(main PRIVATE "include")
-
+target_compile_definitions(main PRIVATE REFLECTCPP_USE_STD_EXPECTED)
 # 链接库
 target_link_libraries(main
   PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称

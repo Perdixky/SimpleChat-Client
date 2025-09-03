@@ -1,3 +1,4 @@
+#pragma once
 #include <concepts>
 #include <string>
 
@@ -32,16 +33,9 @@ struct SignIn {
 
 ////////////////////////////////////////////////////////
 template <typename T>
-concept RequestType = requires { typename T::ResponseType; };
-
-namespace Request {
-
-struct SignIn {
-  std::string username;
-  std::string password;
-  using ResponseType = Network::Response::SignIn;
+concept RequestType = requires {
+  typename T::ResponseType;
+  T::id;
 };
-
-}; // namespace Request
 
 }; // namespace Network
