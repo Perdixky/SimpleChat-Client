@@ -1,6 +1,6 @@
 #pragma once
 #include "Network/ResponseError.hpp"
-#include "Utils/Function.hpp"
+#include "Utils/Logger.hpp"
 
 #include <boost/date_time.hpp>
 #include <boost/uuid.hpp>
@@ -8,47 +8,48 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <chrono>
 #include <expected>
+#include <functional>
 #include <rfl.hpp>
 #include <rfl/Generic.hpp>
+#include <unordered_map>
 
 namespace Network {
 
 enum class ResponseError;
 
-template <typename callback_t>
-  requires(
-      std::is_invocable_v<callback_t,
-                          std::expected<rfl::Generic::Object, ResponseError>> &&
-      std::movable<callback_t>)
 class ResponseRouter {
 public:
-  using Callback_t = callback_t;
+  using Callback_t = std::function<void(
+      const std::expected<rfl::Generic::Object, ResponseError> &)>;
 
-  auto registe(boost::uuids::uuid uuid, callback_t &&callback) -> void {
-    // auto uuid = boost::uuids::to_string(generator_());
-    callbacks_.emplace(uuid,
-                       std::make_pair(std::chrono::steady_clock::now() +
-                                          std::chrono::seconds(5),
-                                      std::forward<callback_t>(callback)));
+  auto registe(boost::uuids::uuid uuid, Callback_t &&callback) -> void {
+    auto id = boost::uuids::to_string(uuid);
+    LOG(trace) << "Registering callback for UUID: " << id;
+    callbacks_.emplace(id, std::make_pair(std::chrono::steady_clock::now() +
+                                              std::chrono::seconds(5),
+                                          std::forward<Callback_t>(callback)));
   }
 
   auto route(const rfl::Generic::Object &generic) -> void {
-    auto it = callbacks_.find(
-        generic.get("id").and_then(rfl::to_string).value()); // 这里一定有id
+    const auto id = generic.get("id").and_then(rfl::to_string).value();
+    LOG(debug) << "Routing message with ID: " << id;
+    auto it = callbacks_.find(id); // 这里一定有id
     if (it != callbacks_.end()) {
       it->second.second(generic);
       callbacks_.erase(it);
+      LOG(trace) << "Callback found and executed for ID: " << id;
     } else {
-      // TODO: 添加报错信息并考虑服务器异常
+      LOG(warning) << "No callback found for message with ID: " << id;
     }
   }
 
   auto timeoutCheck() -> void {
     auto now = std::chrono::time_point_cast<std::chrono::milliseconds>(
         std::chrono::steady_clock::now());
-    callbacks_.erase_if([&](auto &it) {
-      if (now > it->second.first) {
-        it->second.second(
+    std::erase_if(callbacks_, [&](auto &item) {
+      if (now > item.second.first) {
+        LOG(info) << "Callback for ID " << item.first << " timed out.";
+        item.second.second(
             std::unexpected<ResponseError>(ResponseError::TIMEOUT));
         return true;
       }
@@ -57,9 +58,10 @@ public:
   }
 
   auto cancelAll(ResponseError &error) -> void {
+    LOG(info) << "Cancelling all outstanding callbacks with error: "
+              << rfl::enum_to_string(error);
     for (auto &[id, pair] : callbacks_) {
-      pair.second(
-          std::unexpected<ResponseError>(error)); // 这里可以考虑传递错误信息
+      pair.second(std::unexpected<ResponseError>(error));
     }
     callbacks_.clear();
   }
@@ -67,7 +69,7 @@ public:
 private:
   boost::uuids::random_generator generator_;
   std::unordered_map<
-      std::string, std::pair<std::chrono::steady_clock::time_point, callback_t>>
+      std::string, std::pair<std::chrono::steady_clock::time_point, Callback_t>>
       callbacks_;
 };
 }; // namespace Network

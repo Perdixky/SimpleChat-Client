@@ -31,8 +31,7 @@ auto CreateLogo() -> Element {
          center | color(linear_gradient);
 }
 
-template <Network::ConnectionType C>
-auto TUI::Screen<C>::loginMenu() -> Component {
+auto TUI::Screen::loginMenu() -> Component {
   // --- 1. 定义状态变量 ---
   // std::string username;
   // std::string password;

@@ -26,11 +26,11 @@ CPMAddPackage(
 
 find_package(OpenSSL REQUIRED)
 
-CPMAddPackage(
-  NAME fmtlog
-  GITHUB_REPOSITORY MengRao/fmtlog
-  GIT_TAG main
-)
+# CPMAddPackage(
+#   NAME fmtlog
+#   GITHUB_REPOSITORY MengRao/fmtlog
+#   GIT_TAG main
+# )
 
 CPMAddPackage(
   NAME reflectcpp
@@ -39,42 +39,55 @@ CPMAddPackage(
   OPTIONS "REFLECTCPP_MSGPACK ON"
 )
 
-find_package(Boost REQUIRED COMPONENTS system thread)
+CPMAddPackage(
+  NAME Slint
+  GITHUB_REPOSITORY slint-ui/slint
+  GIT_TAG release/1
+)
+
+find_package(Boost REQUIRED COMPONENTS system thread log log_setup)
 
 # 收集源文件
 # 确保 'src/' 目录下有 .cpp 文件
 file(GLOB_RECURSE source_files PRIVATE "src/*.cpp")
 add_executable(main ${source_files}) # 修正：使用 ${source_files} 解引用变量
 target_include_directories(main PRIVATE "include")
-target_compile_definitions(main PRIVATE REFLECTCPP_USE_STD_EXPECTED)
+slint_target_sources(main include/GUI/Login.slint)
+if(WIN32)
+  add_custom_command(TARGET my_application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
+endif()
+target_compile_definitions(main PRIVATE REFLECTCPP_USE_STD_EXPECTED BOOST_LOG_DYN_LINK)
 # 链接库
 target_link_libraries(main
   PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
   PRIVATE ftxui::screen
   PRIVATE ftxui::component
   PRIVATE Boost::system
+  PRIVATE Boost::log
+  PRIVATE Boost::log_setup
   # PRIVATE Boost::asio
   # PRIVATE Boost::uuid
   PRIVATE reflectcpp::reflectcpp
   # PRIVATE fmt::fmt
-  PRIVATE fmtlog-static
+  # PRIVATE fmtlog-static
   PRIVATE TBB::tbb
   PRIVATE OpenSSL::SSL
+  PRIVATE Slint::Slint
 )
 
-add_executable(test test.cpp)
-target_include_directories(test PRIVATE "include")
-target_link_libraries(test
-  PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
-  PRIVATE ftxui::screen
-  PRIVATE ftxui::component
-  PRIVATE Boost::system
-  PRIVATE reflectcpp
-  # PRIVATE fmt::fmt
-  PRIVATE fmtlog-static
-  PRIVATE TBB::tbb
-  PRIVATE OpenSSL::SSL
-)
+# add_executable(test test.cpp)
+# target_include_directories(test PRIVATE "include")
+# target_link_libraries(test
+#   PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
+#   PRIVATE ftxui::screen
+#   PRIVATE ftxui::component
+#   PRIVATE Boost::system
+#   PRIVATE reflectcpp
+#   # PRIVATE fmt::fmt
+#   PRIVATE fmtlog-static
+#   PRIVATE TBB::tbb
+#   PRIVATE OpenSSL::SSL
+# )
 
 if (CMAKE_BUILD_TYPE MATCHES "Release|RelWithDebInfo")
   target_compile_options(main PRIVATE -fsanitize=address,undefined)

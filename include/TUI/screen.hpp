@@ -12,16 +12,8 @@ namespace TUI {
 
 enum class ScreenState { Login, MainMenu, Settings };
 
-template <Network::ConnectionType C> class Screen {
+class Screen {
 public:
-  Screen(C &conn)
-      : connection_(conn), screen_(ftxui::ScreenInteractive::Fullscreen()) {}
-
-  // auto static getInstance(C &conn) -> Screen<C> & {
-  //   static Screen screen(conn);
-  //   return screen;
-  // }
-
   auto changePage(const int page_number) -> void { page_number_ = page_number; }
 
   auto addMessage(const std::string &message) {
@@ -47,11 +39,10 @@ public:
   auto loginMenu() -> ftxui::Component;
 
 private:
-  ftxui::ScreenInteractive screen_;
-  int page_number_;
+  ftxui::ScreenInteractive screen_ = ftxui::ScreenInteractive::Fullscreen();
+  int page_number_ = 0;
   ftxui::Component pages_;
   std::vector<ftxui::Element> message_elements_;
-  C &connection_;
 };
 
 }; // namespace TUI
