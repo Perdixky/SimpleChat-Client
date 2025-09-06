@@ -3,8 +3,8 @@
 #include <boost/system/detail/error_code.hpp>
 #include <concepts>
 #include <exec/async_scope.hpp>
-#include <print>
 #include <stdexec/execution.hpp>
+#include <execpools/asio/asio_thread_pool.hpp>
 
 namespace Async {
 class Loop {
@@ -26,7 +26,8 @@ public:
     handle_timeout = [func = std::forward<Func>(func), interval,
                       &handle_timeout](const boost::system::error_code &ec) {
       if (ec) {
-        std::print("Timer cancelled or error: {}\n", ec.message());
+        // TODO: 添加错误处理
+        // std::print("Timer cancelled or error: {}\n", ec.message());
         return;
       }
 
@@ -45,14 +46,15 @@ public:
 
   static auto cancelTimer() -> void { timer_.cancel(); }
 
-  static auto run() -> void { io_context_.run(); }
+  static auto run() -> void { io_context_.get_executor().running_in_this_thread(); }
 
-  static auto getIOContext() -> boost::asio::io_context & {
+  static auto getIOContext() -> auto & {
     return io_context_;
   }
 
 private:
-  static boost::asio::io_context io_context_;
+  // static boost::asio::io_context io_context_;
+  static execpools::asio_thread_pool io_context_;
   static boost::asio::steady_timer timer_;
   static exec::async_scope scope_;
 };

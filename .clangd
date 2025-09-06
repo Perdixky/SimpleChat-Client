@@ -1,0 +1,6 @@
+CompileFlags:
+  Remove:
+    - "-fconcepts-diagnostics-depth=.*"
+    - "-fmodule-mapper=.*"
+    - "-fmodules-ts"
+    - "-fdeps-format=.*"

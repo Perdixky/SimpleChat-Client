@@ -12,6 +12,7 @@ concept MessageType = requires {
   T::timestamp;
   T::content;
 };
+
 namespace Message {
 struct DefaultMessage {
   std::string source;
@@ -22,14 +23,6 @@ struct DefaultMessage {
 }; // namespace Message
 
 ////////////////////////////////////////////////////////
-namespace Response {
-
-struct SignIn {
-  bool success;
-  // std::optional<std::string>
-}; // namespace Response
-
-}; // namespace Response
 
 ////////////////////////////////////////////////////////
 template <typename T>

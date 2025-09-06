@@ -40,4 +40,5 @@ concept ResponseRouterType = requires {
   } -> std::same_as<void>;
   { t.route(rfl::Generic::Object{}) } -> std::same_as<void>;
 };
+
 }; // namespace Network
