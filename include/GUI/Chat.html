@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatApp</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background-start: #13182a;
+            --background-end: #2e3c75;
+            --glass-background: rgba(0, 0, 0, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8d1;
+            --accent-color: #4dc7ff;
+            --accent-color-dark: #2965a8;
+            --my-message-bg: #2a3a75;
+            --their-message-bg: rgba(255, 255, 255, 0.1);
+            --hover-highlight: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) transparent;
+        }
+
+        *::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 20px;
+            border: 3px solid transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* REMOVED: No longer a full-page background */
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .chat-container {
+            /* UPDATED: Sized for a floating window */
+            width: 800px;
+            height: 700px;
+            max-width: 95vw;
+            max-height: 95vh;
+            display: flex;
+            background: var(--glass-background);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px); /* Increased blur for better floating effect */
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        /* Sidebar (User List) */
+        .sidebar {
+            width: 30%;
+            min-width: 280px;
+            background: rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .sidebar-header .actions button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color .3s;
+        }
+
+        .sidebar-header .actions button:hover {
+            color: var(--text-primary);
+        }
+
+        .search-bar {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color .3s, background .3s;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .user-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background .3s;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .user-item:hover {
+            background: var(--hover-highlight);
+        }
+
+        .user-item.active {
+            background: var(--accent-color-dark);
+        }
+
+        .user-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .user-info .name {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .user-info .last-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .chat-header .name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chat-header .status {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .message-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-end;
+            max-width: 70%;
+        }
+
+        .message .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .message.my-message {
+            align-self: flex-end;
+        }
+
+        .message.my-message .message-content {
+            background: var(--my-message-bg);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.their-message {
+            align-self: flex-start;
+        }
+
+        .message.their-message .message-content {
+            background: var(--their-message-bg);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-input-area {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .message-input-area form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .message-input-area input {
+            flex-grow: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid transparent;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-primary);
+            outline: none;
+            font-size: 16px;
+            transition: border-color .3s, background .3s;
+        }
+
+        .message-input-area input:focus {
+            border-color: var(--accent-color);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .message-input-area button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent-color);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background .3s, transform .2s;
+        }
+
+        .message-input-area button:hover {
+            background: #6ad4ff;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Sidebar with user list -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Chats</h2>
+                <div class="actions">
+                    <!-- C++ BINDING: 点击时调用 C++ 函数来创建新的聊天 -->
+                    <button id="new-chat-btn" title="New Chat"><i class="fas fa-pen-square"></i></button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <!-- C++ BINDING: 输入时调用 C++ 函数进行用户搜索 -->
+                <input type="text" id="search-input" placeholder="Search or start new chat">
+            </div>
+            <div class="user-list" id="user-list">
+                <!-- User items will be dynamically inserted here by JavaScript -->
+                <!-- Example of a user item: -->
+                <div class="user-item active" onclick="callbacks.selectChat('user1')">
+                    <img src="https://i.pravatar.cc/100?u=user1" alt="User Avatar">
+                    <div class="user-info">
+                        <div class="name">Alice</div>
+                        <div class="last-message">Okay, see you then!</div>
+                    </div>
+                </div>
+                <div class="user-item" onclick="callbacks.selectChat('user2')">
+                    <img src="https://i.pravatar.cc/100?u=user2" alt="User Avatar">
+                    <div class="user-info">
+                        <div class="name">Bob</div>
+                        <div class="last-message">Haha, that's hilarious.</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main chat panel -->
+        <main class="chat-panel">
+            <header class="chat-header" id="chat-header">
+                <!-- Active chat header will be dynamically inserted here -->
+                <img src="https://i.pravatar.cc/100?u=user1" alt="Active User Avatar">
+                <div>
+                    <div class="name">Alice</div>
+                    <div class="status">Online</div>
+                </div>
+            </header>
+            <div class="message-area" id="message-area">
+                <div class="message-list" id="message-list">
+                    <!-- Messages will be dynamically inserted here -->
+                    <!-- Example messages: -->
+                    <div class="message their-message">
+                        <img class="avatar" src="https://i.pravatar.cc/100?u=user1" alt="Avatar">
+                        <div class="message-content">Hey, how are you doing?</div>
+                    </div>
+                    <div class="message my-message">
+                        <div class="message-content">I'm doing great, thanks for asking! Just working on this new chat interface. What do you think?</div>
+                    </div>
+                     <div class="message their-message">
+                        <img class="avatar" src="https://i.pravatar.cc/100?u=user1" alt="Avatar">
+                        <div class="message-content">Wow, it looks amazing! Very slick design.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-input-area">
+                <form id="message-form">
+                    <!-- C++ BINDING: 点击时调用 C++ 函数来附加文件 -->
+                    <button type="button" id="attach-file-btn" title="Attach File"><i class="fas fa-paperclip"></i></button>
+                    <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+                    <!-- C++ BINDING: 表单提交(点击按钮或回车)时调用 C++ 函数发送消息 -->
+                    <button type="submit" title="Send Message"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        /*****************************************************************/
+        /************************** NATIVE LOGGER ************************/
+        /*****************************************************************/
+        (function() {
+            const LogLevel = {
+                INFO: 0,
+                WARN: 1,
+                ERROR: 2,
+                DEBUG: 3
+            };
+
+            // Store original console methods
+            const originals = {
+                log: console.log.bind(console),
+                warn: console.warn.bind(console),
+                error: console.error.bind(console),
+                debug: console.debug.bind(console)
+            };
+
+            function nativeLog(level, args) {
+                const message = args.map(arg => {
+                    if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg);
+                        } catch (e) {
+                            return 'Unserializable Object';
+                        }
+                    }
+                    return arg;
+                }).join(' ');
+
+                try {
+                    // Use the 'log' function bound in main.cpp
+                    window.log(level, message);
+                } catch (e) {
+                    originals.error("Native 'log' function call failed. Ensure it's bound in C++.", e);
+                    originals.log(`[FALLBACK] ${message}`);
+                }
+            }
+
+            console.log = (...args) => { nativeLog(LogLevel.INFO, args); };
+            console.warn = (...args) => { nativeLog(LogLevel.WARN, args); };
+            console.error = (...args) => { nativeLog(LogLevel.ERROR, args); };
+            console.debug = (...args) => { nativeLog(LogLevel.DEBUG, args); };
+            
+            // Add a global error handler to catch unhandled exceptions
+            window.addEventListener('error', function(event) {
+                console.error('Unhandled error:', event.message, 'at', event.filename, ':', event.lineno);
+            });
+            window.addEventListener('unhandledrejection', function(event) {
+                console.error('Unhandled promise rejection:', event.reason);
+            });
+
+            console.log("Unified logger initialized for Chat panel.");
+        })();
+
+        /*****************************************************************/
+        /***************** C++ -> JS (C++ 调用这些函数来更新UI) *****************/
+        /*****************************************************************/
+
+        const uiManager = {
+            /**
+             * 更新整个用户列表
+             * @param {Array<Object>} users - 用户对象数组
+             * @example users = [{id: 'user1', name: 'Alice', avatar: 'url', lastMessage: 'Hi'}]
+             */
+            updateUserList: (users) => {
+                console.debug("Updating user list with:", users);
+                const userList = document.getElementById('user-list');
+                userList.innerHTML = ''; // Clear existing list
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'user-item';
+                    userDiv.setAttribute('onclick', `callbacks.selectChat('''${user.id}''')`);
+                    userDiv.innerHTML = `
+                        <img src="${user.avatar}" alt="User Avatar">
+                        <div class="user-info">
+                            <div class="name">${user.name}</div>
+                            <div class="last-message">${user.lastMessage}</div>
+                        </div>
+                    `;
+                    userList.appendChild(userDiv);
+                });
+            },
+
+            /**
+             * 向当前聊天窗口添加一条新消息
+             * @param {Object} msg - 消息对象
+             * @example msg = {isMe: true, text: 'Hello!', avatar: 'url'}
+             */
+            addMessage: (msg) => {
+                console.debug("Adding message:", msg);
+                const messageList = document.getElementById('message-list');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.isMe ? 'my-message' : 'their-message'}`;
+                
+                let content = '';
+                if (!msg.isMe) {
+                    content += `<img class="avatar" src="${msg.avatar}" alt="Avatar">`;
+                }
+                content += `<div class="message-content">${msg.text}</div>`;
+                
+                messageDiv.innerHTML = content;
+                messageList.prepend(messageDiv); // Prepend to keep scroll at bottom
+            },
+
+            /**
+             * 设置当前活动的聊天窗口
+             * @param {Object} chatInfo - 聊天信息对象
+             * @example chatInfo = {id: 'user1', name: 'Alice', avatar: 'url', status: 'Online'}
+             * @param {Array<Object>} messages - 该聊天的历史消息
+             */
+            setActiveChat: (chatInfo, messages) => {
+                console.log(`Setting active chat to user: ${chatInfo.name}`);
+                // Update header
+                const chatHeader = document.getElementById('chat-header');
+                chatHeader.innerHTML = `
+                    <img src="${chatInfo.avatar}" alt="Active User Avatar">
+                    <div>
+                        <div class="name">${chatInfo.name}</div>
+                        <div class="status">${chatInfo.status}</div>
+                    </div>
+                `;
+
+                // Highlight user in list
+                document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active'));
+                const userElement = document.querySelector(`[onclick="callbacks.selectChat('''${chatInfo.id}''')"]`);
+                if (userElement) {
+                    userElement.classList.add('active');
+                }
+
+                // Clear and load messages
+                const messageList = document.getElementById('message-list');
+                messageList.innerHTML = '';
+                messages.forEach(msg => uiManager.addMessage(msg));
+            }
+        };
+
+
+        /*****************************************************************/
+        /***************** JS -> C++ (这些函数将调用C++绑定的方法) *************/
+        /*****************************************************************/
+
+        const callbacks = {
+            /**
+             * 发送消息
+             */
+            sendMessage: (text) => {
+                console.log('Sending message:', text);
+                // window.sendMessage(text); // <-- 在这里调用你的 C++ 绑定
+            },
+
+            /**
+             * 选择一个聊天
+             */
+            selectChat: (userId) => {
+                console.log('Selected chat with user:', userId);
+                // window.selectChat(userId); // <-- 在这里调用你的 C++ 绑定
+
+                // --- For demonstration purposes, simulates C++ calling back ---
+                const dummyUsers = {
+                    user1: {id: 'user1', name: 'Alice', avatar: 'https://i.pravatar.cc/100?u=user1', status: 'Online'},
+                    user2: {id: 'user2', name: 'Bob', avatar: 'https://i.pravatar.cc/100?u=user2', status: 'Offline'}
+                };
+                const dummyMessages = {
+                    user1: [
+                        {isMe: false, text: 'Wow, it looks amazing! Very slick design.', avatar: 'https://i.pravatar.cc/100?u=user1'},
+                        {isMe: true, text: 'I'm doing great, thanks for asking! Just working on this new chat interface. What do you think?'},
+                        {isMe: false, text: 'Hey, how are you doing?', avatar: 'https://i.pravatar.cc/100?u=user1'},
+                    ],
+                    user2: [
+                        {isMe: false, text: 'Yeah, let\'s catch up tomorrow.', avatar: 'https://i.pravatar.cc/100?u=user2'},
+                        {isMe: true, text: 'Sure, sounds good.'},
+                    ]
+                };
+                uiManager.setActiveChat(dummyUsers[userId], dummyMessages[userId]);
+                // --- End of demonstration ---
+            },
+
+            /**
+             * 搜索用户
+             */
+            searchUsers: (query) => {
+                console.log('Searching for:', query);
+                // window.searchUsers(query); // <-- 在这里调用你的 C++ 绑定
+            },
+
+            /**
+             * 请求创建新聊天
+             */
+            requestNewChat: () => {
+                console.log('Requesting new chat...');
+                // window.requestNewChat(); // <-- 在这里调用你的 C++ 绑定
+            },
+
+            /**
+             * 请求附加文件
+             */
+            attachFile: () => {
+                console.log('Requesting to attach file...');
+                // window.attachFile(); // <-- 在这里调用你的 C++ 绑定
+            }
+        };
+
+
+        /*****************************************************************/
+        /************************** 事件监听器设置 *************************/
+        /*****************************************************************/
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Chat panel DOM loaded. Setting up listeners.");
+            const messageForm = document.getElementById('message-form');
+            const messageInput = document.getElementById('message-input');
+            const searchInput = document.getElementById('search-input');
+            const newChatBtn = document.getElementById('new-chat-btn');
+            const attachFileBtn = document.getElementById('attach-file-btn');
+
+            // 发送消息表单
+            messageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = messageInput.value.trim();
+                if (text) {
+                    callbacks.sendMessage(text);
+                    messageInput.value = ''; // Clear input after sending
+
+                    // --- For demonstration purposes ---
+                    uiManager.addMessage({isMe: true, text: text});
+                    // --- End of demonstration ---
+                }
+            });
+
+            // 搜索框输入
+            searchInput.addEventListener('input', () => {
+                callbacks.searchUsers(searchInput.value);
+            });
+
+            // 新建聊天按钮
+            newChatBtn.addEventListener('click', () => {
+                callbacks.requestNewChat();
+            });
+
+            // 附加文件按钮
+            attachFileBtn.addEventListener('click', () => {
+                callbacks.attachFile();
+            });
+        });
+    </script>
+</body>
+
+</html>

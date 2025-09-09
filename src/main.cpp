@@ -19,6 +19,15 @@
 
 using namespace boost;
 
+namespace {
+constexpr unsigned char login_html[] = {
+ #embed "../include/GUI/Login.html" suffix(, 0)
+};
+constexpr unsigned char chat_html[] = {
+  #embed "../include/GUI/Chat.html" suffix(, 0)
+};
+};
+
 // 所有代码都在main函数中执行，确保所有对象在main函数中存活
 auto main() -> int {
   initLogging();
@@ -57,21 +66,27 @@ auto main() -> int {
   stdexec::sync_wait(session.lowLevel().connect());
   Async::Loop::submit(session.lowLevel().listen() | exec::repeat_effect());
 
-  constexpr unsigned char html[] = {
-#embed "../include/GUI/Login.html" suffix(, 0)
-  };
   webview::webview w(true, nullptr);
   w.set_title("Login");
+
   w.set_size(800, 600, WEBVIEW_HINT_NONE);
-  w.set_html(reinterpret_cast<const char *>(html));
+  w.set_html(reinterpret_cast<char const *>(login_html));
   LOG(debug) << "HTML content set in webview.";
 
   GUI::bind(w, "login",
-            [&](Logic::Data::SignIn signin) { return session.signIn(signin); });
+            [&](const std::string &username, const std::string &password) {
+              Logic::Data::SignIn credentials{username, password};
+              return session.signIn(credentials);
+            });
+
+  GUI::bind(w, "log", [](const int severity, const std::string res){ 
+    LOG(static_cast<SeverityLevel>(severity)) << res;
+    return;
+  });
 
   std::jthread async_thread([]() { Async::Loop::run(); });
 
-  LOG(debug) << "Starting GUI on main thread.";
+  LOG(info) << "Starting GUI on main thread.";
   w.run();
   Async::Loop::stop();
   return 0;

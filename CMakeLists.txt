@@ -82,24 +82,24 @@ target_link_libraries(main
   # PRIVATE Slint::Slint
 )
 
-add_executable(test test.cpp)
-target_include_directories(test PRIVATE "include")
-target_link_libraries(test
-  PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
-  PRIVATE ftxui::screen
-  PRIVATE ftxui::component
-  PRIVATE Boost::system
-  PRIVATE reflectcpp
-  PRIVATE Boost::log
-  PRIVATE Boost::log_setup
-  PRIVATE Boost::thread
-  # PRIVATE fmt::fmt
-  # PRIVATE fmtlog-static
-  PRIVATE TBB::tbb
-  PRIVATE OpenSSL::SSL
-  PRIVATE webview::core
-  # PRIVATE Slint::Slint
-)
+# add_executable(test test.cpp)
+# target_include_directories(test PRIVATE "include")
+# target_link_libraries(test
+#   PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
+#   PRIVATE ftxui::screen
+#   PRIVATE ftxui::component
+#   PRIVATE Boost::system
+#   PRIVATE reflectcpp
+#   PRIVATE Boost::log
+#   PRIVATE Boost::log_setup
+#   PRIVATE Boost::thread
+#   # PRIVATE fmt::fmt
+#   # PRIVATE fmtlog-static
+#   PRIVATE TBB::tbb
+#   PRIVATE OpenSSL::SSL
+#   PRIVATE webview::core
+#   # PRIVATE Slint::Slint
+# )
 # slint_target_sources(test include/GUI/Test.slint)
 # if(WIN32)
 #   add_custom_command(TARGET test POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
