@@ -1,8 +1,6 @@
-#include <functional> // For std::invoke_result_t
-#include <string>
-#include <string_view>
+#pragma once
 #include <tuple>
-#include <vector>
+#include <cstddef>
 
 namespace Utils {
 template <typename T> struct function_traits;
@@ -15,6 +13,8 @@ struct function_traits<ReturnType (*)(Args...)> {
 
   // 使用 std::tuple 来方便地访问参数类型
   using args_as_tuple = std::tuple<Args...>;
+
+  using decayed_args_as_tuple = std::tuple<std::decay_t<Args>...>;
 
   // 提取第一个参数类型
   using first_arg_type = std::tuple_element_t<0, args_as_tuple>;

@@ -558,6 +558,66 @@
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
+    /*****************************************************************/
+    /************************** NATIVE LOGGER ************************/
+    /*****************************************************************/
+    (function() {
+        const LogLevel = {
+            INFO: 0,
+            WARN: 1,
+            ERROR: 2,
+            DEBUG: 3
+        };
+
+        // Store original console methods
+        const originals = {
+            log: console.log.bind(console),
+            warn: console.warn.bind(console),
+            error: console.error.bind(console),
+            debug: console.debug.bind(console)
+        };
+
+        function nativeLog(level, args) {
+            const message = args.map(arg => {
+                if (typeof arg === 'object') {
+                    try {
+                        return JSON.stringify(arg);
+                    } catch (e) {
+                        return 'Unserializable Object';
+                    }
+                }
+                return arg;
+            }).join(' ');
+
+            try {
+                // Use the 'log' function bound in main.cpp
+                window.log(level, message);
+            } catch (e) {
+                originals.error("Native 'log' function call failed. Ensure it's bound in C++.", e);
+                originals.log(`[FALLBACK] ${message}`);
+            }
+        }
+
+        console.log = (...args) => { nativeLog(LogLevel.INFO, args); };
+        console.warn = (...args) => { nativeLog(LogLevel.WARN, args); };
+        console.error = (...args) => { nativeLog(LogLevel.ERROR, args); };
+        console.debug = (...args) => { nativeLog(LogLevel.DEBUG, args); };
+        
+        // Add a global error handler to catch unhandled exceptions
+        window.addEventListener('error', function(event) {
+            console.error('Unhandled error:', event.message, 'at', event.filename, ':', event.lineno);
+        });
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
+
+        console.log("Unified logger initialized.");
+    })();
+
+
+    /*****************************************************************/
+    /*********************** PARTICLES & SETUP ***********************/
+    /*****************************************************************/
     particlesJS('particles-js', {
       particles: {
         number: {value: 60, density: {enable: true, value_area: 800}},
@@ -590,19 +650,19 @@
       if (type === 'error') messageBox.classList.add('error');
     }
 
-    // 使用 Native Bridge 调用本地方法
-    async function callNative(name, payloadObj) {
-      if (typeof window[name] !== 'function') {
-        console.warn('Native binding', name, 'not found.');
-        return {ok: false, message: 'Native bridge not ready: ' + name};
+    async function callNative(name, ...args) {
+      const func = window[name];
+      if (typeof func !== 'function') {
+        const errorMsg = `Native binding function '${name}' not found.`;
+        console.error(errorMsg); // Now uses the unified logger
+        return Promise.reject(new Error(errorMsg));
       }
       try {
-        const res = await window[name](payloadObj || {});
-        if (!res) return {ok: false, message: 'Empty response'};
-        return res;
+        const response = await func(...args);
+        return response;
       } catch (e) {
-        console.error(e);
-        return {ok: false, message: e.message || 'Bridge error'};
+        console.error(`Error calling native function '${name}':`, e); // Now uses the unified logger
+        return Promise.reject(e);
       }
     }
 
@@ -610,20 +670,28 @@
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
-      // const remember = document.getElementById('remember').checked;
+
       if (!username || !password) {
         showMessage('Username / Password required', 'error');
         return;
       }
       setLoading(true);
       showMessage('');
-      const resp = await callNative('login', {username, password, /* remember, ts: Date.now()*/});
-      if (resp.success) {
-        showMessage(resp.message || 'Login success', 'success');
-        // window.location.href = 'app.html';
-      } else {
-        showMessage(resp.message || 'Login failed', 'error');
+
+      try {
+        const resp = await callNative('login', username, password);
+        // Use the new console logger which calls native code
+        console.warn("Received response from login:", resp); 
+        if (resp.success) {
+            showMessage(resp.message || 'Login success', 'success');
+        } else {
+            showMessage(resp.message || 'Login failed', 'error');
+        }
+      } catch (err) {
+        showMessage(err.message || 'An unexpected error occurred.', 'error');
+        console.error("Login failed:", err);
       }
+
       setLoading(false);
     });
 
@@ -634,9 +702,15 @@
         showMessage('Enter username first to reset password', 'error');
         return;
       }
-      const resp = await callNative('forgotPassword', {username});
-      if (resp.ok) showMessage(resp.message || 'Reset email sent', 'success');
-      else showMessage(resp.message || 'Reset failed', 'error');
+      try {
+        console.log(`Requesting password reset for ${username}`);
+        const resp = await callNative('forgotPassword', username);
+        if (resp.ok) showMessage(resp.message || 'Reset email sent', 'success');
+        else showMessage(resp.message || 'Reset failed', 'error');
+      } catch (err) {
+        showMessage(err.message || 'An error occurred.', 'error');
+        console.error("Forgot password failed:", err);
+      }
     });
 
     socialIcons.forEach(icon => {
@@ -644,9 +718,15 @@
         e.preventDefault();
         const provider = icon.getAttribute('data-provider');
         showMessage('Starting ' + provider + ' login ...');
-        const resp = await callNative('oauthLogin', {provider});
-        if (resp.ok) showMessage(resp.message || (provider + ' login success'), 'success');
-        else showMessage(resp.message || (provider + ' login failed'), 'error');
+        console.log(`Starting OAuth with ${provider}`);
+        try {
+            const resp = await callNative('oauthLogin', provider);
+            if (resp.ok) showMessage(resp.message || (provider + ' login success'), 'success');
+            else showMessage(resp.message || (provider + ' login failed'), 'error');
+        } catch (err) {
+            showMessage(err.message || 'An error occurred.', 'error');
+            console.error(`OAuth with ${provider} failed:`, err);
+        }
       });
     });
   </script>
