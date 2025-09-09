@@ -1,13 +1,21 @@
+#ifdef TrueColor
+#undef TrueColor
+#endif
+
 #include "Async/Loop.hpp"
+#include "GUI/Bind.hpp"
 #include "Logic/Session.hpp"
-#include "TUI/screen.hpp"
+// #include "TUI/screen.hpp"
 #include "Utils/Logger.hpp"
 #include "stdexec/__detail/__start_detached.hpp"
 #include <exec/repeat_effect_until.hpp>
-#include <ftxui/component/loop.hpp>
+// #include <ftxui/component/loop.hpp>
 #include <print>
+#include <rfl.hpp>
+#include <rfl/json.hpp>
 #include <stdexec/execution.hpp>
 #include <variant>
+#include <webview.h>
 
 using namespace boost;
 
@@ -27,25 +35,44 @@ auto main() -> int {
   //
 
   Logic::Session session(std::move(conn));
-  stdexec::sync_wait(
-      session.lowLevel().connect() | stdexec::let_value([&session]() {
-        Async::Loop::submit(session.lowLevel().listen() |
-                            exec::repeat_effect()); // 持续监听
-        return session.echo("Hello, World!") | stdexec::then([](auto
-        response) {
-                 std::print("Echo response: {}\n", response.message);
-               }) |
-               stdexec::upon_error([](const std::exception_ptr e_ptr) {
-                 if (e_ptr) {
-                   try {
-                     std::rethrow_exception(e_ptr);
-                   } catch (const std::exception &e) {
-                     std::print("Error in echo request: {}\n", e.what());
-                   }
-                 }
-               });
-      }));
+  // stdexec::sync_wait(
+  //     session.lowLevel().connect() | stdexec::let_value([&session]() {
+  //       Async::Loop::submit(session.lowLevel().listen() |
+  //                           exec::repeat_effect()); // 持续监听
+  //       return session.echo("Hello, World!") | stdexec::then([](auto
+  //       response) {
+  //                std::print("Echo response: {}\n", response.message);
+  //              }) |
+  //              stdexec::upon_error([](const std::exception_ptr e_ptr) {
+  //                if (e_ptr) {
+  //                  try {
+  //                    std::rethrow_exception(e_ptr);
+  //                  } catch (const std::exception &e) {
+  //                    std::print("Error in echo request: {}\n", e.what());
+  //                  }
+  //                }
+  //              });
+  //     }));
 
-  // Async::Loop::run();
+  stdexec::sync_wait(session.lowLevel().connect());
+  Async::Loop::submit(session.lowLevel().listen() | exec::repeat_effect());
+
+  constexpr unsigned char html[] = {
+#embed "../include/GUI/Login.html" suffix(, 0)
+  };
+  webview::webview w(true, nullptr);
+  w.set_title("Login");
+  w.set_size(800, 600, WEBVIEW_HINT_NONE);
+  w.set_html(reinterpret_cast<const char *>(html));
+  LOG(debug) << "HTML content set in webview.";
+
+  GUI::bind(w, "login",
+            [&](Logic::Data::SignIn signin) { return session.signIn(signin); });
+
+  std::jthread async_thread([]() { Async::Loop::run(); });
+
+  LOG(debug) << "Starting GUI on main thread.";
+  w.run();
+  Async::Loop::stop();
   return 0;
 }

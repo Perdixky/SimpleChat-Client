@@ -39,12 +39,17 @@ CPMAddPackage(
   OPTIONS "REFLECTCPP_MSGPACK ON"
 )
 
-CPMAddPackage(
-  NAME Slint
-  GITHUB_REPOSITORY slint-ui/slint
-  GIT_TAG release/1
-)
+# CPMAddPackage(
+#   NAME Slint
+#   GITHUB_REPOSITORY slint-ui/slint
+#   GIT_TAG release/1
+# )
 
+CPMAddPackage(
+  NAME webview
+  GIT_REPOSITORY https://github.com/webview/webview
+  GIT_TAG master
+)
 find_package(Boost REQUIRED COMPONENTS system thread log log_setup)
 
 # 收集源文件
@@ -52,10 +57,10 @@ find_package(Boost REQUIRED COMPONENTS system thread log log_setup)
 file(GLOB_RECURSE source_files PRIVATE "src/*.cpp")
 add_executable(main ${source_files}) # 修正：使用 ${source_files} 解引用变量
 target_include_directories(main PRIVATE "include")
-slint_target_sources(main include/GUI/Login.slint)
-if(WIN32)
-  add_custom_command(TARGET my_application POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
-endif()
+# slint_target_sources(main include/GUI/Login.slint)
+# if(WIN32)
+#   add_custom_command(TARGET main POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
+# endif()
 target_compile_definitions(main PRIVATE REFLECTCPP_USE_STD_EXPECTED BOOST_LOG_DYN_LINK)
 # 链接库
 target_link_libraries(main
@@ -65,6 +70,7 @@ target_link_libraries(main
   PRIVATE Boost::system
   PRIVATE Boost::log
   PRIVATE Boost::log_setup
+  PRIVATE Boost::thread
   # PRIVATE Boost::asio
   # PRIVATE Boost::uuid
   PRIVATE reflectcpp::reflectcpp
@@ -72,24 +78,36 @@ target_link_libraries(main
   # PRIVATE fmtlog-static
   PRIVATE TBB::tbb
   PRIVATE OpenSSL::SSL
-  PRIVATE Slint::Slint
+  PRIVATE webview::core
+  # PRIVATE Slint::Slint
 )
 
-# add_executable(test test.cpp)
-# target_include_directories(test PRIVATE "include")
-# target_link_libraries(test
-#   PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
-#   PRIVATE ftxui::screen
-#   PRIVATE ftxui::component
-#   PRIVATE Boost::system
-#   PRIVATE reflectcpp
-#   # PRIVATE fmt::fmt
-#   PRIVATE fmtlog-static
-#   PRIVATE TBB::tbb
-#   PRIVATE OpenSSL::SSL
-# )
-
-if (CMAKE_BUILD_TYPE MATCHES "Release|RelWithDebInfo")
-  target_compile_options(main PRIVATE -fsanitize=address,undefined)
-  target_link_options(main PRIVATE -fsanitize=address,undefined)
+add_executable(test test.cpp)
+target_include_directories(test PRIVATE "include")
+target_link_libraries(test
+  PRIVATE STDEXEC::stdexec # 根据 stdexec 的 CMakeLists.txt 提供的目标名称
+  PRIVATE ftxui::screen
+  PRIVATE ftxui::component
+  PRIVATE Boost::system
+  PRIVATE reflectcpp
+  PRIVATE Boost::log
+  PRIVATE Boost::log_setup
+  PRIVATE Boost::thread
+  # PRIVATE fmt::fmt
+  # PRIVATE fmtlog-static
+  PRIVATE TBB::tbb
+  PRIVATE OpenSSL::SSL
+  PRIVATE webview::core
+  # PRIVATE Slint::Slint
+)
+# slint_target_sources(test include/GUI/Test.slint)
+# if(WIN32)
+#   add_custom_command(TARGET test POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:my_application> $<TARGET_FILE_DIR:my_application> COMMAND_EXPAND_LISTS)
+# endif()
+option(ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" ON)
+if (ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    message("Enabling AddressSanitizer and UndefinedBehaviorSanitizer")
+    set(SAN_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer -O1 -g)
+    target_compile_options(main PRIVATE ${SAN_FLAGS})
+    target_link_options(main PRIVATE -fsanitize=address,undefined)
 endif()

@@ -5,6 +5,7 @@
 #include <exec/async_scope.hpp>
 #include <stdexec/execution.hpp>
 #include <execpools/asio/asio_thread_pool.hpp>
+#include <Utils/Logger.hpp>
 
 namespace Async {
 class Loop {
@@ -15,7 +16,6 @@ public:
   }
 
   template <stdexec::sender S> static auto submit(S &&sender) -> void {
-    // stdexec::start_detached(std::forward<S>(sender));
     scope_.spawn(std::forward<S>(sender));
   }
 
@@ -46,17 +46,26 @@ public:
 
   static auto cancelTimer() -> void { timer_.cancel(); }
 
-  static auto run() -> void { io_context_.get_executor().running_in_this_thread(); }
+  static auto run() -> void { 
+    LOG(info) << "Async Loop started.";
+    io_context_.get_executor().context().join();
+    LOG(info) << "Async Loop stopped.";
+  }
+
+  static auto stop() -> void { 
+    scope_.request_stop();
+    io_context_.get_executor().context().stop();
+  }
 
   static auto getIOContext() -> auto & {
     return io_context_;
   }
 
 private:
-  // static boost::asio::io_context io_context_;
   static execpools::asio_thread_pool io_context_;
   static boost::asio::steady_timer timer_;
   static exec::async_scope scope_;
+  static boost::asio::executor_work_guard<decltype(io_context_.get_executor())> work_guard_;
 };
 
 }; // namespace Async
