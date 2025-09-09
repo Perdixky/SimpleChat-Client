@@ -33,7 +33,7 @@ public:
   auto route(const rfl::Generic::Object &generic) -> void {
     const auto id = generic.get("id").and_then(rfl::to_string).value();
     LOG(debug) << "Routing message with ID: " << id;
-    auto it = callbacks_.find(id); // 这里一定有id
+    auto it = callbacks_.find(id);
     if (it != callbacks_.end()) {
       it->second.second(generic);
       callbacks_.erase(it);

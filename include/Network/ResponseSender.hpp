@@ -1,13 +1,17 @@
 #pragma once
+#include "Logic/LogicType.hpp"
 #include "Network/Concepts.hpp"
 #include "Network/MessageType.hpp"
 #include "Network/ResponseRoute.hpp"
+#include "Utils/GenericFormatter.hpp"
 #include "Utils/Logger.hpp"
 #include "rfl/Generic.hpp"
 #include "rfl/from_generic.hpp"
+#include "rfl/msgpack/write.hpp"
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <expected>
+#include <print>
 #include <rfl.hpp>
 #include <stdexec/execution.hpp>
 
@@ -24,8 +28,6 @@ struct ResponseOperation {
   boost::uuids::uuid uuid_;
 
   auto start() noexcept -> void {
-    LOG(trace) << "Registering response callback for UUID: "
-               << boost::uuids::to_string(uuid_);
     auto callback = [this, r = std::move(receiver_)](
                         const std::expected<rfl::Generic::Object, ResponseError>
                             &result) mutable {
@@ -55,8 +57,16 @@ struct ResponseOperation {
 
       auto response = rfl::from_generic<ResponseType>(value);
       if (!response) [[unlikely]] {
-        LOG(error) << "Failed to convert response from generic object for UUID: "
-                   << boost::uuids::to_string(uuid_);
+        LOG(error)
+            << "Failed to convert response from generic object for UUID: "
+            << boost::uuids::to_string(uuid_);
+        LOG(error) << "Expected error: " << response.error().what();
+        LOG(debug) << "Generic object content:";
+        LOG(debug) << std::format("{}", value);
+        LOG(debug) << "Expected response type: ";
+        for (const auto &field : rfl::fields<ResponseType>()) {
+          LOG(debug) << " - " << field.name() << ": " << field.type();
+        }
         stdexec::set_error(
             std::move(r),
             std::make_exception_ptr(std::runtime_error(

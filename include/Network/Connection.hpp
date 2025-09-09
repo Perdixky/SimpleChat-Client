@@ -101,7 +101,8 @@ public:
 
     LOG(debug) << "Sending request with ID: " << request.id;
 
-    static auto request_msg = rfl::msgpack::write(request);
+    static std::vector<char> request_msg;
+    request_msg = rfl::msgpack::write(request);
 
     auto send =
         stdexec::when_all(stream_.async_write(asio::buffer(request_msg),
@@ -144,8 +145,6 @@ public:
             auto value = generic.value();
             auto id = value.get("id");
             if (id) {
-              LOG(debug) << "Routing message with ID: "
-                         << id->to_string().value();
               router_.route(value);
             } else {
               LOG(warning) << "Received a message without an ID.";

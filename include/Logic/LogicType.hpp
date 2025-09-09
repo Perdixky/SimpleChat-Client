@@ -1,3 +1,4 @@
+#pragma once
 #include "Network/MessageType.hpp"
 #include <chrono>
 
@@ -50,5 +51,14 @@ struct Echo {
 };
 
 }; // namespace Request
+
+namespace Data {
+
+struct SignIn {
+  std::string username;
+  std::string password;
+};
+
+}; // namespace Data
 
 }; // namespace Logic

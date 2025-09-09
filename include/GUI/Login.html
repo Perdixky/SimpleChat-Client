@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatApp - Secure Login</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #13182a, #2e3c75, #4a2f6c, #272a50);
+      background-size: 400% 400%;
+      animation: gradient-animation 15s ease infinite;
+    }
+
+    @keyframes gradient-animation {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .login-form {
+      width: min(90vw, 420px);
+      min-width: 280px;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      text-align: center;
+    }
+
+    .login-form h2 {
+      font-size: clamp(24px, 5vw, 28px);
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-form p {
+      font-size: clamp(12px, 2.5vw, 14px);
+      margin-bottom: 25px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .logo-container {
+      width: min(180px, 80%);
+      margin: 0 auto 15px;
+      transition: transform .3s ease;
+    }
+
+    .logo-container:hover {
+      transform: scale(1.05);
+    }
+
+    #animated-logo {
+      width: 100%;
+      height: auto;
+    }
+
+    .logo-icon-path {
+      stroke: #4dc7ff;
+      stroke-width: 2;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-path .2s ease-out forwards;
+    }
+
+    .logo-icon-fill {
+      fill-opacity: 0;
+      animation: fill-in .2s ease-in forwards .3s;
+    }
+
+    .logo-text {
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fade-slide-up 1s ease-out forwards .4s;
+    }
+
+    @keyframes draw-path {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes fill-in {
+      to {
+        fill-opacity: 1;
+      }
+    }
+
+    @keyframes fade-slide-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 0;
+      font-size: 16px;
+      color: #fff;
+      background: none;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, .7);
+      outline: 0;
+      transition: all .3s ease;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, .7);
+      pointer-events: none;
+      transition: all .3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group label i {
+      margin-right: 10px;
+      transition: all .3s ease;
+    }
+
+    .input-group input:focus+label,
+    .input-group input:valid+label {
+      top: -20px;
+      left: 0;
+      font-size: 12px;
+      color: #4dc7ff;
+    }
+
+    .input-group input:focus+label i {
+      color: #4dc7ff;
+      animation: icon-shake .4s ease;
+    }
+
+    @keyframes icon-shake {
+
+      0%,
+      100% {
+        transform: translateX(0) rotate(0)
+      }
+
+      20% {
+        transform: translateX(-2px) rotate(-5deg)
+      }
+
+      40% {
+        transform: translateX(2px) rotate(5deg)
+      }
+
+      60% {
+        transform: translateX(-2px) rotate(-5deg)
+      }
+
+      80% {
+        transform: translateX(2px) rotate(5deg)
+      }
+    }
+
+    .input-group input:focus {
+      border-bottom-color: #4dc7ff;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .remember-me {
+      display: block;
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, .8);
+      user-select: none;
+      font-size: clamp(12px, 2.5vw, 14px);
+    }
+
+    .remember-me input[type=checkbox] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .remember-me .checkmark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 18px;
+      width: 18px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, .7);
+      border-radius: 4px;
+      transition: all .3s ease;
+      box-sizing: border-box;
+    }
+
+    .remember-me:hover .checkmark {
+      border-color: #4dc7ff;
+      box-shadow: 0 0 5px rgba(77, 199, 255, .5);
+    }
+
+    .remember-me input[type=checkbox]:checked~.checkmark {
+      background: #4dc7ff;
+      border-color: #4dc7ff;
+      box-shadow: 0 0 8px rgba(77, 199, 255, .7);
+    }
+
+    .remember-me .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 2px;
+      width: 6px;
+      height: 12px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .remember-me input[type=checkbox]:checked~.checkmark:after {
+      display: block;
+      opacity: 1;
+    }
+
+    .forgot-password {
+      color: rgba(255, 255, 255, .8);
+      text-decoration: none;
+      transition: color .3s ease;
+    }
+
+    .forgot-password:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1f36;
+      background: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all .4s cubic-bezier(.23, 1, .32, 1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-login .btn-icon {
+      margin-left: 8px;
+      transition: transform .3s ease;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, .3);
+      background: #4dc7ff;
+      color: #fff;
+    }
+
+    .btn-login:hover .btn-icon {
+      transform: translateX(5px);
+    }
+
+    .btn-login:active {
+      transform: translateY(-1px) scale(1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .15);
+    }
+
+    .btn-login.loading {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      padding: 0;
+      pointer-events: none;
+    }
+
+    .btn-login.loading .btn-text,
+    .btn-login.loading .btn-icon {
+      opacity: 0;
+      display: none;
+    }
+
+    .btn-login:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border: 3px solid #2e3c75;
+      border-top-color: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width .3s ease, height .3s ease, opacity .3s ease;
+    }
+
+    .btn-login.loading:after {
+      width: 30px;
+      height: 30px;
+      opacity: 1;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    .social-login {
+      margin-top: 20px;
+    }
+
+    .social-login p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, .8);
+      margin-bottom: 15px;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .social-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .1);
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: all .3s ease;
+    }
+
+    .social-icon:hover {
+      background: #fff;
+      color: #2e3c75;
+      transform: translateY(-8px) scale(1.1);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, .3);
+    }
+
+    /* 消息提示区 */
+    #message {
+      margin-top: 18px;
+      min-height: 24px;
+      font-size: 14px;
+      line-height: 1.4;
+      transition: opacity .3s ease;
+    }
+
+    #message.success {
+      color: #4dc7ff;
+    }
+
+    #message.error {
+      color: #ff6b6b;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="particles-js"></div>
+  <div class="login-container">
+    <div class="login-form">
+
+      <div class="logo-container">
+        <svg id="animated-logo" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 392.54 163.44">
+          <defs>
+            <!-- 移除了所有 filter 和 gradient -->
+            <style>
+              /* 定义了新的纯色类，替换了之前的渐变 */
+              .sc-light-blue {
+                fill: #52adde;
+              }
+
+              .sc-medium-blue {
+                fill: #2965a8;
+              }
+
+              .sc-dark-blue {
+                fill: #1f4e8e;
+              }
+
+              .sc-white {
+                fill: #fff;
+              }
+
+              .sc-text-main {
+                fill: #FFFFFF;
+              }
+
+              /* SVG内部文字颜色 */
+              .sc-text-alt {
+                fill: #52adde;
+              }
+
+              /* SVG内部文字颜色 */
+            </style>
+          </defs>
+          <g class="logo-wrapper">
+            <!-- 图标部分 -->
+            <g class="logo-icon">
+              <!-- 注意：这里用 class 替换了 style="fill:url(...)" -->
+              <path class="logo-icon-path logo-icon-fill sc-light-blue"
+                d="m98.12,127.72c17.39-5.61,17.39-19.28,17.11-23.67-.28-4.39-1.94-15.83-21.39-19.5-19.44-3.67-35-7.83-43.17-13.83s-16.5-18.86-13.08-37.69C40.8,15.37,58.28-.74,92.09.88,49.83-4.8,10.61,17.63,1.78,54.21c-6.64,27.53,5.7,55.79,29.35,74.14.34,5.78.4,22.22-8.51,35.1,0,0,18.65-4.57,32.53-21.58,3.16-3.87,6.08-8.39,8.47-13.64,0,0,17.11,5.11,34.5-.5Z" />
+              <path class="logo-icon-path logo-icon-fill sc-white"
+                d="m131.5,96.16c-.69-2.85-1.69-5.73-3.1-8.6-9.89-20.22-39.39-21.44-56.14-26.03-4.08-1.12-7.26-2.58-9.74-4.28-7.71-5.29-8.57-12.85-7.9-19.24.89-8.44,8.56-18.22,26.83-19.67,18.28-1.44,34.47,6.61,34.47,6.61l5.73-15.32c-6.06-2.88-12.55-5.21-19.41-6.87-3.4-.82-6.79-1.43-10.16-1.88C58.28-.74,40.8,15.37,37.6,33.03c-3.42,18.83,4.92,31.69,13.08,37.69s23.72,10.17,43.17,13.83c19.44,3.67,21.11,15.11,21.39,19.5.28,4.39.28,18.06-17.11,23.67-17.39,5.61-34.5.5-34.5.5-2.39,5.26-5.31,9.77-8.47,13.64,4.04,1.56,8.25,2.88,12.6,3.93,2.82.68,5.63,1.23,8.43,1.65,20.82.26,31.37-3.57,41.55-10.78,9.82-6.96,17.91-23.25,13.76-40.51Z" />
+              <path class="logo-icon-path logo-icon-fill sc-dark-blue"
+                d="m81.46,18.33c-18.28,1.44-25.94,11.22-26.83,19.67-.67,6.39.19,13.95,7.9,19.24-1.36-6.69-.97-15.73,7.88-22.08,15.72-11.28,51.22-2.5,51.22-2.5l6.51-19.64c-2.1-1.2-4.25-2.34-6.47-3.4l-5.73,15.32s-16.19-8.06-34.47-6.61Z" />
+              <path class="logo-icon-path logo-icon-fill sc-dark-blue"
+                d="m131.5,96.16c4.15,17.26-3.94,33.55-13.76,40.51-10.18,7.22-20.73,11.04-41.55,10.78,18.08,2.76,35.67.33,50.66-6.16,15.48-20.65,8.5-38.33,4.66-45.13Z" />
+              <path class="logo-icon-path logo-icon-fill sc-medium-blue"
+                d="m128.14,13.02l-6.51,19.64s-35.5-8.78-51.22,2.5c-8.85,6.35-9.23,15.39-7.88,22.08,2.48,1.7,5.66,3.17,9.74,4.28,16.75,4.58,46.25,5.81,56.14,26.03,1.4,2.87,2.41,5.75,3.1,8.6,3.85,6.81,10.83,24.48-4.66,45.13,20.57-8.91,36.21-25.49,41.39-46.94,7.58-31.44-9.59-63.83-40.09-81.32Z" />
+            </g>
+            <!-- 文字部分 -->
+            <g class="logo-text">
+              <g class="sc-text-main">
+                <path
+                  d="m227.44,90.26c-9.48,0-16.83,7.35-16.83,16.98s7.35,17.06,16.83,17.06c4.98,0,10.43-2.53,14.38-6.48l7.35,7.98c-5.84,6-14.3,9.87-22.36,9.87-16.51,0-28.99-12.24-28.99-28.28s12.72-27.96,29.46-27.96c7.98,0,16.35,3.55,21.8,9.16l-7.27,8.85c-3.79-4.34-9.24-7.19-14.38-7.19Z" />
+                <path
+                  d="m300.44,108.43v26.7h-12.17v-23.15c0-5.37-3.16-8.69-8.37-8.69-6.08.08-9.79,4.66-9.79,10.9v20.93h-12.17v-58.61h12.17v23.62c3-5.29,8.06-7.9,14.69-7.98,9.56,0,15.64,6.32,15.64,16.27Z" />
+                <path
+                  d="m336.7,135.13v-4.98c-2.84,3.55-7.43,5.53-13.35,5.53-9.08,0-14.61-5.53-14.61-13.27s5.77-12.72,16.19-12.8h11.69v-.79c0-4.5-3-7.11-8.85-7.11-3.79,0-8.21,1.26-12.64,3.71l-3.79-8.37c6.32-3.16,11.77-4.9,19.2-4.9,11.38,0,17.93,5.69,18.01,15.25l.08,27.73h-11.93Zm-.08-14.54v-3.79h-9.56c-4.66,0-6.95,1.42-6.95,4.82s2.53,5.37,6.64,5.37c5.13,0,9.16-2.76,9.87-6.4Z" />
+                <path
+                  d="m386.62,132.76c-3.16,1.82-7.11,2.92-11.06,2.92-7.58,0-13.35-4.34-13.35-13.11v-19.67h-5.92v-8.37h5.92v-11.69h12.09v11.69h11.53v8.45h-11.53v17.54c0,3.55,1.5,4.98,4.11,4.9,1.58,0,3.48-.55,5.69-1.58l2.53,8.93Z" />
+              </g>
+              <g class="sc-text-alt">
+                <path
+                  d="m212.44,22.65c-3.81,0-6.29,1.43-6.29,4.03,0,8.44,20.84,3.92,20.79,17.81,0,6.89-6.07,11.14-14.56,11.14-6.07,0-11.8-2.48-15.77-6.12l2.81-5.62c3.97,3.64,8.93,5.62,13.07,5.62,4.52,0,7.22-1.71,7.22-4.69,0-8.6-20.84-3.81-20.84-17.54,0-6.62,5.68-10.75,14.06-10.75,5.02,0,9.93,1.6,13.51,3.97l-2.7,5.73c-4.19-2.54-8.38-3.58-11.3-3.58Z" />
+                <path
+                  d="m242.11,17.69c0,2.15-1.6,3.75-3.69,3.75s-3.7-1.6-3.7-3.75,1.6-3.81,3.7-3.81,3.69,1.6,3.69,3.81Zm-.55,8.38v29.34h-6.29v-29.34h6.29Z" />
+                <path
+                  d="m301.06,37.16v18.25h-6.34v-16.49c0-4.47-2.65-7.17-6.95-7.17-5.02.17-8.05,4.03-8.05,9.15v14.5h-6.34v-16.49c0-4.47-2.59-7.17-6.89-7.17-5.07.17-8.16,4.03-8.16,9.15v14.5h-6.29v-29.34h6.29v5.68c2.04-4.14,5.79-5.9,10.64-5.9,5.24,0,8.82,2.59,10.2,7.06,1.88-4.91,5.79-7.06,11.14-7.06,6.73,0,10.75,4.3,10.75,11.31Z" />
+                <path
+                  d="m341.55,40.85c0,8.77-5.51,14.78-13.9,14.78-4.69,0-8.22-1.88-10.37-5.29v15.77h-6.34V26.07h6.34v5.07c2.15-3.42,5.68-5.29,10.26-5.29,8.33,0,14.01,6.07,14.01,15Zm-6.4-.22c0-5.46-3.69-9.49-8.93-9.49s-8.93,3.97-8.93,9.49,3.7,9.6,8.93,9.6,8.93-3.97,8.93-9.6Z" />
+                <path d="m355.89,14.49v40.92h-6.34V14.49h6.34Z" />
+                <path
+                  d="m392.45,43.17h-22.17c.99,4.52,4.47,7.33,9.1,7.33,3.2,0,6.12-1.21,8.27-3.42l3.36,3.58c-2.87,3.14-7.06,4.96-12.13,4.96-9.04,0-15-6.01-15-14.83s6.12-14.89,14.83-14.94c10.31,0,14.5,6.73,13.73,17.32Zm-5.51-4.63c-.22-4.74-3.36-7.61-8.16-7.61s-7.94,2.92-8.6,7.61h16.76Z" />
+              </g>
+            </g>
+          </g>
+        </svg>
+
+      </div>
+
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue to ChatApp</p>
+
+      <form id="auth-form">
+        <div class="input-group">
+          <input type="text" id="username" required autocomplete="username">
+          <label for="username"><i class="fas fa-user"></i> Username</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" required autocomplete="current-password">
+          <label for="password"><i class="fas fa-lock"></i> Password</label>
+        </div>
+        <div class="options">
+          <label class="remember-me">
+            <input type="checkbox" id="remember">
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" id="forgot-link" class="forgot-password">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn-login" id="login-button">
+          <span class="btn-text">Log In</span>
+          <i class="fas fa-arrow-right btn-icon"></i>
+        </button>
+      </form>
+
+      <div id="message"></div>
+
+      <div class="social-login">
+        <p>Or sign in with</p>
+        <div class="social-icons">
+          <a href="#" class="social-icon" data-provider="google"><i class="fab fa-google"></i></a>
+          <a href="#" class="social-icon" data-provider="facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon" data-provider="twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles-js', {
+      particles: {
+        number: {value: 60, density: {enable: true, value_area: 800}},
+        color: {value: '#ffffff'}, shape: {type: 'circle'}, opacity: {value: 0.5, random: true},
+        size: {value: 3, random: true}, line_linked: {enable: true, distance: 150, color: '#ffffff', opacity: 0.2, width: 1},
+        move: {enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out'}
+      },
+      interactivity: {
+        detect_on: 'canvas', events: {onhover: {enable: true, mode: 'grab'}, onclick: {enable: true, mode: 'push'}, resize: true},
+        modes: {grab: {distance: 140, line_opacity: 0.5}, push: {particles_nb: 4}}
+      },
+      retina_detect: true
+    });
+
+    const form = document.getElementById('auth-form');
+    const loginButton = document.getElementById('login-button');
+    const messageBox = document.getElementById('message');
+    const forgotLink = document.getElementById('forgot-link');
+    const socialIcons = document.querySelectorAll('.social-icon');
+
+    function setLoading(on) {
+      if (on) loginButton.classList.add('loading');
+      else loginButton.classList.remove('loading');
+    }
+
+    function showMessage(text, type = 'info') {
+      messageBox.textContent = text;
+      messageBox.className = '';
+      if (type === 'success') messageBox.classList.add('success');
+      if (type === 'error') messageBox.classList.add('error');
+    }
+
+    // 使用 Native Bridge 调用本地方法
+    async function callNative(name, payloadObj) {
+      if (typeof window[name] !== 'function') {
+        console.warn('Native binding', name, 'not found.');
+        return {ok: false, message: 'Native bridge not ready: ' + name};
+      }
+      try {
+        const res = await window[name](payloadObj || {});
+        if (!res) return {ok: false, message: 'Empty response'};
+        return res;
+      } catch (e) {
+        console.error(e);
+        return {ok: false, message: e.message || 'Bridge error'};
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      // const remember = document.getElementById('remember').checked;
+      if (!username || !password) {
+        showMessage('Username / Password required', 'error');
+        return;
+      }
+      setLoading(true);
+      showMessage('');
+      const resp = await callNative('login', {username, password, /* remember, ts: Date.now()*/});
+      if (resp.success) {
+        showMessage(resp.message || 'Login success', 'success');
+        // window.location.href = 'app.html';
+      } else {
+        showMessage(resp.message || 'Login failed', 'error');
+      }
+      setLoading(false);
+    });
+
+    forgotLink.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      if (!username) {
+        showMessage('Enter username first to reset password', 'error');
+        return;
+      }
+      const resp = await callNative('forgotPassword', {username});
+      if (resp.ok) showMessage(resp.message || 'Reset email sent', 'success');
+      else showMessage(resp.message || 'Reset failed', 'error');
+    });
+
+    socialIcons.forEach(icon => {
+      icon.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const provider = icon.getAttribute('data-provider');
+        showMessage('Starting ' + provider + ' login ...');
+        const resp = await callNative('oauthLogin', {provider});
+        if (resp.ok) showMessage(resp.message || (provider + ' login success'), 'success');
+        else showMessage(resp.message || (provider + ' login failed'), 'error');
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -9,10 +9,10 @@ template <Network::ConnectionType C> class Session {
 public:
   Session(C &&conn) : connection_(std::forward<C>(conn)) {};
 
-  auto signIn(const std::string &username, const std::string &password)
+  auto signIn(const Data::SignIn &data)
       -> stdexec::sender auto {
 
-    Request::SignIn request{.username = username, .password = password};
+    Request::SignIn request{.username = data.username, .password = data.password};
 
     auto sender = connection_.sendRequest(request);
 

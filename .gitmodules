@@ -1,0 +1,3 @@
+[submodule "include/GUI/Material"]
+	path = include/GUI/Material
+	url = https://github.com/slint-ui/material-components.git

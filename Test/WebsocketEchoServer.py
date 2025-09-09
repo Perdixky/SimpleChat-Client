@@ -2,6 +2,8 @@ import asyncio
 import websockets
 import ssl
 import pathlib
+import json
+import msgpack
 
 # 证书和私钥文件的路径
 CERT_FILE = "/home/perdixky/Codes/SimpleChat-Client/safety/certificate.crt"
@@ -35,19 +37,39 @@ async def echo(websocket):
     #     print(f"无法从请求头中解析路径: {e}")
 
     # print(f"新连接来自: {websocket.remote_address} (请求路径: {path})")
-    try:
-        async for message in websocket:
+    
+    async for message in websocket:
+        try:
             print(f"收到来自 {websocket.remote_address} 的消息: {message}")
-            await websocket.send(message)
-            print(f"已将消息 '{message}' 回送给 {websocket.remote_address}")
-    except websockets.exceptions.ConnectionClosedOK:
-        print(f"连接 {websocket.remote_address} 正常关闭。")
-    except websockets.exceptions.ConnectionClosedError as e:
-        print(f"连接 {websocket.remote_address} 异常关闭: {e}")
-    except Exception as e:
-        print(f"处理 {websocket.remote_address} 连接时发生错误: {e}")
-    finally:
-        print(f"连接 {websocket.remote_address} 已断开。")
+            data = msgpack.unpackb(message, raw=False)
+            method = data.get("method")
+
+            if method == "Echo":
+                await websocket.send(message)
+                print(f"已将消息 '{message}' 回送给 {websocket.remote_address}")
+            elif method == "SignIn":
+                response = {
+                    "id": data.get("id"),
+                    "success": True
+                }
+                print(f"处理 SignIn 请求, 准备发送确认: {msgpack.packb(response)}")
+                await websocket.send(msgpack.packb(response))
+                print(f"已发送 SignIn 确认给 {websocket.remote_address}")
+            else:
+                await websocket.send(message)
+                print(f"未知 method, 已将原消息 '{message}' 回送给 {websocket.remote_address}")
+
+        except websockets.exceptions.ConnectionClosedOK:
+            print(f"连接 {websocket.remote_address} 正常关闭。")
+        except websockets.exceptions.ConnectionClosedError as e:
+            print(f"连接 {websocket.remote_address} 异常关闭: {e}")
+        except msgpack.UnpackException:
+            print(f"收到的消息不是有效的Msgpack格式: {message}")
+            await websocket.send(message) # Or send an error message
+        except Exception as e:
+            print(f"处理 {websocket.remote_address} 连接时发生错误: {e}")
+        finally:
+            print(f"连接 {websocket.remote_address} 已断开。")
 
 async def main():
     """
