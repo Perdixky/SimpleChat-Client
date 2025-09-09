@@ -18,7 +18,7 @@
 
 1.  **克隆仓库**
     ```bash
-    git clone <your-repository-url> SimpleChat-Client
+    git clone https://github.com/Perdixky/SimpleChat-Client.git SimpleChat-Client
     cd SimpleChat-Client
     ```
 
@@ -30,9 +30,9 @@
     ```
 
 3.  **运行 CMake 配置**
-    此步骤会检查编译环境并生成构建系统。CMake配置会自动处理依赖项的下载（例如通过 CPM.cmake）。
+    此步骤会检查编译环境并生成构建系统。需要您本地拥有OpenSSL库，CMake配置会自动处理其他依赖项的下载（建议您在本地安装有Boost以防止长时间的拉取和编译过程）。
     ```bash
-    cmake ..
+    cmake .. -G Ninja
     ```
 
 4.  **编译项目**
