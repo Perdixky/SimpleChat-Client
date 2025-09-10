@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Chat.svg" width="200" />
+  <img src="SimpleChat.svg" width="200" />
 </div>
 
 # SimpleChat-Client
@@ -12,9 +12,47 @@
 
 ## 编译指南
 
-本项目使用 CMake 进行构建。在编译之前，请确保您的系统上已安装 C++ 编译器 (如 GCC, Clang) 和 CMake。
+本项目支持 CMake 和 xmake 两种构建方式，您可以根据自己的喜好选择其中一种。我们更推荐使用 xmake，因为它更简单快捷。
 
-### 编译步骤
+请选择您的构建方式：
+
+*   [**使用 xmake 构建 (推荐)**](#使用-xmake-构建-推荐)
+*   [**使用 CMake 构建**](#使用-cmake-构建)
+
+---
+
+### 使用 xmake 构建 (推荐)
+
+在编译之前，请确保您的系统上已安装 [xmake](https://xmake.io/#/zh-cn/guide/installation)。
+
+#### 编译步骤
+
+1.  **克隆仓库**  
+    ```bash
+    git clone https://github.com/Perdixky/SimpleChat-Client.git SimpleChat-Client
+    cd SimpleChat-Client
+    ```
+
+2.  **编译项目**  
+    xmake 会自动处理依赖项，一键编译。
+    ```bash
+    xmake
+    ```
+
+3.  **运行**  
+    ```bash
+    xmake run
+    ```
+
+[返回顶部](#编译指南)
+
+---
+
+### 使用 CMake 构建
+
+在编译之前，请确保您的系统上已安装 C++ 编译器 (如 GCC, Clang) 和 CMake。
+
+#### 编译步骤
 
 1.  **克隆仓库**  
     ```bash
@@ -43,3 +81,5 @@
 
 5.  **运行**  
     编译成功后，可执行文件将生成在 `build` 目录中。
+
+[返回顶部](#编译指南)

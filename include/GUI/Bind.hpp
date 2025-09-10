@@ -4,7 +4,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include <webview.h>
+#include <webview/webview.h>
 
 #include "Async/Loop.hpp"
 #include "Utils/FunctionTraits.hpp"

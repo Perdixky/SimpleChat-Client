@@ -15,7 +15,7 @@
 #include <rfl/json.hpp>
 #include <stdexec/execution.hpp>
 #include <variant>
-#include <webview.h>
+#include <webview/webview.h>
 
 using namespace boost;
 
