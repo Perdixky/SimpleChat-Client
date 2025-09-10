@@ -1,38 +1,50 @@
 #pragma once
 
-#include <boost/log/core.hpp>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sinks/text_ostream_backend.hpp>
-#include <boost/log/sources/global_logger_storage.hpp>
-#include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/utility/setup/file.hpp>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include <sstream>
 
-namespace src = boost::log::sources;
+// Forward declaration for the initialization function
+void initLogging();
 
-// Define severity levels
+// The old severity levels, for compatibility at call sites
 enum SeverityLevel { trace, debug, info, warning, error, fatal };
 
-// The formatting logic for severity levels
-template <typename CharT, typename TraitsT>
-inline std::basic_ostream<CharT, TraitsT> &
-operator<<(std::basic_ostream<CharT, TraitsT> &strm, SeverityLevel lvl) {
-  static const char *const str[] = {"trace",   "debug", "info",
-                                    "warning", "error", "fatal"};
-  if (static_cast<std::size_t>(lvl) < (sizeof(str) / sizeof(*str)))
-    strm << str[lvl];
-  else
-    strm << static_cast<int>(lvl);
-  return strm;
+// Mapping from old severity to spdlog level
+inline spdlog::level::level_enum to_spdlog_level(SeverityLevel level) {
+    switch (level) {
+        case trace: return spdlog::level::trace;
+        case debug: return spdlog::level::debug;
+        case info: return spdlog::level::info;
+        case warning: return spdlog::level::warn;
+        case error: return spdlog::level::err;
+        case fatal: return spdlog::level::critical;
+    }
+    return spdlog::level::off;
 }
 
-// Define the logger macro
-#define LOG(severity) BOOST_LOG_SEV(logger::get(), severity)
+// A wrapper class to capture the stream and log it using spdlog
+class LogStream {
+public:
+    LogStream(spdlog::level::level_enum level) : level_(level) {}
 
-// Declare the logger instance and initialization function
-BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(logger,
-                                       src::severity_logger_mt<SeverityLevel>)
+    ~LogStream() {
+        // When the object is destroyed, log the captured message
+        if (stream_.tellp() > 0) { // Only log if there is something to log
+            spdlog::log(level_, "{}", stream_.str());
+        }
+    }
 
-void initLogging();
+    template<typename T>
+    LogStream& operator<<(const T& msg) {
+        stream_ << msg;
+        return *this;
+    }
+
+private:
+    std::ostringstream stream_;
+    spdlog::level::level_enum level_;
+};
+
+// The new LOG macro
+#define LOG(severity) LogStream(to_spdlog_level(severity))
