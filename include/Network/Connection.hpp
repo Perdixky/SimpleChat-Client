@@ -104,27 +104,26 @@ public:
     static std::vector<char> request_msg;
     request_msg = rfl::msgpack::write(request);
 
-    auto send =
-        stdexec::when_all(stream_.async_write(asio::buffer(request_msg),
-                                              asioexec::use_sender),
-                          stdexec::just(uuid_obj)) |
-        stdexec::let_value([this](auto, uuids::uuid uuid) {
-          LOG(trace) << "Successfully wrote message with ID: "
-                     << boost::uuids::to_string(uuid) << " to socket.";
-          return ResponseSender<T, R>{router_, uuid};
-        });
-      // |
-      //   stdexec::upon_error([id = request.id](const std::exception_ptr ec) {
-      //     if (ec) {
-      //       try {
-      //         std::rethrow_exception(ec);
-      //       } catch (const std::exception &e) {
-      //         LOG(error) << "Failed to send request with ID: " << id
-      //                    << ", error: " << e.what();
-      //         return T{};
-      //       }
-      //     }
-      //   });
+    auto send = stdexec::when_all(stream_.async_write(asio::buffer(request_msg),
+                                                      asioexec::use_sender),
+                                  stdexec::just(uuid_obj)) |
+                stdexec::let_value([this](auto, uuids::uuid uuid) {
+                  LOG(trace) << "Successfully wrote message with ID: "
+                             << boost::uuids::to_string(uuid) << " to socket.";
+                  return ResponseSender<T, R>{router_, uuid};
+                });
+    // |
+    //   stdexec::upon_error([id = request.id](const std::exception_ptr ec) {
+    //     if (ec) {
+    //       try {
+    //         std::rethrow_exception(ec);
+    //       } catch (const std::exception &e) {
+    //         LOG(error) << "Failed to send request with ID: " << id
+    //                    << ", error: " << e.what();
+    //         return T{};
+    //       }
+    //     }
+    //   });
 
     return send;
   }
