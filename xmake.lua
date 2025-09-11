@@ -21,9 +21,12 @@ add_requires("webview-git")
 
 
 target("Client")
-add_includedirs("include", { public = false })
-add_files("src/main.cpp", "src/**/*.cpp")
-add_packages("python", "openssl3", "boost", "stdexec-git", "webview-git", "reflect-cpp", "spdlog")
+  if is_plat("windows") then
+    set_runtimes("MD")
+  end
+  add_includedirs("include", { public = false })
+  add_files("src/main.cpp", "src/**/*.cpp")
+  add_packages("python", "openssl3", "boost", "stdexec-git", "webview-git", "reflect-cpp", "spdlog")
 
 package("stdexec-git")
   set_kind("library", { headeronly = true })
@@ -33,11 +36,11 @@ package("stdexec-git")
 
   add_urls("https://github.com/Perdixky/stdexec.git")
 
-  add_versions("latest", "main")
+  add_versions("latest", "dangling-refs")
 
   set_policy("package.cmake_generator.ninja", false)
 
-  add_deps("cmake")
+  add_deps("cmake", "boost")
 
   if on_check then
     on_check("windows", function(package)
