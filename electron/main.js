@@ -1,5 +1,5 @@
 // Electron main process: spawns C++ ChatDaemon and bridges IPC to renderer
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 
@@ -71,11 +71,18 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1024,
     height: 768,
+    autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   });
+
+  // Remove application menu and the visible menu bar
+  try {
+    Menu.setApplicationMenu(null);
+    win.setMenuBarVisibility(false);
+  } catch (e) { console.warn('[electron] failed to remove menu bar:', e); }
 
   const indexPath = path.resolve(__dirname, '..', 'include', 'GUI', 'index.html');
   win.loadFile(indexPath);
