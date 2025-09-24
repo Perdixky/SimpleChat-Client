@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatApp</title>
+
+  <!-- External Libraries -->
+  <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- CSS Variables and Global Styles --- */
+    :root {
+      --background-start: #13182a;
+      --background-end: #2e3c75;
+      --glass-background: rgba(0, 0, 0, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b8d1;
+      --accent-color: #4dc7ff;
+      --accent-color-dark: #2965a8;
+      --my-message-bg: #2a3a75;
+      --their-message-bg: rgba(255, 255, 255, 0.1);
+      --hover-highlight: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-color) transparent;
+    }
+
+    *::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: var(--accent-color);
+      border-radius: 20px;
+      border: 3px solid transparent;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(-45deg, #13182a, #2e3c75, #4a2f6c, #272a50);
+      background-size: 400% 400%;
+      animation: gradient-animation 15s ease infinite;
+      color: var(--text-primary);
+    }
+
+    @keyframes gradient-animation {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* --- Login and Registration Form Styles --- */
+    .login-container {
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-form {
+      width: min(90vw, 420px);
+      min-height: 600px;
+      padding: 30px;
+      background: var(--glass-background);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: width 0.8s ease-in-out, height 0.8s ease-in-out, border-radius 0.8s ease-in-out, min-height 0.8s ease-in-out;
+    }
+
+    .login-form.expanding {
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      border-radius: 0;
+    }
+
+    .login-form-content,
+    .register-form-content {
+      transition: opacity 0.3s ease-out;
+    }
+
+    .login-form-content.fading-out,
+    .register-form-content.fading-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .register-form-content {
+      opacity: 0;
+      display: none;
+    }
+
+    .register-form-content.visible {
+      opacity: 1;
+      display: block;
+    }
+
+    .login-form h2 {
+      font-size: clamp(24px, 5vw, 28px);
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-form p {
+      font-size: clamp(12px, 2.5vw, 14px);
+      margin-bottom: 25px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .logo-container {
+      width: min(180px, 80%);
+      margin: 0 auto 15px;
+      transition: transform .3s ease;
+    }
+
+    .logo-container:hover {
+      transform: scale(1.05);
+    }
+
+    #animated-logo {
+      width: 100%;
+      height: auto;
+    }
+
+    /* --- Input Fields and Form Elements --- */
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 0;
+      font-size: 16px;
+      color: #fff;
+      background: none;
+      border: none;
+      border-bottom: 2px solid rgba(255, 255, 255, .7);
+      outline: 0;
+      transition: all .3s ease;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, .7);
+      pointer-events: none;
+      transition: all .3s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-group label .iconify {
+      margin-right: 10px;
+    }
+
+    .input-group input:focus+label,
+    .input-group input:valid+label,
+    .input-group.has-content label {
+      top: -20px;
+      left: 0;
+      font-size: 12px;
+      color: var(--accent-color);
+    }
+
+    .input-group input:focus {
+      border-bottom-color: var(--accent-color);
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .remember-me {
+      display: block;
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, .8);
+      user-select: none;
+      font-size: clamp(12px, 2.5vw, 14px);
+    }
+
+    .remember-me input[type=checkbox] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .remember-me .checkmark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 18px;
+      width: 18px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, .7);
+      border-radius: 4px;
+      transition: all .3s ease;
+    }
+
+    .remember-me:hover .checkmark {
+      border-color: var(--accent-color);
+    }
+
+    .remember-me input[type=checkbox]:checked~.checkmark {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .remember-me .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 2px;
+      width: 6px;
+      height: 12px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .remember-me input[type=checkbox]:checked~.checkmark:after {
+      display: block;
+      opacity: 1;
+    }
+
+    .forgot-password {
+      color: rgba(255, 255, 255, .8);
+      text-decoration: none;
+      transition: color .3s ease;
+    }
+
+    .forgot-password:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1f36;
+      background: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all .4s cubic-bezier(.23, 1, .32, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-login.loading {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      padding: 0;
+      pointer-events: none;
+    }
+
+    .btn-login.loading .btn-text,
+    .btn-login.loading .btn-icon {
+      opacity: 0;
+      display: none;
+    }
+
+    /* Replace pseudo-element spinner with an explicit centered element */
+    .btn-login:after { content: none; display: none; }
+    .btn-login.loading:after { content: none; display: none; }
+    .btn-login .spinner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 26px;
+      height: 26px;
+      border: 3px solid var(--accent-color-dark);
+      border-top-color: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin 1s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    .btn-login .btn-icon {
+      font-size: 24px;
+    }
+
+    .social-login a {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    .social-login a:hover {
+      text-decoration: underline;
+    }
+
+    #message,
+    #register-message {
+      margin-top: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      transition: all .3s ease;
+      margin-bottom: 15px;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 10px;
+    }
+
+    #message.error,
+    #register-message.error,
+    #message.success,
+    #register-message.success {
+      max-height: 100px;
+      padding: 10px;
+    }
+
+    #message.success,
+    #register-message.success {
+      color: var(--accent-color);
+    }
+
+    #message.error,
+    #register-message.error {
+      color: #ff6b6b;
+      background-color: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.5);
+      border-radius: 5px;
+    }
+
+    .verification-code-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .verification-code-group input {
+      flex-grow: 1;
+    }
+
+    #get-code-btn {
+      padding: 8px 12px;
+      margin-left: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #get-code-btn .iconify {
+      font-size: 18px;
+    }
+
+    #get-code-btn:hover {
+      background: var(--accent-color-dark);
+    }
+
+    #get-code-btn:disabled {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+    }
+
+    /* --- Chat Interface Styles --- */
+    .chat-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out 0.2s;
+      pointer-events: none;
+    }
+
+    .login-form.expanding .chat-container {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 30%;
+      min-width: 280px;
+      background: rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--glass-border);
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .sidebar-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .sidebar-header .actions button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 22px;
+      cursor: pointer;
+      transition: color 0.3s;
+      margin-left: 10px;
+    }
+
+    .sidebar-header .actions button:hover {
+      color: var(--text-primary);
+    }
+
+    .search-bar {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .user-list {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .user-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background .3s;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .user-item:hover {
+      background: var(--hover-highlight);
+    }
+
+    .user-item.active {
+      background: var(--accent-color-dark);
+    }
+
+    .user-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+    }
+
+    .user-info .name {
+      font-weight: 500;
+    }
+
+    .user-info .last-message {
+      font-size: 14px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main Chat Panel */
+    .chat-panel {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    .chat-header .name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .message-area {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .message-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-end;
+      max-width: 70%;
+    }
+
+    .message .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin: 0 10px;
+    }
+
+    .message-content {
+      padding: 12px 18px;
+      border-radius: 18px;
+      font-size: 15px;
+    }
+
+    .message.my-message {
+      align-self: flex-end;
+    }
+
+    .message.my-message .message-content {
+      background: var(--my-message-bg);
+    }
+
+    .message.their-message {
+      align-self: flex-start;
+    }
+
+    .message.their-message .message-content {
+      background: var(--their-message-bg);
+    }
+
+    .message-input-area {
+      padding: 20px;
+      border-top: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .message-input-area form {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .message-input-area input {
+      flex-grow: 1;
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: 1px solid transparent;
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-primary);
+      outline: none;
+      font-size: 16px;
+    }
+
+    .message-input-area button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent-color);
+      color: var(--text-primary);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* --- Modal Styles --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--glass-background);
+      padding: 30px;
+      border-radius: 15px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      width: min(90vw, 400px);
+      text-align: center;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .modal-overlay.visible .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .modal-content .input-group {
+      text-align: left;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #add-friend-message {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    #add-friend-message.success {
+      color: var(--accent-color);
+    }
+
+    #add-friend-message.error {
+      color: #ff6b6b;
+    }
+
+    /* --- Friend Search Results --- */
+    #friend-search-results {
+      margin-top: -15px;
+      margin-bottom: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      border-radius: 5px;
+    }
+
+    .friend-search-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border-radius: 5px;
+    }
+
+    .friend-search-item:hover {
+      background-color: var(--hover-highlight);
+    }
+
+    .friend-search-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    .friend-search-item .info .name {
+      font-weight: 500;
+      font-size: 16px;
+      color: var(--text-primary);
+    }
+
+    .friend-search-item .info .email {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+
+    /* --- SVG Logo Styles --- */
+    .sc-light-blue {
+      fill: #52adde;
+    }
+
+    .sc-medium-blue {
+      fill: #2965a8;
+    }
+
+    .sc-dark-blue {
+      fill: #1f4e8e;
+    }
+
+    .sc-white {
+      fill: #fff;
+    }
+
+    .sc-text-main {
+      fill: #FFFFFF;
+    }
+
+    .sc-text-alt {
+      fill: #52adde;
+    }
+    /* === THEME + AURORA ENHANCEMENTS (appended) === */
+    :root {
+      /* Background aurora palette (dark default) */
+      --bg1: #0f1426;
+      --bg2: #23356a;
+      --bg3: #4a2f6c;
+      --bg4: #1f2242;
+
+      /* Extra surfaces */
+      --glass-background-strong: rgba(10, 12, 24, 0.55);
+      --card-glow: rgba(93, 191, 255, 0.35);
+
+      /* Motion */
+      --ease-smooth: cubic-bezier(.22,1,.36,1);
+      --ease-bounce: cubic-bezier(.2,.8,.2,1);
+      --dur-fast: 160ms;
+      --dur-med: 360ms;
+      --dur-slow: 800ms;
+    }
+
+    [data-theme="light"] {
+      --bg1: #e9eefc;
+      --bg2: #fafcff;
+      --bg3: #e5f4ff;
+      --bg4: #f2f6ff;
+      --glass-background: rgba(255, 255, 255, 0.72);
+      --glass-background-strong: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(17, 40, 90, 0.15);
+      --card-glow: rgba(63, 143, 255, 0.28);
+      --text-primary: #15203b;
+      --text-secondary: #445578;
+      --accent-color: #1f7cff;
+      --accent-color-dark: #1552a8;
+      --their-message-bg: rgba(21, 32, 59, 0.06);
+      --hover-highlight: rgba(21, 32, 59, 0.08);
+    }
+
+    body {
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2), var(--bg3), var(--bg4));
+      background-size: 400% 400%;
+      animation: gradient-animation 16s var(--ease-smooth) infinite;
+    }
+
+    #particles-js { position: fixed; inset: 0; z-index: 0; }
+
+    .aurora {
+      position: fixed; inset: -10% -10% -10% -10%; z-index: 1; pointer-events: none;
+      filter: blur(40px) saturate(120%);
+      background:
+        radial-gradient(40% 50% at 20% 20%, rgba(83, 173, 222, .35), transparent 60%),
+        radial-gradient(40% 55% at 80% 30%, rgba(76, 130, 255, .28), transparent 60%),
+        radial-gradient(35% 50% at 50% 85%, rgba(163, 93, 255, .22), transparent 60%);
+      animation: aurora-pan 28s linear infinite alternate;
+      mix-blend-mode: screen;
+    }
+    @keyframes aurora-pan {
+      0%   { transform: translate3d(-2%, -2%, 0) scale(1.02); }
+      50%  { transform: translate3d( 2%,  3%, 0) scale(1.05); }
+      100% { transform: translate3d(-1%,  2%, 0) scale(1.03); }
+    }
+
+    .login-form {
+      background: linear-gradient(180deg, var(--glass-background), var(--glass-background-strong));
+      border-radius: 22px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--glass-border), 0 0 40px var(--card-glow) inset;
+      backdrop-filter: blur(14px) saturate(140%);
+      transition: width var(--dur-slow) var(--ease-smooth), height var(--dur-slow) var(--ease-smooth), border-radius var(--dur-slow) var(--ease-smooth), min-height var(--dur-slow) var(--ease-smooth), box-shadow var(--dur-med) var(--ease-smooth);
+    }
+
+    .logo-container {
+      width: min(200px, 80%);
+      margin: 0 auto 18px;
+      transition: transform var(--dur-med) var(--ease-bounce), filter var(--dur-med) var(--ease-smooth);
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    .logo-container:hover { transform: translateY(-2px) scale(1.03); }
+
+    .btn-login {
+      color: #0c1330;
+      background: linear-gradient(180deg, #ffffff, #eaf4ff);
+      transition: all var(--dur-med) var(--ease-bounce);
+    }
+    .btn-login:hover { transform: translateY(-1px); box-shadow: 0 12px 24px rgba(0,0,0,.25); }
+
+    .chat-container { transition: opacity 0.5s var(--ease-smooth) 0.15s; }
+    .sidebar { backdrop-filter: blur(12px) saturate(130%); }
+    .sidebar-header .actions button { transition: color var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-bounce); }
+    .sidebar-header .actions button:hover { color: var(--text-primary); transform: translateY(-1px); }
+
+    .user-item { transition: background var(--dur-fast) var(--ease-smooth), transform var(--dur-fast) var(--ease-bounce); }
+    .user-item img { box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+
+    .message { opacity: 0; transform: translateY(8px); animation: msg-in 420ms var(--ease-smooth) both; }
+    @keyframes msg-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    #message-list .message:nth-child(1) { animation-delay: 20ms; }
+    #message-list .message:nth-child(2) { animation-delay: 40ms; }
+    #message-list .message:nth-child(3) { animation-delay: 60ms; }
+    #message-list .message:nth-child(4) { animation-delay: 80ms; }
+    #message-list .message:nth-child(5) { animation-delay: 100ms; }
+    #message-list .message:nth-child(6) { animation-delay: 120ms; }
+    #message-list .message:nth-child(7) { animation-delay: 140ms; }
+    #message-list .message:nth-child(8) { animation-delay: 160ms; }
+    #message-list .message:nth-child(9) { animation-delay: 180ms; }
+    #message-list .message:nth-child(10) { animation-delay: 200ms; }
+
+    .my-message .message-content { box-shadow: 0 10px 22px rgba(34, 76, 157, .35); }
+    .their-message .message-content { box-shadow: 0 10px 22px rgba(0,0,0,.25); }
+
+    .modal-content { background: linear-gradient(180deg, var(--glass-background), var(--glass-background-strong)); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55); }
+
+    .theme-toggle {
+      position: fixed; top: 16px; right: 16px; z-index: 3;
+      background: linear-gradient(180deg, var(--glass-background), var(--glass-background-strong));
+      border: 1px solid var(--glass-border); color: var(--text-primary);
+      width: 42px; height: 42px; border-radius: 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px) saturate(140%);
+      cursor: pointer;
+      transition: transform var(--dur-fast) var(--ease-bounce), box-shadow var(--dur-fast) var(--ease-smooth), background var(--dur-fast) var(--ease-smooth);
+    }
+    .theme-toggle:hover { transform: translateY(-1px) scale(1.04); }
+    .theme-toggle .iconify { font-size: 22px; }
+
+    /* Extra animations and motion polish */
+    @keyframes shake-x { 0%,100% { transform: translateX(0); } 15% { transform: translateX(-10px); } 30% { transform: translateX(8px); } 45% { transform: translateX(-6px); } 60% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+    .shake { animation: shake-x 420ms var(--ease-bounce); }
+
+    /* Checkbox focus and check animations */
+    @keyframes cb-pop { 0% { transform: translateY(-50%) scale(.9); } 80% { transform: translateY(-50%) scale(1.08); } 100% { transform: translateY(-50%) scale(1); } }
+    .remember-me input[type=checkbox]:checked~.checkmark { animation: cb-pop 220ms var(--ease-bounce); }
+    .remember-me input[type=checkbox]:focus-visible~.checkmark { box-shadow: 0 0 0 3px rgba(31,124,255,.35); border-color: var(--accent-color); }
+
+    /* Subtle animated icons */
+    @keyframes breathe { 0%,100% { transform: translateZ(0) scale(1); opacity:.95; } 50% { transform: translateZ(0) scale(1.06); opacity:1; } }
+    .icon-breathe { animation: breathe 3s ease-in-out infinite; }
+    .icon-fly { transition: transform var(--dur-fast) var(--ease-bounce); }
+    .icon-fly:hover { transform: translateX(2px); }
+
+    /* Message bubble gradients for a richer tone */
+    .message.my-message .message-content {
+      background: linear-gradient(135deg, rgba(63,131,248,.28), rgba(139,92,246,.28));
+      border: 1px solid rgba(113,143,255,.26);
+    }
+    .message.their-message .message-content {
+      background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    /* Conversation list hover/active improvements */
+    .user-item:hover { background: linear-gradient(90deg, rgba(255,255,255,.06), transparent); }
+    .user-item.active { background: linear-gradient(90deg, rgba(31,124,255,.22), rgba(21,82,168,.18)); }
+  </style>
+</head>
+
+<body>
+  <div id="particles-js"></div>
+  <div class="aurora"></div>
+  <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
+    <span class="iconify" data-icon="mdi:theme-light-dark"></span>
+  </button>
+
+  <div class="login-container">
+    <div class="login-form" id="login-form">
+
+      <!-- Login Form -->
+      <div class="login-form-content" id="login-form-content">
+        <div class="logo-container">
+          <svg id="animated-logo" data-name="图层 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 392.54 163.44">
+            <g class="logo-wrapper">
+              <g class="logo-icon">
+                <path class="logo-icon-path logo-icon-fill sc-light-blue"
+                  d="m98.12,127.72c17.39-5.61,17.39-19.28,17.11-23.67-.28-4.39-1.94-15.83-21.39-19.5-19.44-3.67-35-7.83-43.17-13.83s-16.5-18.86-13.08-37.69C40.8,15.37,58.28-.74,92.09.88,49.83-4.8,10.61,17.63,1.78,54.21c-6.64,27.53,5.7,55.79,29.35,74.14.34,5.78.4,22.22-8.51,35.1,0,0,18.65-4.57,32.53-21.58,3.16-3.87,6.08-8.39,8.47-13.64,0,0,17.11,5.11,34.5-.5Z" />
+                <path class="logo-icon-path logo-icon-fill sc-white"
+                  d="m131.5,96.16c-.69-2.85-1.69-5.73-3.1-8.6-9.89-20.22-39.39-21.44-56.14-26.03-4.08-1.12-7.26-2.58-9.74-4.28-7.71-5.29-8.57-12.85-7.9-19.24.89-8.44,8.56-18.22,26.83-19.67,18.28-1.44,34.47,6.61,34.47,6.61l5.73-15.32c-6.06-2.88-12.55-5.21-19.41-6.87-3.4-.82-6.79-1.43-10.16-1.88C58.28-.74,40.8,15.37,37.6,33.03c-3.42,18.83,4.92,31.69,13.08,37.69s23.72,10.17,43.17,13.83c19.44,3.67,21.11,15.11,21.39,19.5.28,4.39.28,18.06-17.11,23.67-17.39,5.61-34.5.5-34.5.5-2.39,5.26-5.31,9.77-8.47,13.64,4.04,1.56,8.25,2.88,12.6,3.93,2.82.68,5.63,1.23,8.43,1.65,20.82.26,31.37-3.57,41.55-10.78,9.82-6.96,17.91-23.25,13.76-40.51Z" />
+                <path class="logo-icon-path logo-icon-fill sc-dark-blue"
+                  d="m81.46,18.33c-18.28,1.44-25.94,11.22-26.83,19.67-.67,6.39.19,13.95,7.9,19.24-1.36-6.69-.97-15.73,7.88-22.08,15.72-11.28,51.22-2.5,51.22-2.5l6.51-19.64c-2.1-1.2-4.25-2.34-6.47-3.4l-5.73,15.32s-16.19-8.06-34.47-6.61Z" />
+                <path class="logo-icon-path logo-icon-fill sc-dark-blue"
+                  d="m131.5,96.16c4.15,17.26-3.94,33.55-13.76,40.51-10.18,7.22-20.73,11.04-41.55,10.78,18.08,2.76,35.67.33,50.66-6.16,15.48-20.65,8.5-38.33,4.66-45.13Z" />
+                <path class="logo-icon-path logo-icon-fill sc-medium-blue"
+                  d="m128.14,13.02l-6.51,19.64s-35.5-8.78-51.22,2.5c-8.85,6.35-9.23,15.39-7.88,22.08,2.48,1.7,5.66,3.17,9.74,4.28,16.75,4.58,46.25,5.81,56.14,26.03,1.4,2.87,2.41,5.75,3.1,8.6,3.85,6.81,10.83,24.48-4.66,45.13,20.57-8.91,36.21-25.49,41.39-46.94,7.58-31.44-9.59-63.83-40.09-81.32Z" />
+              </g>
+              <g class="logo-text">
+                <g class="sc-text-main">
+                  <path
+                    d="m227.44,90.26c-9.48,0-16.83,7.35-16.83,16.98s7.35,17.06,16.83,17.06c4.98,0,10.43-2.53,14.38-6.48l7.35,7.98c-5.84,6-14.3,9.87-22.36,9.87-16.51,0-28.99-12.24-28.99-28.28s12.72-27.96,29.46-27.96c7.98,0,16.35,3.55,21.8,9.16l-7.27,8.85c-3.79-4.34-9.24-7.19-14.38-7.19Z" />
+                  <path
+                    d="m300.44,108.43v26.7h-12.17v-23.15c0-5.37-3.16-8.69-8.37-8.69-6.08.08-9.79,4.66-9.79,10.9v20.93h-12.17v-58.61h12.17v23.62c3-5.29,8.06-7.9,14.69-7.98,9.56,0,15.64,6.32,15.64,16.27Z" />
+                  <path
+                    d="m336.7,135.13v-4.98c-2.84,3.55-7.43,5.53-13.35,5.53-9.08,0-14.61-5.53-14.61-13.27s5.77-12.72,16.19-12.8h11.69v-.79c0-4.5-3-7.11-8.85-7.11-3.79,0-8.21,1.26-12.64,3.71l-3.79-8.37c6.32-3.16,11.77-4.9,19.2-4.9,11.38,0,17.93,5.69,18.01,15.25l.08,27.73h-11.93Zm-.08-14.54v-3.79h-9.56c-4.66,0-6.95,1.42-6.95,4.82s2.53,5.37,6.64,5.37c5.13,0,9.16-2.76,9.87-6.4Z" />
+                  <path
+                    d="m386.62,132.76c-3.16,1.82-7.11,2.92-11.06,2.92-7.58,0-13.35-4.34-13.35-13.11v-19.67h-5.92v-8.37h5.92v-11.69h12.09v11.69h11.53v8.45h-11.53v17.54c0,3.55,1.5,4.98,4.11,4.9,1.58,0,3.48-.55,5.69-1.58l2.53,8.93Z" />
+                </g>
+                <g class="sc-text-alt">
+                  <path
+                    d="m212.44,22.65c-3.81,0-6.29,1.43-6.29,4.03,0,8.44,20.84,3.92,20.79,17.81,0,6.89-6.07,11.14-14.56,11.14-6.07,0-11.8-2.48-15.77-6.12l2.81-5.62c3.97,3.64,8.93,5.62,13.07,5.62,4.52,0,7.22-1.71,7.22-4.69,0-8.6-20.84-3.81-20.84-17.54,0-6.62,5.68-10.75,14.06-10.75,5.02,0,9.93,1.6,13.51,3.97l-2.7,5.73c-4.19-2.54-8.38-3.58-11.3-3.58Z" />
+                  <path
+                    d="m242.11,17.69c0,2.15-1.6,3.75-3.69,3.75s-3.7-1.6-3.7-3.75,1.6-3.81,3.7-3.81,3.69,1.6,3.69,3.81Zm-.55,8.38v29.34h-6.29v-29.34h6.29Z" />
+                  <path
+                    d="m301.06,37.16v18.25h-6.34v-16.49c0-4.47-2.65-7.17-6.95-7.17-5.02.17-8.05,4.03-8.05,9.15v14.5h-6.34v-16.49c0-4.47-2.59-7.17-6.89-7.17-5.07.17-8.16,4.03-8.16,9.15v14.5h-6.29v-29.34h6.29v5.68c2.04-4.14,5.79-5.9,10.64-5.9,5.24,0,8.82,2.59,10.2,7.06,1.88-4.91,5.79-7.06,11.14-7.06,6.73,0,10.75,4.3,10.75,11.31Z" />
+                  <path
+                    d="m341.55,40.85c0,8.77-5.51,14.78-13.9,14.78-4.69,0-8.22-1.88-10.37-5.29v15.77h-6.34V26.07h6.34v5.07c2.15-3.42,5.68-5.29,10.26-5.29,8.33,0,14.01,6.07,14.01,15Zm-6.4-.22c0-5.46-3.69-9.49-8.93-9.49s-8.93,3.97-8.93,9.49,3.7,9.6,8.93,9.6,8.93-3.97,8.93-9.6Z" />
+                  <path d="m355.89,14.49v40.92h-6.34V14.49h6.34Z" />
+                  <path
+                    d="m392.45,43.17h-22.17c.99,4.52,4.47,7.33,9.1,7.33,3.2,0,6.12-1.21,8.27-3.42l3.36,3.58c-2.87,3.14-7.06,4.96-12.13,4.96-9.04,0-15-6.01-15-14.83s6.12-14.89,14.83-14.94c10.31,0,14.5,6.73,13.73,17.32Zm-5.51-4.63c-.22-4.74-3.36-7.61-8.16-7.61s-7.94,2.92-8.6,7.61h16.76Z" />
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue to ChatApp</p>
+
+        <form id="auth-form">
+          <div class="input-group">
+            <input type="text" id="username" required autocomplete="username">
+            <label for="username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" required autocomplete="current-password">
+            <label for="password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+          </div>
+          <div class="options">
+            <label class="remember-me">
+              <input type="checkbox" id="remember">
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" id="forgot-link" class="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn-login" id="login-button">
+            <span class="btn-text">Log In</span>
+            <span class="iconify btn-icon icon-fly" data-icon="mdi:arrow-right"></span>
+          </button>
+        </form>
+
+        <div id="message"></div>
+
+        <div class="social-login">
+          <p>Don't have an account? <a href="#" id="show-register-link">Sign up</a></p>
+        </div>
+      </div>
+
+      <!-- Registration Form -->
+      <div class="register-form-content" id="register-form-content">
+        <h2>Create Account</h2>
+        <p>Join the community</p>
+
+        <form id="register-form">
+          <div class="input-group">
+            <input type="text" id="invitation-code" required>
+            <label for="invitation-code"><span class="iconify" data-icon="mdi:ticket"></span>Invitation Code</label>
+          </div>
+          <div class="input-group">
+            <input type="text" id="register-username" required autocomplete="username">
+            <label for="register-username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+          </div>
+          <div class="input-group">
+            <input type="email" id="register-email" required>
+            <label for="register-email"><span class="iconify" data-icon="mdi:email"></span>Email</label>
+          </div>
+          <div class="input-group verification-code-group">
+            <input type="text" id="verification-code" required>
+            <label for="verification-code"><span class="iconify" data-icon="mdi:shield-check"></span>Verification
+              Code</label>
+            <button type="button" id="get-code-btn"><span class="iconify" data-icon="mdi:email-fast"></span>Get
+              Code</button>
+          </div>
+          <div class="input-group">
+            <input type="password" id="register-password" required>
+            <label for="register-password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+          </div>
+          <button type="submit" class="btn-login" id="register-button">
+            <span class="btn-text">Register</span>
+            <span class="iconify btn-icon" data-icon="mdi:account-plus"></span>
+          </button>
+        </form>
+
+        <div id="register-message"></div>
+
+        <div class="social-login">
+          <p>Already have an account? <a href="#" id="show-login-link">Sign in</a></p>
+        </div>
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="chat-container" id="chat-container">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h2>Chats</h2>
+            <div class="actions">
+              <button id="add-friend-btn" title="Add Friend"><span class="iconify icon-breathe"
+                  data-icon="mdi:account-plus-outline"></span></button>
+              <button id="new-chat-btn" title="New Chat"><span class="iconify icon-breathe" data-icon="mdi:pencil"></span></button>
+            </div>
+          </div>
+          <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search or start new chat">
+          </div>
+          <div class="user-list" id="user-list">
+            <!-- Conversations will be loaded here -->
+          </div>
+        </aside>
+
+        <main class="chat-panel">
+          <header class="chat-header" id="chat-header">
+            <!-- Active chat header will be loaded here -->
+          </header>
+          <div class="message-area" id="message-area">
+            <div class="message-list" id="message-list">
+              <!-- Messages will be loaded here -->
+            </div>
+          </div>
+          <div class="message-input-area">
+            <form id="message-form">
+              <button type="button" id="attach-file-btn" title="Attach File"><span class="iconify icon-fly"
+                  data-icon="mdi:attachment"></span></button>
+              <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off">
+              <button type="submit" title="Send Message"><span class="iconify icon-fly icon-breathe" data-icon="mdi:send"></span></button>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Friend Modal -->
+  <div class="modal-overlay" id="add-friend-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="add-friend-modal-close-btn"><span class="iconify"
+          data-icon="mdi:close"></span></button>
+      <h3>Add Friend</h3>
+      <form id="add-friend-form">
+        <div class="input-group">
+          <input type="text" id="add-friend-username" required autocomplete="off">
+          <label for="add-friend-username"><span class="iconify" data-icon="mdi:account-search"></span>Username</label>
+        </div>
+
+        <div id="friend-search-results"></div>
+
+        <button type="submit" class="btn-login" id="add-friend-submit-btn">
+          <span class="btn-text">Send Request</span>
+          <span class="iconify btn-icon" data-icon="mdi:send"></span>
+        </button>
+      </form>
+      <div id="add-friend-message"></div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // ================================================================
+      // ======================== THEME MANAGER =========================
+      // ================================================================
+      (function initTheme() {
+        const root = document.documentElement;
+        const STORAGE_KEY = 'sc-theme';
+        const toggleBtn = document.getElementById('theme-toggle');
+
+        // Determine default: user selection > system preference > dark
+        const stored = localStorage.getItem(STORAGE_KEY);
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initial = stored || (prefersDark ? 'dark' : 'light');
+        root.setAttribute('data-theme', initial);
+        updateToggleIcon(initial);
+
+        // If no manual selection, follow system changes
+        if (!stored && window.matchMedia) {
+          const mq = window.matchMedia('(prefers-color-scheme: dark)');
+          mq.addEventListener('change', (e) => {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+              const next = e.matches ? 'dark' : 'light';
+              root.setAttribute('data-theme', next);
+              updateToggleIcon(next);
+            }
+          });
+        }
+
+        toggleBtn.addEventListener('click', () => {
+          const current = root.getAttribute('data-theme') || 'dark';
+          const next = current === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', next);
+          localStorage.setItem(STORAGE_KEY, next);
+          updateToggleIcon(next);
+        });
+
+        function updateToggleIcon(theme) {
+          const icon = toggleBtn.querySelector('.iconify');
+          if (!icon) return;
+          // Sun icon on dark, moon on light
+          icon.setAttribute('data-icon', theme === 'dark' ? 'mdi:white-balance-sunny' : 'mdi:weather-night');
+        }
+      })();
+
+      // =================================================================
+      // ====================== NATIVE LOGGER SETUP ======================
+      // =================================================================
+      (function () {
+        const LogLevel = {
+          TRACE: 0,
+          DEBUG: 1,
+          INFO: 2,
+          WARNING: 3,
+          ERROR: 4,
+          FATAL: 5
+        };
+        const originals = {
+          log: console.log.bind(console),
+          warn: console.warn.bind(console),
+          error: console.error.bind(console),
+          debug: console.debug.bind(console),
+          trace: console.trace ? console.trace.bind(console) : console.log.bind(console)
+        };
+
+        function nativeLog(level, args) {
+          const message = args.map(arg => {
+            if (typeof arg === 'object') {
+              try {
+                return JSON.stringify(arg);
+              } catch (e) {
+                return 'Unserializable Object';
+              }
+            }
+            return arg;
+          }).join(' ');
+
+          try {
+            window.log(level, message);
+          } catch (e) {
+            originals.error("Native 'log' function call failed.", e);
+            originals.log(`[FALLBACK] ${message}`);
+          }
+        }
+
+        console.trace = (...args) => nativeLog(LogLevel.TRACE, args);
+        console.debug = (...args) => nativeLog(LogLevel.DEBUG, args);
+        console.log = (...args) => nativeLog(LogLevel.INFO, args);
+        console.warn = (...args) => nativeLog(LogLevel.WARNING, args);
+        console.error = (...args) => nativeLog(LogLevel.ERROR, args);
+        console.fatal = (...args) => nativeLog(LogLevel.FATAL, args);
+
+        window.addEventListener('error', (event) => {
+          console.error(`[GLOBAL ERROR] ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`);
+          console.error(`[GLOBAL ERROR] Stack trace:`, event.error);
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+          console.error('[GLOBAL PROMISE] Unhandled promise rejection:', event.reason);
+          if (event.reason && event.reason.stack) {
+            console.error('[GLOBAL PROMISE] Stack trace:', event.reason.stack);
+          }
+        });
+
+        // Network/connectivity logging
+        window.addEventListener('online', () => {
+          console.log('[NETWORK] Connection restored - back online');
+        });
+
+        window.addEventListener('offline', () => {
+          console.warn('[NETWORK] Connection lost - gone offline');
+        });
+
+        // Performance logging
+        window.addEventListener('load', () => {
+          console.debug(`[PERF] Page fully loaded in ${performance.now().toFixed(2)}ms`);
+        });
+
+        console.log("[LOGGER] Unified logger initialized with enhanced debugging");
+      })();
+
+      // =================================================================
+      // ===================== DOM & STATE MANAGEMENT ====================
+      // =================================================================
+      const dom = {
+        loginForm: document.getElementById('login-form'),
+        loginFormContent: document.getElementById('login-form-content'),
+        registerFormContent: document.getElementById('register-form-content'),
+        authForm: document.getElementById('auth-form'),
+        loginButton: document.getElementById('login-button'),
+        messageBox: document.getElementById('message'),
+        registerForm: document.getElementById('register-form'),
+        registerButton: document.getElementById('register-button'),
+        registerMessageBox: document.getElementById('register-message'),
+        getCodeButton: document.getElementById('get-code-btn'),
+        showRegisterLink: document.getElementById('show-register-link'),
+        showLoginLink: document.getElementById('show-login-link'),
+        userList: document.getElementById('user-list'),
+        messageList: document.getElementById('message-list'),
+        chatHeader: document.getElementById('chat-header'),
+        messageForm: document.getElementById('message-form'),
+        addFriendModal: document.getElementById('add-friend-modal'),
+        addFriendBtn: document.getElementById('add-friend-btn'),
+        addFriendModalCloseBtn: document.getElementById('add-friend-modal-close-btn'),
+        addFriendForm: document.getElementById('add-friend-form'),
+        addFriendUsernameInput: document.getElementById('add-friend-username'),
+        friendSearchResults: document.getElementById('friend-search-results'),
+        addFriendSubmitBtn: document.getElementById('add-friend-submit-btn'),
+        addFriendMessage: document.getElementById('add-friend-message'),
+      };
+
+      let state = {
+        currentUserId: null,
+        conversationsCache: [],
+        conversationMembersCache: new Map(),
+        debounceTimer: null,
+        selectedFriendId: null,
+      };
+
+      // =================================================================
+      // ========================= UI UTILITIES ==========================
+      // =================================================================
+      // Lightweight hashing for deterministic colors
+      function hash32(str) {
+        let h = 2166136261 >>> 0; // FNV-1a basis
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return h >>> 0;
+      }
+
+      function initialsFrom(nameOrEmail) {
+        const s = String(nameOrEmail || '').trim();
+        if (!s) return 'U';
+        const parts = s.replace(/[_.-]/g, ' ').split(/\s+/).filter(Boolean);
+        const first = parts[0] ? parts[0][0] : 'U';
+        const second = parts.length > 1 ? parts[1][0] : '';
+        return (first + second).toUpperCase();
+      }
+
+      function gradientFor(seed) {
+        const palettes = [
+          ['#4f46e5', '#22d3ee'], // indigo → cyan
+          ['#7c3aed', '#f472b6'], // violet → pink
+          ['#0ea5e9', '#34d399'], // sky → green
+          ['#f59e0b', '#ef4444'], // amber → red
+          ['#6366f1', '#a855f7'], // indigo → purple
+        ];
+        const h = hash32(String(seed));
+        return palettes[h % palettes.length];
+      }
+
+      function svgAvatarDataURI(seed, label, size = 64) {
+        const [c1, c2] = gradientFor(seed);
+        const text = initialsFrom(label);
+        const id = 'g' + (hash32(String(seed + label)) % 1e9);
+        const svg = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+          `<defs>` +
+          `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="${c1}"/>` +
+          `<stop offset="100%" stop-color="${c2}"/>` +
+          `</linearGradient>` +
+          `</defs>` +
+          `<rect width="100%" height="100%" rx="${Math.floor(size/2)}" fill="url(#${id})"/>` +
+          `<text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="Poppins, Arial, sans-serif" font-size="${Math.floor(size*0.42)}" font-weight="600">${text}</text>` +
+          `</svg>`;
+        return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+      }
+
+      // =================================================================
+      // ===================== NATIVE C++ BINDINGS =======================
+      // =================================================================
+      async function callNative(name, ...args) {
+        console.debug(`[NATIVE CALL] ${name}() with args:`, args);
+
+        if (typeof window[name] !== 'function') {
+          const errorMsg = `Native binding function '${name}' not found.`;
+          console.error(`[NATIVE ERROR] ${errorMsg}`);
+          return Promise.reject(new Error(errorMsg));
+        }
+
+        try {
+          const startTime = performance.now();
+          const raw = await window[name](...args);
+          const endTime = performance.now();
+          const duration = (endTime - startTime).toFixed(2);
+
+          console.debug(`[NATIVE SUCCESS] ${name}() completed in ${duration}ms`);
+          console.trace(`[NATIVE RESPONSE RAW] ${name}():`, raw);
+
+          // Unwrap single-element arrays produced by C++ tuple serialization
+          const result = (Array.isArray(raw) && raw.length === 1) ? raw[0] : raw;
+          console.trace(`[NATIVE RESPONSE] ${name}():`, result);
+
+          return result;
+        } catch (e) {
+          console.error(`[NATIVE ERROR] ${name}() failed:`, e);
+          console.error(`[NATIVE ERROR] Call args were:`, args);
+          return Promise.reject(e);
+        }
+      }
+
+      // =================================================================
+      // ======================== UI MANAGER =============================
+      // =================================================================
+      const uiManager = {
+        setLoading: function (button, isLoading) {
+          button.classList.toggle('loading', isLoading);
+          // Ensure a centered spinner element exists while loading
+          if (isLoading) {
+            if (!button.querySelector('.spinner')) {
+              const sp = document.createElement('span');
+              sp.className = 'spinner';
+              button.appendChild(sp);
+            }
+          } else {
+            const sp = button.querySelector('.spinner');
+            if (sp) sp.remove();
+          }
+        },
+
+        // Deterministic avatar data-uri fallback (initials + gradient)
+        getAvatar: function (obj) {
+          if (!obj) return svgAvatarDataURI('unknown', 'U', 64);
+          const explicit = obj.avatar;
+          // Prefer embedded (data:) avatars; otherwise use generated SVG to avoid tacky random faces
+          if (explicit && typeof explicit === 'string' && explicit.trim().startsWith('data:')) return explicit;
+          const seed = obj.id ?? (obj.name || obj.title || 'user');
+          const label = obj.name || obj.title || 'User';
+          return svgAvatarDataURI(String(seed), label, 64);
+        },
+
+        shake: function (element) {
+          if (!element) return;
+          element.classList.remove('shake'); // reset if still present
+          // Force reflow to restart animation if needed
+          void element.offsetWidth;
+          element.classList.add('shake');
+          element.addEventListener('animationend', () => element.classList.remove('shake'), { once: true });
+        },
+
+        showMessage: function (element, text, type = 'info') {
+          element.textContent = text;
+          element.className = ''; // Reset classes
+          if (type) {
+            element.classList.add(type);
+          }
+        },
+
+        renderConversations: function (conversations) {
+          dom.userList.innerHTML = '';
+          conversations.forEach(convo => {
+            const userItem = document.createElement('div');
+            userItem.className = 'user-item';
+            userItem.dataset.conversationId = convo.id;
+            const avatarSrc = uiManager.getAvatar(convo);
+            userItem.innerHTML = `
+              <img src="${avatarSrc}" alt="User Avatar">
+              <div class="user-info">
+                <div class="name">${convo.title}</div>
+                <div class="last-message">${convo.lastMessage || ''}</div>
+              </div>
+            `;
+            dom.userList.appendChild(userItem);
+          });
+        },
+
+        renderMessages: function (messages, conversation, members) {
+          dom.messageList.innerHTML = '';
+          const membersMap = new Map(members.map(m => [m.id, m]));
+
+          const chAvatar = uiManager.getAvatar(conversation);
+          dom.chatHeader.innerHTML = `
+              <img src="${chAvatar}" alt="Active User Avatar">
+              <div>
+                <div class="name">${conversation.name}</div>
+                <div class="status">Online</div>
+              </div>
+          `;
+
+          messages.forEach(msg => {
+            const sender = membersMap.get(msg.sender_id);
+            const isMine = msg.sender_id === state.currentUserId;
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isMine ? 'my-message' : 'their-message'}`;
+
+            let content = '';
+            if (!isMine) {
+              const avatarSrc = uiManager.getAvatar(sender || { id: 'unknown', name: '?' });
+              content += `<img class="avatar" src="${avatarSrc}" alt="Avatar">`;
+            }
+            content += `<div class="message-content">${msg.text}</div>`;
+            messageDiv.innerHTML = content;
+
+            dom.messageList.appendChild(messageDiv);
+          });
+        },
+
+        updateInputLabels: function () {
+          document.querySelectorAll('.input-group input').forEach(input => {
+            const hasContent = input.value.trim() !== '';
+            input.parentElement.classList.toggle('has-content', hasContent);
+            // Check on load
+            if (input.value.trim() !== '') {
+              input.parentElement.classList.add('has-content');
+            }
+            // Check on input
+            input.addEventListener('input', (e) => {
+              const hasContentNow = e.target.value.trim() !== '';
+              e.target.parentElement.classList.toggle('has-content', hasContentNow);
+            });
+          });
+        },
+
+        toggleModal: function (modal, show) {
+          modal.classList.toggle('visible', show);
+          if (show) {
+            // Reset form when opening
+            const form = modal.querySelector('form');
+            if (form) form.reset();
+            uiManager.updateInputLabels();
+            const messageEl = modal.querySelector('.success, .error');
+            if (messageEl) uiManager.showMessage(messageEl, '');
+          }
+        },
+
+        renderUserSearchResults: function (users) {
+          dom.friendSearchResults.innerHTML = '';
+          if (!users || users.length === 0) {
+            return;
+          }
+          users.forEach(user => {
+            const item = document.createElement('div');
+            item.className = 'friend-search-item';
+            item.dataset.username = user.name;
+            item.dataset.userId = user.id;
+            const avatarSrc = uiManager.getAvatar(user);
+            item.innerHTML = `
+                    <img src="${avatarSrc}" alt="Avatar">
+                    <div class="info">
+                        <div class="name">${user.name}</div>
+                        <div class="email">${user.email}</div>
+                    </div>
+                `;
+            dom.friendSearchResults.appendChild(item);
+          });
+        }
+      };
+
+      // =================================================================
+      // ======================== PAGE TRANSITIONS =======================
+      // =================================================================
+      const pageManager = {
+        showChatPage: function () {
+          console.log("[PAGE] Transitioning to chat page...");
+          console.debug("[UI] Adding fading-out class to login/register forms");
+
+          dom.loginFormContent.classList.add('fading-out');
+          dom.registerFormContent.classList.add('fading-out');
+
+          dom.loginForm.addEventListener('transitionend', () => {
+            console.debug("[UI] Form transition ended, starting expansion");
+            dom.loginForm.classList.add('expanding');
+            console.debug("[PAGE] Loading conversations after page transition");
+            api.GetConversationList();
+          }, {
+            once: true
+          });
+        },
+
+        showRegisterForm: function () {
+          console.debug("[PAGE] Switching to register form");
+          dom.loginFormContent.classList.add('fading-out');
+
+          setTimeout(() => {
+            console.debug("[UI] Hiding login form, showing register form");
+            dom.loginFormContent.style.display = 'none';
+            dom.registerFormContent.style.display = 'block';
+            dom.loginForm.style.minHeight = '650px';
+            setTimeout(() => {
+              console.debug("[UI] Making register form visible");
+              dom.registerFormContent.classList.add('visible');
+            }, 50);
+          }, 300);
+        },
+
+        showLoginForm: function () {
+          console.debug("[PAGE] Switching to login form");
+          dom.registerFormContent.classList.remove('visible');
+
+          setTimeout(() => {
+            console.debug("[UI] Hiding register form, showing login form");
+            dom.registerFormContent.style.display = 'none';
+            dom.loginFormContent.style.display = 'block';
+            dom.loginForm.style.minHeight = '600px';
+            setTimeout(() => {
+              console.debug("[UI] Removing fading-out class from login form");
+              dom.loginFormContent.classList.remove('fading-out');
+            }, 50);
+          }, 300);
+        }
+      };
+
+      // =================================================================
+      // ===================== TEST MODE (DECOUPLED) ====================
+      // =================================================================
+      const IS_TEST_MODE = (typeof window.log !== 'function');
+      function createTestAPI() {
+        console.warn('[TEST] Native bindings not found. Entering TEST MODE with mock data.');
+        // --- mock dataset ---
+        const me = { id: 1000, name: 'You', email: 'you@example.com', avatar: `https://i.pravatar.cc/100?u=1000` };
+        const users = [
+          me,
+          { id: 1, name: 'Alice Johnson', email: 'alice@example.com', avatar: `https://i.pravatar.cc/100?u=1` },
+          { id: 2, name: 'Bob Smith', email: 'bob@example.com', avatar: `https://i.pravatar.cc/100?u=2` },
+          { id: 3, name: 'Clara Lee', email: 'clara@example.com', avatar: `https://i.pravatar.cc/100?u=3` },
+          { id: 4, name: 'David Wu', email: 'david@example.com', avatar: `https://i.pravatar.cc/100?u=4` },
+          { id: 5, name: 'Eva Green', email: 'eva@example.com', avatar: `https://i.pravatar.cc/100?u=5` },
+        ];
+        const conversations = [
+          { id: 201, name: 'Alice Johnson', title: 'Alice Johnson', avatar: users[1].avatar, lastMessage: 'Let\'s meet tomorrow at 10.' },
+          { id: 202, name: 'Bob Smith', title: 'Bob Smith', avatar: users[2].avatar, lastMessage: 'Sending the report now.' },
+          { id: 203, name: 'Core Team', title: 'Core Team', avatar: `https://i.pravatar.cc/100?u=team`, lastMessage: 'Standup in 5 minutes.' },
+        ];
+        const convMembers = new Map([
+          [201, [me, users[1]]],
+          [202, [me, users[2]]],
+          [203, [me, users[1], users[2], users[3]]],
+        ]);
+        const convMessages = new Map([
+          [201, [
+            { sender_id: 1, text: 'Hey there! How\'s it going?' },
+            { sender_id: 1000, text: 'All good! Working on the UI revamp.' },
+            { sender_id: 1, text: 'Looks great already.' },
+          ]],
+          [202, [
+            { sender_id: 2, text: 'I\'ll send the draft shortly.' },
+            { sender_id: 1000, text: 'Awesome, thanks!' },
+          ]],
+          [203, [
+            { sender_id: 3, text: 'Morning folks!' },
+            { sender_id: 1, text: 'Morning!' },
+            { sender_id: 1000, text: 'GM! Ready for standup.' },
+          ]],
+        ]);
+        const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
+        // optional test badge
+        try {
+          const badge = document.createElement('div');
+          badge.style.cssText = 'position:fixed;left:16px;top:16px;z-index:3;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);font:600 12px/1 Poppins, sans-serif;color:var(--text-primary);box-shadow:0 6px 18px rgba(0,0,0,.35)';
+          badge.textContent = 'TEST MODE';
+          document.body.appendChild(badge);
+        } catch {}
+
+        return {
+          SignIn: async function (username, password) {
+            uiManager.setLoading(dom.loginButton, true);
+            uiManager.showMessage(dom.messageBox, '');
+            await delay(480);
+            state.currentUserId = me.id;
+            uiManager.showMessage(dom.messageBox, 'Test mode login successful', 'success');
+            setTimeout(() => pageManager.showChatPage(), 400);
+          },
+          getVerificationCode: async function (email) {
+            dom.getCodeButton.disabled = true;
+            dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="line-md:loading-loop"></span>Sending...';
+            await delay(800);
+            uiManager.showMessage(dom.registerMessageBox, `Verification code sent to ${email || 'your email'}.`, 'success');
+            let countdown = 8; const interval = setInterval(() => {
+              if (countdown > 0) { dom.getCodeButton.textContent = `${countdown--}s`; }
+              else { clearInterval(interval); dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="mdi:email-fast"></span>Get Code'; dom.getCodeButton.disabled = false; }
+            }, 1000);
+            return { success: true };
+          },
+          SignUp: async function (username, invitationCode, email, verificationCode, password) {
+            uiManager.setLoading(dom.registerButton, true);
+            await delay(600);
+            uiManager.showMessage(dom.registerMessageBox, 'Registration successful (test mode)', 'success');
+            uiManager.setLoading(dom.registerButton, false);
+            setTimeout(() => pageManager.showLoginForm(), 1000);
+            return { success: true };
+          },
+          GetConversationList: async function () {
+            await delay(360);
+            state.conversationsCache = conversations.slice();
+            uiManager.renderConversations(state.conversationsCache);
+            return { conversations: state.conversationsCache };
+          },
+          GetConversationMemberList: async function (conversationId) {
+            await delay(200);
+            return convMembers.get(conversationId) || [];
+          },
+          GetMessageHistory: async function (conversationId) {
+            await delay(320);
+            const conversation = state.conversationsCache.find(c => c.id === conversationId) || conversations[0];
+            let members = state.conversationMembersCache.get(conversationId);
+            if (!members) {
+              members = convMembers.get(conversationId) || [me];
+              state.conversationMembersCache.set(conversationId, members);
+            }
+            const messages = (convMessages.get(conversationId) || []).slice();
+            uiManager.renderMessages(messages, conversation, members);
+            return { messages };
+          },
+          AddFriend: async function (userId) {
+            await delay(500);
+            uiManager.showMessage(dom.addFriendMessage, 'Request sent (test mode)', 'success');
+            setTimeout(() => uiManager.toggleModal(dom.addFriendModal, false), 1000);
+            return { success: true, message: 'ok' };
+          },
+          FindUsers: async function (query) {
+            await delay(200);
+            const q = (query || '').toLowerCase();
+            const result = users.filter(u => u.id !== me.id && (u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)));
+            uiManager.renderUserSearchResults(result);
+            return { users: result };
+          }
+        };
+      }
+
+      // =================================================================
+      // =========================== API CALLS ===========================
+      // =================================================================
+      let api = {
+        SignIn: async function (username, password) {
+          console.debug(`[API] SignIn attempt for user: ${username}`);
+          uiManager.setLoading(dom.loginButton, true);
+          uiManager.showMessage(dom.messageBox, '');
+
+          try {
+            const result = await callNative('SignIn', username, password);
+            console.debug(`[API] SignIn parsed result:`, result);
+
+            if (result.status === 'Success') {
+              console.log(`[API] Login successful for user: ${username}, user_id: ${result.user_id}`);
+              uiManager.showMessage(dom.messageBox, result.message || 'Login success', 'success');
+              state.currentUserId = result.user_id;
+              console.debug(`[STATE] Current user ID set to: ${state.currentUserId}`);
+              setTimeout(() => pageManager.showChatPage(), 500);
+            } else {
+              console.error(`[API] Login failed for user: ${username}, status: ${result.status}, message: ${result.message}`);
+              uiManager.showMessage(dom.messageBox, result.message || 'Login failed', 'error');
+              uiManager.shake(dom.loginForm);
+              uiManager.setLoading(dom.loginButton, false);
+            }
+          } catch (err) {
+            console.error(`[API] SignIn exception for user ${username}:`, err);
+            uiManager.showMessage(dom.messageBox, err.message || 'An unexpected error occurred.', 'error');
+            uiManager.shake(dom.loginForm);
+            uiManager.setLoading(dom.loginButton, false);
+          }
+        },
+
+        getVerificationCode: async function (email) {
+          console.debug(`[API] Getting verification code for email: ${email}`);
+          dom.getCodeButton.disabled = true;
+          dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="line-md:loading-loop"></span>Sending...';
+
+          try {
+            const result = await callNative('getVerificationCode', email);
+            console.debug(`[API] getVerificationCode response:`, result);
+
+            if (result.success) {
+              console.log(`[API] Verification code sent successfully to: ${email}`);
+              uiManager.showMessage(dom.registerMessageBox, 'Verification code sent to your email.', 'success');
+
+              let countdown = 60;
+              console.debug(`[UI] Starting countdown timer: ${countdown}s`);
+              const interval = setInterval(() => {
+                if (countdown > 0) {
+                  dom.getCodeButton.textContent = `${countdown}s`;
+                  countdown--;
+                } else {
+                  console.debug(`[UI] Countdown finished, re-enabling button`);
+                  clearInterval(interval);
+                  dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="mdi:email-fast"></span>Get Code';
+                  dom.getCodeButton.disabled = false;
+                }
+              }, 1000);
+            } else {
+              console.error(`[API] Failed to send verification code to ${email}:`, result.message);
+              uiManager.showMessage(dom.registerMessageBox, result.message || 'Failed to send code.', 'error');
+              dom.getCodeButton.disabled = false;
+              dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="mdi:email-fast"></span>Get Code';
+            }
+          } catch (err) {
+            console.error(`[API] getVerificationCode exception for ${email}:`, err);
+            uiManager.showMessage(dom.registerMessageBox, err.message || 'An unexpected error occurred.', 'error');
+            dom.getCodeButton.disabled = false;
+            dom.getCodeButton.innerHTML = '<span class="iconify" data-icon="mdi:email-fast"></span>Get Code';
+          }
+        },
+
+        SignUp: async function (username, invitationCode, email, verificationCode, password) {
+          uiManager.setLoading(dom.registerButton, true);
+          uiManager.showMessage(dom.registerMessageBox, '');
+          try {
+            const result = await callNative('SignUp', username, invitationCode, email, verificationCode, password);
+            if (result.success) {
+              uiManager.showMessage(dom.registerMessageBox, result.message || 'Registration successful!', 'success');
+              setTimeout(() => pageManager.showLoginForm(), 1500);
+            } else {
+              uiManager.showMessage(dom.registerMessageBox, result.message || 'Registration failed.', 'error');
+            }
+          } catch (err) {
+            uiManager.showMessage(dom.registerMessageBox, err.message || 'An unexpected error occurred.', 'error');
+          } finally {
+            uiManager.setLoading(dom.registerButton, false);
+          }
+        },
+
+        GetConversationList: async function () {
+          console.debug(`[API] Getting conversation list`);
+          try {
+            const response = await callNative('GetConversationList');
+            const conversations = response.conversations || [];
+            console.debug(`[API] Retrieved ${conversations.length} conversations:`, conversations);
+
+            state.conversationsCache = conversations;
+            console.debug(`[STATE] Cached ${conversations.length} conversations`);
+
+            uiManager.renderConversations(conversations);
+            console.debug(`[UI] Rendered ${conversations.length} conversations to UI`);
+          } catch (error) {
+            console.error(`[API] Failed to get conversations:`, error);
+          }
+        },
+
+        GetMessageHistory: async function (conversationId) {
+          console.debug(`[API] Getting message history for conversation: ${conversationId}`);
+
+          try {
+            const conversation = state.conversationsCache.find(c => c.id === conversationId);
+            if (!conversation) {
+              console.error(`[API] Conversation not found in cache: ${conversationId}`);
+              console.debug(`[STATE] Available conversations:`, state.conversationsCache.map(c => c.id));
+              return;
+            }
+            console.debug(`[API] Found conversation:`, conversation);
+
+            let members = state.conversationMembersCache.get(conversationId);
+            if (!members) {
+              console.debug(`[API] Members not cached, fetching for conversation: ${conversationId}`);
+              members = await api.GetConversationMemberList(conversationId);
+              state.conversationMembersCache.set(conversationId, members);
+              console.debug(`[STATE] Cached ${members.length} members for conversation ${conversationId}`);
+            } else {
+              console.debug(`[STATE] Using cached members (${members.length}) for conversation ${conversationId}`);
+            }
+
+            const result = await callNative('GetMessageHistory', conversationId);
+            const messages = result.messages || [];
+            console.debug(`[API] Retrieved ${messages.length} messages for conversation ${conversationId}:`, messages);
+
+            uiManager.renderMessages(messages, conversation, members);
+            console.debug(`[UI] Rendered ${messages.length} messages to UI`);
+          } catch (error) {
+            console.error(`[API] Failed to get messages for ${conversationId}:`, error);
+          }
+        },
+
+        GetConversationMemberList: async function (conversationId) {
+          const result = await callNative('GetConversationMemberList', conversationId);
+          return result.members || [];
+        },
+
+        AddFriend: async function (userId) {
+          uiManager.setLoading(dom.addFriendSubmitBtn, true);
+          uiManager.showMessage(dom.addFriendMessage, '');
+          try {
+            const result = await callNative('AddFriend', userId);
+            if (result.success) {
+              uiManager.showMessage(dom.addFriendMessage, result.message || 'Friend request sent!', 'success');
+              setTimeout(() => {
+                uiManager.toggleModal(dom.addFriendModal, false);
+              }, 1500);
+            } else {
+              uiManager.showMessage(dom.addFriendMessage, result.message || 'Failed to send request.', 'error');
+            }
+          } catch (err) {
+            uiManager.showMessage(dom.addFriendMessage, err.message || 'An unexpected error occurred.', 'error');
+          } finally {
+            uiManager.setLoading(dom.addFriendSubmitBtn, false);
+          }
+        },
+
+        FindUsers: async function (query) {
+          try {
+            const result = await callNative('FindUsers', query);
+            uiManager.renderUserSearchResults(result.users || []);
+          } catch (err) {
+            console.error("Failed to find user:", err);
+            uiManager.renderUserSearchResults([]); // Clear results on error
+          }
+        }
+      };
+
+      // --- Activate Test Mode if no native 'log' binding is present ---
+      if (IS_TEST_MODE) {
+        try { uiManager.showMessage(dom.messageBox, 'Running in TEST MODE (no native bindings detected)', 'success'); } catch {}
+        api = createTestAPI();
+      }
+
+      // =================================================================
+      // ======================== EVENT LISTENERS ========================
+      // =================================================================
+      dom.authForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.debug("[EVENT] Login form submitted");
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        console.debug(`[EVENT] Login attempt - username: ${username}, password: ${password ? '[MASKED]' : '[EMPTY]'}`);
+
+        if (username && password) {
+          api.SignIn(username, password);
+        } else {
+          console.warn("[EVENT] Login form validation failed - missing fields");
+          uiManager.showMessage(dom.messageBox, 'Username and Password are required.', 'error');
+          uiManager.shake(dom.loginForm);
+        }
+      });
+
+      dom.registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.debug("[EVENT] Register form submitted");
+
+        const username = document.getElementById('register-username').value.trim();
+        const invitationCode = document.getElementById('invitation-code').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const verificationCode = document.getElementById('verification-code').value.trim();
+        const password = document.getElementById('register-password').value;
+
+        console.debug(`[EVENT] Register data - username: ${username}, email: ${email}, invitationCode: ${invitationCode}, verificationCode: ${verificationCode}, password: ${password ? '[MASKED]' : '[EMPTY]'}`);
+
+        if (!username || !invitationCode || !email || !verificationCode || !password) {
+          console.warn("[EVENT] Register form validation failed - missing required fields");
+          uiManager.showMessage(dom.registerMessageBox, 'All fields are required.', 'error');
+          return;
+        }
+        api.SignUp(username, invitationCode, email, verificationCode, password);
+      });
+
+      dom.getCodeButton.addEventListener('click', () => {
+        console.debug("[EVENT] Get verification code button clicked");
+
+        const emailInput = document.getElementById('register-email');
+        const email = emailInput.value.trim();
+        console.debug(`[EVENT] Requesting verification code for email: ${email}`);
+
+        if (!emailInput.checkValidity() || !email) {
+          console.warn(`[EVENT] Email validation failed: ${email}`);
+          uiManager.showMessage(dom.registerMessageBox, 'Please enter a valid email address.', 'error');
+          emailInput.reportValidity();
+          return;
+        }
+        api.getVerificationCode(email);
+      });
+
+      dom.showRegisterLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.debug("[EVENT] Show register form link clicked");
+        pageManager.showRegisterForm();
+      });
+
+      dom.showLoginLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.debug("[EVENT] Show login form link clicked");
+        pageManager.showLoginForm();
+      });
+
+      dom.userList.addEventListener('click', (e) => {
+        const userItem = e.target.closest('.user-item');
+        if (userItem) {
+          const conversationId = Number(userItem.dataset.conversationId);
+          console.debug(`[EVENT] User item clicked - conversationId: ${conversationId}`);
+
+          // Update UI state
+          document.querySelectorAll('.user-item').forEach(item => {
+            const wasActive = item.classList.contains('active');
+            item.classList.remove('active');
+            if (wasActive && item !== userItem) {
+              console.debug(`[UI] Deactivated conversation: ${item.dataset.conversationId}`);
+            }
+          });
+          userItem.classList.add('active');
+          console.debug(`[UI] Activated conversation: ${conversationId}`);
+
+          api.GetMessageHistory(conversationId);
+        }
+      });
+
+      // --- Add Friend Modal Listeners ---
+      dom.addFriendBtn.addEventListener('click', () => {
+        uiManager.toggleModal(dom.addFriendModal, true);
+        dom.friendSearchResults.innerHTML = ''; // Clear previous results
+      });
+
+      dom.addFriendModalCloseBtn.addEventListener('click', () => {
+        uiManager.toggleModal(dom.addFriendModal, false);
+      });
+
+      dom.addFriendForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (state.selectedFriendId) {
+          api.AddFriend(state.selectedFriendId);
+          state.selectedFriendId = null;
+          dom.addFriendUsernameInput.value = '';
+        } else {
+          uiManager.showMessage(dom.addFriendMessage, 'Please search for a user and select one from the list.', 'error');
+        }
+      });
+
+      dom.addFriendUsernameInput.addEventListener('input', (e) => {
+        clearTimeout(state.debounceTimer);
+        const query = e.target.value.trim();
+        state.selectedFriendId = null;
+        if (query.length > 0) {
+          state.debounceTimer = setTimeout(() => {
+            api.FindUsers(query);
+          }, 500);
+        } else {
+          dom.friendSearchResults.innerHTML = ''; // Clear if input is empty
+        }
+      });
+
+      dom.friendSearchResults.addEventListener('click', (e) => {
+        const selectedItem = e.target.closest('.friend-search-item');
+        if (selectedItem) {
+          const username = selectedItem.dataset.username;
+          const userId = Number(selectedItem.dataset.userId);
+          dom.addFriendUsernameInput.value = username;
+          state.selectedFriendId = userId;
+          dom.friendSearchResults.innerHTML = ''; // Hide results after selection
+          dom.addFriendUsernameInput.parentElement.classList.add('has-content');
+        }
+      });
+
+
+      // =================================================================
+      // ====================== INITIALIZATION ===========================
+      // =================================================================
+
+      // Add initial logging
+      console.debug("[INIT] Starting application initialization");
+      console.debug(`[INIT] User agent: ${navigator.userAgent}`);
+      console.debug(`[INIT] Screen size: ${screen.width}x${screen.height}`);
+      console.debug(`[INIT] Viewport size: ${window.innerWidth}x${window.innerHeight}`);
+
+      particlesJS('particles-js', {
+        particles: {
+          number: {
+            value: 60,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: '#ffffff'
+          },
+          shape: {
+            type: 'circle'
+          },
+          opacity: {
+            value: 0.5,
+            random: true
+          },
+          size: {
+            value: 3,
+            random: true
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: '#ffffff',
+            opacity: 0.2,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 2,
+            direction: 'none',
+            random: true,
+            straight: false,
+            out_mode: 'out'
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: {
+              enable: true,
+              mode: 'grab'
+            },
+            onclick: {
+              enable: true,
+              mode: 'push'
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              line_opacity: 0.5
+            },
+            push: {
+              particles_nb: 4
+            }
+          }
+        },
+        retina_detect: true
+      });
+
+      uiManager.updateInputLabels();
+
+      // Final initialization logging
+      console.debug("[INIT] Application initialization complete");
+      console.debug("[INIT] DOM ready, event listeners attached, particles initialized");
+
+    });
+  </script>
+</body>
+
+</html>

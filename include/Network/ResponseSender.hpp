@@ -19,7 +19,7 @@ namespace Network {
 
 template <stdexec::receiver Receiver, RequestType T, ResponseRouterType R>
 struct ResponseOperation {
-  using ResponseType = T::ResponseType;
+  using ResponseType = T::Response;
 
   Receiver receiver_;
 
@@ -32,9 +32,9 @@ struct ResponseOperation {
                         const std::expected<rfl::Generic::Object, ResponseError>
                             &result) mutable {
       if (!result) {
-        LOG(error) << "Request failed for UUID: "
-                   << boost::uuids::to_string(uuid_)
-                   << " with error: " << static_cast<int>(result.error());
+        log(error, "Request failed for UUID: {} with error: {}",
+                   boost::uuids::to_string(uuid_),
+                   static_cast<int>(result.error()));
         stdexec::set_error(
             std::move(r),
             std::make_exception_ptr(std::runtime_error("Request error")));
@@ -45,9 +45,9 @@ struct ResponseOperation {
 
       if constexpr (requires { ResponseType::error; }) {
         if (auto err = value.get("error"); err) {
-          LOG(warning) << "Received error in response for UUID: "
-                       << boost::uuids::to_string(uuid_)
-                       << ", error: " << err->to_string().value();
+          log(warning, "Received error in response for UUID: {}, error: {}",
+                       boost::uuids::to_string(uuid_),
+                       err->to_string().value());
           stdexec::set_error(std::move(r),
                              std::make_exception_ptr(
                                  std::runtime_error(err->to_string().value())));
@@ -57,15 +57,15 @@ struct ResponseOperation {
 
       auto response = rfl::from_generic<ResponseType>(value);
       if (!response) [[unlikely]] {
-        LOG(error)
-            << "Failed to convert response from generic object for UUID: "
-            << boost::uuids::to_string(uuid_);
-        LOG(error) << "Expected error: " << response.error().what();
-        LOG(debug) << "Generic object content:";
-        LOG(debug) << std::format("{}", value);
-        LOG(debug) << "Expected response type: ";
+        log(error,
+            "Failed to convert response from generic object for UUID: {}",
+            boost::uuids::to_string(uuid_));
+        log(error, "Expected error: {}", response.error().what());
+        log(debug, "Generic object content:");
+        log(debug, "{}", value);
+        log(debug, "Expected response type: ");
         for (const auto &field : rfl::fields<ResponseType>()) {
-          LOG(debug) << " - " << field.name() << ": " << field.type();
+          log(debug, " - {}: {}", field.name(), field.type());
         }
         stdexec::set_error(
             std::move(r),
@@ -86,7 +86,7 @@ template <RequestType T, ResponseRouterType R> struct ResponseSender {
 
   using sender_concept = stdexec::sender_t;
   using completion_signatures = stdexec::completion_signatures<
-      stdexec::set_value_t(typename T::ResponseType),
+      stdexec::set_value_t(typename T::Response),
       stdexec::set_error_t(std::exception_ptr), stdexec::set_stopped_t()>;
 
   template <stdexec::receiver Receiver> auto connect(Receiver r) noexcept {

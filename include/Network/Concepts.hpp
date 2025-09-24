@@ -12,7 +12,8 @@ namespace Network {
 namespace detail {
 
 struct RequestConceptHelper {
-  using ResponseType = int;
+  using Response = int;
+  using Message = int;
   std::string id;
 };
 

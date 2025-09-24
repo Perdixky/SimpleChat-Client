@@ -1,7 +1,6 @@
 set_languages("c++latest")
 -- add_requires("msgpack-c")
-add_requires("python", {system = true})
-add_requires("boost", {system = false, configs = {thread = true, system = true, serialization = true, context = true, asio = true}})
+add_requires("boost", {configs = {thread = true, system = true, serialization = true, context = true, asio = true}})
 add_requires("spdlog")
 add_requires("stdexec-git")
 add_requires("reflect-cpp", {configs = {msgpack = true}})
@@ -26,7 +25,18 @@ target("Client")
   end
   add_includedirs("include", { public = false })
   add_files("src/main.cpp", "src/**/*.cpp")
-  add_packages("python", "openssl3", "boost", "stdexec-git", "webview-git", "reflect-cpp", "spdlog")
+  add_packages("openssl3", "boost", "stdexec-git", "webview-git", "reflect-cpp", "spdlog")
+
+-- Headless stdio bridge used by Electron main process
+target("ChatDaemon")
+  set_kind("binary")
+  set_targetdir("bin")
+  if is_plat("windows") then
+    set_runtimes("MD")
+  end
+  add_includedirs("include", { public = false })
+  add_files("src/daemon.cpp", "src/Utils/Logger.cpp", "src/Async/Loop.cpp")
+  add_packages("openssl3", "boost", "stdexec-git", "reflect-cpp", "spdlog")
 
 package("stdexec-git")
   set_kind("library", { headeronly = true })
@@ -36,7 +46,7 @@ package("stdexec-git")
 
   add_urls("https://github.com/Perdixky/stdexec.git")
 
-  add_versions("latest", "dangling-refs")
+  add_versions("latest", "main")
 
   set_policy("package.cmake_generator.ninja", false)
 
@@ -69,60 +79,99 @@ package("stdexec-git")
   end)
 
 package("webview-git")
-  set_homepage("https://github.com/webview/webview")
-  set_description("Tiny cross-platform webview library for C/C++ to build modern desktop GUIs.")
-  set_license("MIT")
+    set_homepage("https://github.com/webview/webview")
+    set_description("Tiny cross-platform webview library for C/C++ to build modern desktop GUIs.")
+    set_license("MIT")
 
-  add_urls("https://github.com/webview/webview.git")
+    add_urls("https://github.com/webview/webview.git")
+    add_versions("latest", "master")
 
-  add_versions("latest", "master")
+    -- 允许选择 WebKitGTK API
+    add_configs("webkitgtk_api", {
+        description = "Select WebKitGTK API version (6.0 / 4.1 / 4.0)",
+        default = "6.0",
+        values = { "6.0", "4.1", "4.0" }
+    })
 
-  set_policy("package.cmake_generator.ninja", false)
+    -- （可选）是否构建共享库
+    add_configs("shared", {description = "Build shared library.", default = false, type = "boolean"})
 
-  add_deps("cmake")
-  if is_plat("linux") then
-    add_deps("gtk4", "webkitgtk-6.0", {system = true})
-  end
-  
-  if is_plat("windows") then
-    add_deps("webview2-nuget 1.0.3485.44", {system = false})
-  end
+    set_policy("package.cmake_generator.ninja", false)
 
-  -- on_load 会在最终用户项目加载此包时执行，用于传递链接信息等
-  on_load(function(package)
-    -- macOS 需要链接 WebKit.framework
-    if is_plat("macosx") then
-      package:add("frameworks", "WebKit")
-      package:add("links", "dl") -- 根据文档，macOS 也需要链接 dl
-    end
-    -- Windows 需要链接一系列系统库
-    if is_plat("windows") then
-      package:add("syslinks", "advapi32", "ole32", "shell32", "shlwapi", "user32", "version")
-    end
-    -- Linux 需要链接 dl 库
-    if is_plat("linux") then
-      package:add("links", "dl")
-    end
-  end)
+    add_deps("cmake")
 
-  on_install("windows", "linux", "macosx", "mingw", "msys", function(package)
-    local configs = {
-      "-DWEBVIEW_BUILD_TESTS=OFF",
-      "-DWEBVIEW_BUILD_EXAMPLES=OFF",
-      "-DWEBVIEW_BUILD_DOCS=OFF",
-      "-DWEBVIEW_INSTALL_TARGETS=ON",
-      "-DWEBVIEW_BUILD_STATIC_LIBRARY=ON",
-      "-DWEBVIEW_BUILD_SHARED_LIBRARY=OFF",
-      "-DWEBVIEW_ENABLE_CHECKS=OFF",
-      "-DWEBVIEW_BUILD_AMALGAMATION=OFF"
-    }
-    table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
-    import("package.tools.cmake").install(package, configs)
-  end)
-  
-  on_test(function(package)
-    assert(package:has_cxxincludes("webview/webview.h", { configs = { languages = "c++14" } }))
-  end)
+    -- 通用 on_load：根据平台和配置追加依赖/链接
+    on_load(function (package)
+        local plat = package:plat()
+        local api  = package:config("webkitgtk_api")
+
+        if plat == "linux" then
+            -- 依据 API 选择系统依赖 (假设这些已经由 xmake or 系统 pkg-config 提供)
+            if api == "6.0" then
+                -- WebKitGTK 6.0 + GTK4
+                package:add("deps", "gtk4", "webkitgtk-6.0", {system = true})
+            elseif api == "4.1" then
+                -- WebKitGTK 4.1 + GTK3
+                package:add("deps", "gtk3", "webkit2gtk-4.1", {system = true})
+            else
+                -- WebKitGTK 4.0 + GTK3
+                package:add("deps", "gtk3", "webkit2gtk-4.0", {system = true})
+            end
+            package:add("links", "dl")
+        elseif plat == "windows" then
+            -- 依赖 webview2 nuget 包
+            package:add("deps", "webview2-nuget 1.0.3485.44", {system = false})
+            package:add("syslinks", "advapi32", "ole32", "shell32", "shlwapi", "user32", "version")
+        elseif plat == "macosx" then
+            package:add("frameworks", "WebKit")
+            package:add("links", "dl")
+        elseif plat == "mingw" or plat == "msys" then
+            package:add("syslinks", "advapi32", "ole32", "shell32", "shlwapi", "user32", "version")
+        end
+    end)
+
+    on_install("windows", "linux", "macosx", "mingw", "msys", function (package)
+        local configs = {
+            "-DWEBVIEW_BUILD_TESTS=OFF",
+            "-DWEBVIEW_BUILD_EXAMPLES=OFF",
+            "-DWEBVIEW_BUILD_DOCS=OFF",
+            "-DWEBVIEW_INSTALL_TARGETS=ON",
+            "-DWEBVIEW_ENABLE_CHECKS=OFF",
+            "-DWEBVIEW_BUILD_AMALGAMATION=OFF"
+        }
+
+        -- 共享 / 静态（上游有对应选项）
+        if package:config("shared") then
+            table.insert(configs, "-DWEBVIEW_BUILD_SHARED_LIBRARY=ON")
+            table.insert(configs, "-DWEBVIEW_BUILD_STATIC_LIBRARY=OFF")
+        else
+            table.insert(configs, "-DWEBVIEW_BUILD_SHARED_LIBRARY=OFF")
+            table.insert(configs, "-DWEBVIEW_BUILD_STATIC_LIBRARY=ON")
+        end
+
+        table.insert(configs, "-DCMAKE_BUILD_TYPE=" .. (package:debug() and "Debug" or "Release"))
+
+        if package:is_plat("linux") then
+            -- 根据 API 确定模块名（对应 CMake 脚本里的判断）
+            local api = package:config("webkitgtk_api")
+            local module
+            if api == "6.0" then
+                module = "webkitgtk-6.0"
+            elseif api == "4.1" then
+                module = "webkit2gtk-4.1"
+            else
+                module = "webkit2gtk-4.0"
+            end
+            -- 强制指定模块，避免被默认首选列表覆盖
+            table.insert(configs, "-DWEBVIEW_WEBKITGTK_MODULE_NAME=" .. module)
+        end
+
+        import("package.tools.cmake").install(package, configs)
+    end)
+
+    on_test(function (package)
+        assert(package:has_cxxincludes("webview/webview.h", {configs = {languages = "c++14"}}))
+    end)
 
 package("webview2-nuget")
     -- 设置包的主页和描述

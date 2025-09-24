@@ -1,0 +1,15 @@
+{
+  "name": "simplechat-electron",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "description": "Electron shell for SimpleChat using C++ backend via stdio bridge.",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^30"
+  }
+}
+

@@ -47,9 +47,10 @@ public:
   static auto cancelTimer() -> void { timer_.cancel(); }
 
   static auto run() -> void { 
-    LOG(info) << "Async Loop started.";
-    io_context_.get_executor().context().join();
-    LOG(info) << "Async Loop stopped.";
+    log(info, "Async Loop started.");
+    // io_context_.get_executor().context().join();
+    stdexec::sync_wait(scope_.on_empty());
+    log(info, "Async Loop stopped.");
   }
 
   static auto stop() -> void { 

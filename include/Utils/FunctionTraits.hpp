@@ -15,9 +15,6 @@ struct function_traits<ReturnType (*)(Args...)> {
   using args_as_tuple = std::tuple<Args...>;
 
   using decayed_args_as_tuple = std::tuple<std::decay_t<Args>...>;
-
-  // 提取第一个参数类型
-  using first_arg_type = std::tuple_element_t<0, args_as_tuple>;
 };
 
 // 3. 针对 lambda 和函数对象 (Functor) 的特化

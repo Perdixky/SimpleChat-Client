@@ -19,3 +19,6 @@ void initLogging()
     // Set the global logging level to trace.
     spdlog::set_level(spdlog::level::trace);
 }
+
+
+

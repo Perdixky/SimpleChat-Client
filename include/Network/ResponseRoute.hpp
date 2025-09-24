@@ -24,7 +24,7 @@ public:
 
   auto registe(boost::uuids::uuid uuid, Callback_t &&callback) -> void {
     auto id = boost::uuids::to_string(uuid);
-    LOG(trace) << "Registering callback for UUID: " << id;
+    log(trace, "Registering callback for UUID: {}", id);
     callbacks_.emplace(id, std::make_pair(std::chrono::steady_clock::now() +
                                               std::chrono::seconds(5),
                                           std::forward<Callback_t>(callback)));
@@ -32,14 +32,14 @@ public:
 
   auto route(const rfl::Generic::Object &generic) -> void {
     const auto id = generic.get("id").and_then(rfl::to_string).value();
-    LOG(debug) << "Routing message with ID: " << id;
+    log(debug, "Routing message with ID: {}", id);
     auto it = callbacks_.find(id);
     if (it != callbacks_.end()) {
       it->second.second(generic);
       callbacks_.erase(it);
-      LOG(trace) << "Callback found and executed for ID: " << id;
+      log(trace, "Callback found and executed for ID: {}", id);
     } else {
-      LOG(warning) << "No callback found for message with ID: " << id;
+      log(warning, "No callback found for message with ID: {}", id);
     }
   }
 
@@ -48,7 +48,7 @@ public:
         std::chrono::steady_clock::now());
     std::erase_if(callbacks_, [&](auto &item) {
       if (now > item.second.first) {
-        LOG(info) << "Callback for ID " << item.first << " timed out.";
+        log(info, "Callback for ID {} timed out.", item.first);
         item.second.second(
             std::unexpected<ResponseError>(ResponseError::TIMEOUT));
         return true;
@@ -58,8 +58,8 @@ public:
   }
 
   auto cancelAll(ResponseError &error) -> void {
-    LOG(info) << "Cancelling all outstanding callbacks with error: "
-              << rfl::enum_to_string(error);
+    log(info, "Cancelling all outstanding callbacks with error: {}",
+              rfl::enum_to_string(error));
     for (auto &[id, pair] : callbacks_) {
       pair.second(std::unexpected<ResponseError>(error));
     }

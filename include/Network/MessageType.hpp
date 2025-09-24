@@ -27,7 +27,8 @@ struct DefaultMessage {
 ////////////////////////////////////////////////////////
 template <typename T>
 concept RequestType = requires {
-  typename T::ResponseType;
+  typename T::Response;
+  typename T::Message;
   T::id;
 };
 
