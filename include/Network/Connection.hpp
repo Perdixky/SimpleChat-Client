@@ -145,7 +145,9 @@ public:
             if (id) {
               router_.route(value);
             } else {
-              log(warning, "Received a message without an ID.");
+              // Server push / broadcast message: forward to router event callback
+              log(debug, "Received broadcast message without an ID.");
+              router_.broadcast(value);
             }
           } else {
             log(error, "Failed to parse message: {}", generic.error().what());

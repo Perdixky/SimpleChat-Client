@@ -10,76 +10,41 @@
 
 ⚠️ 请注意：本项目目前正处于早期开发阶段，许多功能尚未实现或不完整。这仅仅是一个用于学习和实践的半成品，需要更多时间来开发和完善。
 
-## 编译指南
+## 开发与运行（Electron + xmake 原生模块）
 
-本项目支持 CMake 和 xmake 两种构建方式，您可以根据自己的喜好选择其中一种。我们更推荐使用 xmake，因为它更简单快捷。
+本项目客户端使用 Electron + 原生 C++ Addon（Node-API）。UI 从 `electron/index.html` 加载；渲染层通过 `window.bridge.invoke(name, ...args)` 调用，由主进程转发到 C++ 的 `Session` 方法（PascalCase）。
 
-请选择您的构建方式：
+### 先决条件
+- Node.js 与 npm
+- C/C++ 工具链（gcc/clang 或 MSVC）
+- OpenSSL 开发头/库（Linux 通常为 `libssl-dev`）
+- xmake（用于构建原生模块）
 
-*   [**使用 xmake 构建 (推荐)**](#使用-xmake-构建-推荐)
-*   [**使用 CMake 构建**](#使用-cmake-构建)
+### 构建与启动（开发模式）
+```bash
+# 构建 Debug 原生模块
+xmake f -m debug && xmake build
 
----
+# 启动 Electron 应用
+cd electron
+npm start
+```
 
-### 使用 xmake 构建 (推荐)
+### 打包（electron-builder）
+```bash
+# 构建 Release 原生模块
+xmake f -m release && xmake build
 
-在编译之前，请确保您的系统上已安装 [xmake](https://xmake.io/#/zh-cn/guide/installation)。
+# 打包应用（prepack 会将 native.node 复制到 electron/）
+cd electron
+npm run pack
+```
+打包逻辑：
+- `electron/scripts/prepare-native.js` 会把 `build/<os>/<arch>/release/native.node` 复制到 `electron/native.node`
+- `electron-builder` 会把它打进 `resources/native.node`
+- 运行时主进程优先从 `resources/native.node` 加载
 
-#### 编译步骤
-
-1.  **克隆仓库**  
-    ```bash
-    git clone https://github.com/Perdixky/SimpleChat-Client.git SimpleChat-Client
-    cd SimpleChat-Client
-    ```
-
-2.  **编译项目**  
-    xmake 会自动处理依赖项，一键编译。
-    ```bash
-    xmake
-    ```
-
-3.  **运行**  
-    ```bash
-    xmake run
-    ```
-
-[返回顶部](#编译指南)
-
----
-
-### 使用 CMake 构建
-
-在编译之前，请确保您的系统上已安装 C++ 编译器 (如 GCC, Clang) 和 CMake。
-
-#### 编译步骤
-
-1.  **克隆仓库**  
-    ```bash
-    git clone https://github.com/Perdixky/SimpleChat-Client.git SimpleChat-Client
-    cd SimpleChat-Client
-    ```
-
-2.  **创建构建目录**  
-    我们建议在项目根目录之外创建一个构建目录，以保持源码树的清洁。
-    ```bash
-    mkdir build
-    cd build
-    ```
-
-3.  **运行 CMake 配置**  
-    此步骤会检查编译环境并生成构建系统。需要您本地拥有OpenSSL库，CMake配置会自动处理其他依赖项的下载（建议您在本地安装有Boost以防止长时间的拉取和编译过程）。
-    ```bash
-    cmake .. -G Ninja
-    ```
-
-4.  **编译项目**  
-    使用 CMake 的构建命令来编译项目。
-    ```bash
-    cmake --build .
-    ```
-
-5.  **运行**  
-    编译成功后，可执行文件将生成在 `build` 目录中。
-
-[返回顶部](#编译指南)
+### 说明
+- 后端 TLS CA 路径在 `include/Network/Connection.hpp` 配置；请按本机证书调整。
+- 旧的 node-gyp 流程与构建产物已移除，统一改为 xmake 构建。
+- 旧的 WebView/stdio 守护版本已废弃；仅保留 Electron 原生模块方案。

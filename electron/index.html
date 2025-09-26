@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatApp</title>
+
+  <!-- External Libraries -->
+  <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- App Styles -->
+  <link rel="stylesheet" href="./renderer/styles/app.css" />
+</head>
+<body>
+  <!-- Background effects -->
+  <div id="particles-js"></div>
+  <div class="aurora"></div>
+
+  <!-- Theme & Accent Controls -->
+  <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
+    <span class="iconify" data-icon="mdi:theme-light-dark"></span>
+  </button>
+  <div class="accent-switcher" id="accent-switcher">
+    <button class="accent-dot" style="background:#3b82f6" data-accent="blue" aria-current="true" title="Blue"></button>
+    <button class="accent-dot" style="background:#10b981" data-accent="emerald" title="Emerald"></button>
+    <button class="accent-dot" style="background:#f43f5e" data-accent="rose" title="Rose"></button>
+    <button class="accent-dot" style="background:#fb923c" data-accent="orange" title="Orange"></button>
+    <button class="accent-dot" style="background:#8b5cf6" data-accent="violet" title="Violet"></button>
+    <button class="accent-dot" style="background:#06b6d4" data-accent="teal" title="Teal"></button>
+  </div>
+
+  <!-- Login / Register Panel -->
+  <div class="login-container">
+    <div class="login-form" id="login-form">
+      <!-- Login Form -->
+      <div class="login-form-content" id="login-form-content">
+        <div class="logo-container">
+          <!-- Minimal brand mark; SVG previously inlined was very large -->
+          <svg id="animated-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" aria-label="SimpleChat">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+            <rect width="120" height="40" rx="10" fill="url(#g)"/>
+            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-family="Poppins, Arial, sans-serif" font-size="16" font-weight="600">SimpleChat</text>
+          </svg>
+        </div>
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue to ChatApp</p>
+        <form id="auth-form">
+          <div class="input-group">
+            <input type="text" id="username" required autocomplete="username" />
+            <label for="username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="password" required autocomplete="current-password" />
+            <label for="password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+          </div>
+          <div class="options">
+            <label class="remember-me">
+              <input type="checkbox" id="remember" />
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" id="forgot-link" class="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn-login" id="login-button">
+            <span class="btn-text">Log In</span>
+            <span class="iconify btn-icon icon-fly" data-icon="mdi:arrow-right"></span>
+          </button>
+        </form>
+        <div id="message"></div>
+        <div class="social-login">
+          <p>Don't have an account? <a href="#" id="show-register-link">Sign up</a></p>
+        </div>
+      </div>
+
+      <!-- Registration Form -->
+      <div class="register-form-content" id="register-form-content">
+        <h2>Create Account</h2>
+        <p>Join the community</p>
+        <form id="register-form">
+          <div class="input-group">
+            <input type="text" id="invitation-code" required />
+            <label for="invitation-code"><span class="iconify" data-icon="mdi:ticket"></span>Invitation Code</label>
+          </div>
+          <div class="input-group">
+            <input type="text" id="register-username" required autocomplete="username" />
+            <label for="register-username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+          </div>
+          <div class="input-group">
+            <input type="email" id="register-email" required />
+            <label for="register-email"><span class="iconify" data-icon="mdi:email"></span>Email</label>
+          </div>
+          <div class="input-group verification-code-group">
+            <input type="text" id="verification-code" required />
+            <label for="verification-code"><span class="iconify" data-icon="mdi:shield-check"></span>Verification Code</label>
+            <button type="button" id="get-code-btn"><span class="iconify" data-icon="mdi:email-fast"></span>Get Code</button>
+          </div>
+          <div class="input-group">
+            <input type="password" id="register-password" required />
+            <label for="register-password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+          </div>
+          <button type="submit" class="btn-login" id="register-button">
+            <span class="btn-text">Register</span>
+            <span class="iconify btn-icon" data-icon="mdi:account-plus"></span>
+          </button>
+        </form>
+        <div id="register-message"></div>
+        <div class="social-login">
+          <p>Already have an account? <a href="#" id="show-login-link">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Application -->
+  <div class="chat-app" id="chat-app">
+    <button class="logout-btn" id="logout-btn" title="Logout">
+      <span class="iconify" data-icon="mdi:logout"></span>
+    </button>
+    <div class="chat-container" id="chat-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Chats</h2>
+          <div class="actions">
+            <button id="add-friend-btn" title="Add Friend"><span class="iconify icon-breathe" data-icon="mdi:account-plus-outline"></span></button>
+            <button id="new-chat-btn" title="New Chat"><span class="iconify icon-breathe" data-icon="mdi:pencil"></span></button>
+          </div>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search or start new chat" />
+        </div>
+        <div class="user-list" id="user-list"><!-- Conversations --></div>
+      </aside>
+
+      <main class="chat-panel">
+        <header class="chat-header" id="chat-header"><!-- Active chat header --></header>
+        <div class="message-area" id="message-area">
+          <div class="message-list" id="message-list"><!-- Messages --></div>
+        </div>
+        <div class="message-input-area">
+          <form id="message-form">
+            <button type="button" id="attach-file-btn" title="Attach File"><span class="iconify icon-fly" data-icon="mdi:attachment"></span></button>
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit" title="Send Message"><span class="iconify icon-fly icon-breathe" data-icon="mdi:send"></span></button>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Friend Modal -->
+  <div class="modal-overlay" id="add-friend-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="add-friend-modal-close-btn" aria-label="Close"><span class="iconify" data-icon="mdi:close"></span></button>
+      <h3>Add Friend</h3>
+      <form id="add-friend-form">
+        <div class="input-group">
+          <input type="text" id="add-friend-username" required autocomplete="off" />
+          <label for="add-friend-username"><span class="iconify" data-icon="mdi:account-search"></span>Username</label>
+        </div>
+        <div id="friend-search-results"></div>
+        <button type="submit" class="btn-login" id="add-friend-submit-btn">
+          <span class="btn-text">Send Request</span>
+          <span class="iconify btn-icon" data-icon="mdi:send"></span>
+        </button>
+      </form>
+      <div id="add-friend-message"></div>
+    </div>
+  </div>
+
+  <!-- Vendor and App Scripts -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script type="module" src="./renderer/app.js"></script>
+</body>
+</html>

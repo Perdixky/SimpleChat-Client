@@ -3,13 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "main": "main.js",
-  "description": "Electron shell for SimpleChat using C++ backend via stdio bridge.",
+  "description": "Electron shell for SimpleChat using native C++ addon (Node-API).",
   "scripts": {
     "start": "electron .",
-    "dev": "electron ."
+    "dev": "electron .",
+    "prepack": "node ./scripts/prepare-native.js",
+    "pack": "electron-builder -mwl"
+  },
+  "build": {
+    "appId": "com.simplechat.client",
+    "asar": true,
+    "files": ["**/*"],
+    "extraResources": [
+      { "from": "native.node", "to": "native.node" }
+    ],
+    "linux": { "target": ["AppImage"] },
+    "mac": { "target": ["dmg"] },
+    "win": { "target": ["nsis"] }
   },
   "devDependencies": {
-    "electron": "^30"
+    "electron": "^30",
+    "electron-builder": "^24"
   }
 }
-

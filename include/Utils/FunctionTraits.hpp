@@ -33,7 +33,4 @@ template <typename ClassType, typename ReturnType, typename... Args>
 struct function_traits<ReturnType (ClassType::*)(Args...)>
     : function_traits<ReturnType (*)(Args...)> {}; // 同上
 
-// 定义一个方便的别名模板
-template <typename F>
-using first_arg_t = typename function_traits<F>::first_arg_type;
 }; // namespace Utils
