@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Accent palette driven by data-accent attribute */
+/* Accent as CSS variable (RGB) to work with Tailwind color alpha syntax */
+:root { --accent: 59 130 246; }
+[data-accent='blue'] { --accent: 59 130 246; }
+[data-accent='emerald'] { --accent: 16 185 129; }
+[data-accent='rose'] { --accent: 244 63 94; }
+[data-accent='orange'] { --accent: 251 146 60; }
+[data-accent='violet'] { --accent: 139 92 246; }
+[data-accent='teal'] { --accent: 6 182 212; }
+
+/* Subtle breathing colorful blobs background */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0; /* behind UI */
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+.bg-blob {
+  position: absolute;
+  width: 36vw; height: 36vw; /* scale with viewport */
+  min-width: 420px; min-height: 420px;
+  border-radius: 9999px;
+  filter: blur(32px) saturate(120%);
+  opacity: .18; /* subtle */
+  will-change: transform, opacity;
+  animation: blob-breathe 22s ease-in-out infinite;
+}
+.bg-blob:nth-child(1){
+  left: -8vw; top: -6vw;
+  background: radial-gradient(closest-side, rgba(59,130,246,.6), rgba(59,130,246,0) 70%);
+}
+.bg-blob:nth-child(2){
+  right: -10vw; top: 8vh;
+  background: radial-gradient(closest-side, rgba(16,185,129,.5), rgba(16,185,129,0) 70%);
+  animation-delay: 4s;
+}
+.bg-blob:nth-child(3){
+  left: 10vw; bottom: -12vh;
+  background: radial-gradient(closest-side, rgba(139,92,246,.45), rgba(139,92,246,0) 70%);
+  animation-delay: 8s;
+}
+
+@keyframes blob-breathe {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .18; }
+  25%     { transform: translate3d(2vw, -2vh, 0) scale(1.05); opacity: .22; }
+  50%     { transform: translate3d(-1vw, 2vh, 0) scale(0.98); opacity: .16; }
+  75%     { transform: translate3d(-3vw, -1vh, 0) scale(1.03); opacity: .20; }
+}
+
+/* Transition helpers for page scaling */
+.page-scale-enter { transform: scale(.985); opacity: 0; }
+.page-scale-enter-active { transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease-out; transform: scale(1); opacity: 1; }
+.page-scale-exit { transform: scale(1); opacity: 1; }
+.page-scale-exit-active { transition: transform 200ms ease-in, opacity 160ms ease-in; transform: scale(.985); opacity: 0; }
+
+/* Generic scale-fade utility for toggling panels (crisper tempo) */
+.scale-fade-in { transform: scale(1); opacity: 1; transition: transform 200ms cubic-bezier(0.22,1,0.36,1), opacity 160ms ease-out; }
+.scale-fade-out { transform: scale(.985); opacity: 0; transition: transform 140ms ease-in, opacity 120ms ease-in; pointer-events: none; }
+
+/* Buttons micro-interactions (base only; colors will be applied inline or later during component migration) */
+/* Buttons - base and variants (with subtle gradient + inner glow) */
+.btn { 
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  border-radius: 12px; padding: 10px 14px; font-weight: 600; line-height: 1.2;
+  transition: transform 140ms cubic-bezier(0.22,1,0.36,1), box-shadow 140ms ease, background 140ms ease, color 140ms ease, filter 140ms ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 1px 2px rgba(2,6,23,.05), 0 6px 16px rgba(2,6,23,.06);
+}
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(59,130,246,.18); }
+
+.btn-primary { 
+  background: linear-gradient(135deg, color-mix(in oklab, rgb(var(--accent)) 86%, white), rgb(var(--accent))); 
+  color: #fff; 
+}
+.btn-primary:hover { 
+  background: linear-gradient(135deg, color-mix(in oklab, rgb(var(--accent)) 92%, white), rgb(var(--accent))); 
+  transform: translateY(-1px); 
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline { background: linear-gradient(180deg, #fff, #f8fafc); color: rgb(var(--accent) / 1); border: 1px solid rgb(var(--accent) / 1); }
+.btn-outline:hover { background: color-mix(in oklab, rgb(var(--accent)) 10%, white); }
+.btn-outline:active { background: color-mix(in oklab, rgb(var(--accent)) 18%, white); }
+
+.btn-soft { @apply btn; }
+
+/* Card bounce for Q弹缩放效果（更脆） */
+.card-bounce { animation: card-bounce 360ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes card-bounce {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.04); }
+  75% { transform: scale(0.998); }
+  100% { transform: scale(1); }
+}
+
+/* Hide old dark background by overriding, keep specificity via html body */
+html body {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
+  color: #0f172a; /* slate-900 */
+}
+
+/* Light card surface for login panel with subtle gradient and inner glow */
+.login-form {
+  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.82)) !important;
+  backdrop-filter: blur(8px) saturate(120%);
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 10px 30px rgba(2,6,23,.08);
+}
+
+/* Ensure only one of the two panels is shown by default */
+.login-form-content { display: block; }
+.register-form-content { display: none; }
+.register-form-content.visible { display: block; }
+
+/* Native-feeling input groups with standard layout */
+.input-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  position: relative;
+}
+
+.input-group label {
+  color: #334155 !important; /* slate-700 for readability */
+  font-size: 14px !important;
+  font-weight: 500;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.input-group input {
+  background: rgba(255,255,255,.98) !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  outline: none !important;
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group input:focus {
+  border-color: rgb(var(--accent)) !important;
+  box-shadow: 0 0 0 3px rgba(var(--accent), 0.15) !important;
+}
+
+.input-group input:hover:not(:focus) {
+  border-color: #94a3b8 !important;
+}
+
+/* Verification code group - inline button at the right */
+.verification-code-group { position: relative; }
+/* Reserve enough room for the inline button to avoid overlap or wrapping */
+.verification-code-group input { padding-right: 128px !important; box-sizing: border-box; }
+.verification-code-group #get-code-btn {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  height: 40px; padding: 0 12px; min-width: 108px; white-space: nowrap;
+  border: 1px solid rgb(var(--accent)); color: rgb(var(--accent)); background: #fff; border-radius: 12px;
+}
+
+/* Adjust misc text colors for light theme */
+.remember-me { color: #334155 !important; }
+.forgot-password { color: #2563eb !important; }
+.forgot-password:hover { text-decoration: underline; }
+
+/* Options row (remember + link) layout since legacy CSS is disabled on login) */
+.options { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+
+/* Make primary action clearly accent colored */
+.btn-login { background: linear-gradient(135deg, color-mix(in oklab, rgb(var(--accent)) 86%, white), rgb(var(--accent))) !important; color: #ffffff !important; }
+.btn-login:hover { background: linear-gradient(135deg, color-mix(in oklab, rgb(var(--accent)) 92%, white), rgb(var(--accent))) !important; transform: translateY(-1px); }
+
+/* Remember me checkbox visible with accent */
+.remember-me { display: inline-flex; align-items: center; gap: 8px; padding-left: 0 !important; color: #334155 !important; }
+.remember-me .checkmark { display: none !important; }
+.remember-me input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); }
+
+/* Reduce excess vertical whitespace on the login card */
+.login-form h2 { margin-bottom: 4px !important; }
+.login-form p { margin-bottom: 10px !important; }
+.login-form .logo-container { margin-bottom: 16px !important; }
+.login-form .social-login { margin-top: 10px !important; }
+.login-form .btn-login { margin-bottom: 10px !important; }
+
+/* Subtle scale motion on container visibility toggles */
+.login-container { transition: opacity 300ms, transform 300ms; }
+.login-container.hidden { transform: scale(.985) translateZ(0); opacity: 0; visibility: hidden; pointer-events: none; }
+.chat-app { display: none; transition: opacity 300ms, transform 300ms; }
+.chat-app.active { display: block; transform: scale(1) translateZ(0); }

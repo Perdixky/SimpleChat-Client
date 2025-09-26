@@ -3,7 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('bridge', {
   invoke: (name, ...args) => ipcRenderer.invoke('rpc', name, ...args),
-  log: (severity, message) => ipcRenderer.invoke('log', severity, message),
+  // Forward renderer PID so main can print unified [pid]
+  log: (severity, message) => ipcRenderer.invoke('log', severity, message, process.pid),
   // Subscribe to native push events (broadcasts)
   onEvent: (handler) => {
     const channel = 'native:event';

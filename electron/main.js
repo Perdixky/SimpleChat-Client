@@ -2,6 +2,7 @@
 const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { printUnified, normalizeLevel } = require('./common/logger');
 
 // Load native addon built via xmake (preferred; node-gyp fallback removed)
 let addon;
@@ -21,12 +22,12 @@ const xmakePaths = [path.resolve(__dirname, 'native.node'), ...guessXmakeAddon()
 const packagedPath = path.join(process.resourcesPath || '', 'native.node');
 if (process.resourcesPath && fs.existsSync(packagedPath)) {
   addon = require(packagedPath);
-  console.log('[addon] loaded packaged native:', packagedPath);
+  printUnified('info', process.pid, `addon loaded native: ${packagedPath}`);
 } else {
   const candidate = xmakePaths.find(p => fs.existsSync(p));
   if (!candidate) throw new Error('xmake native.node not found in candidates: ' + xmakePaths.join(', '));
   addon = require(candidate);
-  console.log('[addon] loaded xmake native:', candidate);
+  printUnified('info', process.pid, `addon loaded native: ${candidate}`);
 }
 if (!addon || !addon.Session) throw new Error('Invalid native addon: missing Session class export');
 session = new addon.Session();
@@ -63,10 +64,21 @@ function createWindow() {
   try {
     Menu.setApplicationMenu(null);
     win.setMenuBarVisibility(false);
-  } catch (e) { console.warn('[electron] failed to remove menu bar:', e); }
+  } catch (e) { printUnified('warn', process.pid, `[electron] failed to remove menu bar: ${e && e.message ? e.message : e}`); }
 
-  const indexPath = path.resolve(__dirname, 'index.html');
+  // Load the new React + shadcn/ui renderer built by Vite
+  const indexPath = path.resolve(__dirname, 'ui', 'dist', 'index.html');
   win.loadFile(indexPath);
+  // Helpful diagnostics if the renderer fails to load
+  win.webContents.on('did-fail-load', (_e, code, desc, url) => {
+    try { printUnified('error', process.pid, `[electron] did-fail-load code=${code} desc=${desc} url=${url}`); } catch {}
+  });
+  win.webContents.on('render-process-gone', (_e, details) => {
+    try { printUnified('error', process.pid, `[electron] render-process-gone: ${JSON.stringify(details)}`); } catch {}
+  });
+  if (process.env.DEBUG_UI === '1') {
+    try { win.webContents.openDevTools({ mode: 'detach' }); } catch {}
+  }
 
   // Hook native push events -> forward to renderer
   try {
@@ -74,11 +86,11 @@ function createWindow() {
       try {
         win.webContents.send('native:event', evt);
       } catch (e) {
-        console.warn('[electron] failed to forward native event:', e);
+        printUnified('warn', process.pid, `[electron] failed to forward native event: ${e && e.message ? e.message : e}`);
       }
     });
   } catch (e) {
-    console.warn('[electron] Session.OnEvent not available:', e);
+    printUnified('warn', process.pid, `[electron] Session.OnEvent not available: ${e && e.message ? e.message : e}`);
   }
 }
 
@@ -88,10 +100,10 @@ app.whenReady().then(() => {
     return call(method, ...args);
   });
 
-  ipcMain.handle('log', (_evt, level, message) => {
-    const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
-    const tag = levels[level] || 'info';
-    console.log(`[renderer:${tag}]`, message);
+  ipcMain.handle('log', (_evt, level, message, originPid) => {
+    const tag = normalizeLevel(level);
+    const pid = originPid || process.pid;
+    printUnified(tag, pid, message);
     return true;
   });
 
@@ -111,6 +123,32 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app.on('quit', () => {
-  try { if (addon && typeof addon.shutdown === 'function') addon.shutdown(); } catch {}
-});
+function safeClean() {
+  try {
+    if (session && typeof session.Clean === 'function') {
+      session.Clean();
+      printUnified('info', process.pid, 'addon session.Clean called');
+      return;
+    }
+    if (session && typeof session.Close === 'function') {
+      session.Close();
+      printUnified('info', process.pid, 'addon session.Close called');
+      return;
+    }
+    if (addon && typeof addon.Clean === 'function') {
+      addon.Clean();
+      printUnified('info', process.pid, 'addon addon.Clean called');
+      return;
+    }
+    if (addon && typeof addon.shutdown === 'function') {
+      addon.shutdown();
+      printUnified('info', process.pid, 'addon addon.shutdown called');
+    }
+  } catch (e) {
+    printUnified('warn', process.pid, `[addon] cleanup failed: ${e && e.message ? e.message : e}`);
+  }
+}
+
+app.on('before-quit', safeClean);
+app.on('quit', safeClean);
+process.on('exit', safeClean);

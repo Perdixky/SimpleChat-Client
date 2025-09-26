@@ -5,24 +5,51 @@
   "main": "main.js",
   "description": "Electron shell for SimpleChat using native C++ addon (Node-API).",
   "scripts": {
+    "prestart": "npm --prefix ./ui run build",
     "start": "electron .",
+    "predev": "npm --prefix ./ui run build",
     "dev": "electron .",
     "prepack": "node ./scripts/prepare-native.js",
-    "pack": "electron-builder -mwl"
+    "pack": "electron-builder -mwl",
+    "tailwind:build": "tailwindcss -c tailwind.config.js -i renderer/styles/tailwind.css -o renderer/styles/tw.css --minify",
+    "tailwind:watch": "tailwindcss -c tailwind.config.js -i renderer/styles/tailwind.css -o renderer/styles/tw.css --watch"
   },
   "build": {
     "appId": "com.simplechat.client",
     "asar": true,
-    "files": ["**/*"],
-    "extraResources": [
-      { "from": "native.node", "to": "native.node" }
+    "files": [
+      "**/*"
     ],
-    "linux": { "target": ["AppImage"] },
-    "mac": { "target": ["dmg"] },
-    "win": { "target": ["nsis"] }
+    "extraResources": [
+      {
+        "from": "native.node",
+        "to": "native.node"
+      }
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.21",
     "electron": "^30",
-    "electron-builder": "^24"
+    "electron-builder": "^24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   }
 }

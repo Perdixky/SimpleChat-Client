@@ -1,3 +1,4 @@
+#include "Async/JsScheduler.hpp"
 #include "Async/Loop.hpp"
 #include "Logic/Session.hpp"
 #include "Network/Connection.hpp"
@@ -6,6 +7,7 @@
 #include "Utils/Logger.hpp"
 #include <boost/asio/ip/tcp.hpp>
 #include <rfl/MetaField.hpp>
+#include <rfl/enums.hpp>
 #include <rfl/json.hpp>
 
 #include <napi.h>
@@ -77,7 +79,8 @@ concept StdVector =
 
 // Compile-time false dependent helper for static_assert fallbacks
 template <class T> struct always_false : std::false_type {};
-template <class T> inline constexpr bool always_false_v = always_false<T>::value;
+template <class T>
+inline constexpr bool always_false_v = always_false<T>::value;
 
 // Basic type traits
 template <typename T> struct is_std_vector : std::false_type {};
@@ -94,11 +97,11 @@ template <auto Format>
 struct is_rfl_timestamp<rfl::Timestamp<Format>> : std::true_type {};
 
 // Forward decl
-template <typename T> Napi::Object serializeObject(const Napi::Env &env, const T &v);
+template <typename T>
+Napi::Object serializeResult(const Napi::Env &env, const T &v);
 
 // Convert any supported C++ value to a Napi::Value
-template <typename T>
-Napi::Value toJs(const Napi::Env &env, const T &value) {
+template <typename T> Napi::Value toJs(const Napi::Env &env, const T &value) {
   using V = std::remove_cvref_t<T>;
 
   if constexpr (std::is_same_v<V, std::string>) {
@@ -108,17 +111,7 @@ Napi::Value toJs(const Napi::Env &env, const T &value) {
   } else if constexpr (std::is_same_v<V, bool>) {
     return Napi::Boolean::New(env, value);
   } else if constexpr (std::is_enum_v<V>) {
-    using U = std::underlying_type_t<V>;
-    if constexpr (sizeof(U) >= 8) {
-      // 64-bit enum underlying type: use BigInt to preserve full precision
-      if constexpr (std::is_signed_v<U>) {
-        return Napi::BigInt::New(env, static_cast<int64_t>(static_cast<U>(value)));
-      } else {
-        return Napi::BigInt::New(env, static_cast<uint64_t>(static_cast<U>(value)));
-      }
-    } else {
-      return Napi::Number::New(env, static_cast<double>(static_cast<U>(value)));
-    }
+    return Napi::String::New(env, rfl::enum_to_string(value));
   } else if constexpr (std::is_integral_v<V> && sizeof(V) < 8) {
     return Napi::Number::New(env, static_cast<double>(value));
   } else if constexpr (std::is_integral_v<V> && sizeof(V) == 8) {
@@ -131,7 +124,8 @@ Napi::Value toJs(const Napi::Env &env, const T &value) {
     return Napi::Number::New(env, static_cast<double>(value));
   } else if constexpr (is_rfl_timestamp<V>::value) {
     // Prefer human-readable string for timestamp
-    // rfl::to_string(Timestamp) typically returns std::string or expected<std::string>
+    // rfl::to_string(Timestamp) typically returns std::string or
+    // expected<std::string>
     if constexpr (requires { rfl::to_string(value); }) {
       auto s = rfl::to_string(value);
       if constexpr (std::is_convertible_v<decltype(s), std::string>) {
@@ -156,12 +150,18 @@ Napi::Value toJs(const Napi::Env &env, const T &value) {
     return arr;
   } else if constexpr (requires { rfl::to_view(value); }) {
     // Treat reflectable objects as JS objects
-    return serializeObject(env, value);
+    return serializeResult(env, value);
   } else {
     static_assert(always_false_v<V>, "Unsupported field type in toJs");
   }
 }
 
+// 示例：对于Logic::GetConversationList，首先获取其rfl视图，然后遍历字段
+// 对于其中的id、success、message等基本类型，直接转换为Napi::Value
+// 对于conversations字段（假设是std::vector<Conversation>），递归调用toJs
+// 首先设置一个Napi::Array，然后遍历vector中的每个Conversation对象
+// 每一个Conversation对象又是一个reflectable对象，递归调用serializeResult
+// 然后将生成的Napi::Object放入Napi::Array中
 // Serialize reflectable object using rfl view
 template <typename T>
 Napi::Object serializeResult(const Napi::Env &env, const T &v) {
@@ -184,45 +184,33 @@ public:
   static constexpr size_t ArgCount = Traits::arity;
 
   static Napi::Value wrap(SessionType *session, Method method,
-                          const Napi::CallbackInfo &info) {
-    auto env = info.Env();
-    auto deferred = Napi::Promise::Deferred::New(env);
+                          const Napi::CallbackInfo &info,
+                          const Async::JsScheduler &js_sched) {
+    const auto env = info.Env();
+    const auto deferred = Napi::Promise::Deferred::New(env);
 
     try {
       // Direct deserialization and method call without intermediate tuple
       auto sender = deserializeAndCall<ArgCount>(
           session, method, info, std::make_index_sequence<ArgCount>{});
 
-      // Create thread-safe callback
-      auto tsfn = Napi::ThreadSafeFunction::New(
-          env, Napi::Function::New(env, [](const Napi::CallbackInfo &) {}),
-          "method_callback", 0, 1);
-
-      // Submit to async loop
+      // Submit to async loop; hop onto JS thread before resolving
+      log(debug, "[ADDON] Submitting task to async loop");
       Async::Loop::submit(
-          std::move(sender) |
-          stdexec::then([deferred, tsfn](auto result) mutable {
-            auto callback = [deferred = std::move(deferred),
-                             result = std::move(result)](
-                                Napi::Env env, Napi::Function) mutable {
-              try {
-                auto js_result = serializeResult(env, result);
-                deferred.Resolve(js_result);
-              } catch (const std::exception &e) {
-                deferred.Reject(Napi::Error::New(env, e.what()).Value());
-              }
-            };
-            tsfn.BlockingCall(callback);
-            tsfn.Release();
+          std::move(sender) | stdexec::continues_on(js_sched) |
+          stdexec::then([deferred, env](auto result) mutable {
+            try {
+              Napi::HandleScope scope(env);
+              auto js_result = serializeResult(env, result);
+              deferred.Resolve(js_result);
+            } catch (const std::exception &e) {
+              deferred.Reject(Napi::Error::New(env, e.what()).Value());
+            }
           }) |
-          stdexec::upon_error([deferred, tsfn](std::exception_ptr ep) mutable {
-            auto callback = [deferred = std::move(deferred),
-                             ep](Napi::Env env, Napi::Function) mutable {
-              std::string msg = extractErrorMessage(ep);
-              deferred.Reject(Napi::Error::New(env, msg).Value());
-            };
-            tsfn.BlockingCall(callback);
-            tsfn.Release();
+          stdexec::upon_error([deferred, env](std::exception_ptr ep) mutable {
+            Napi::HandleScope scope(env);
+            std::string msg = extractErrorMessage(ep);
+            deferred.Reject(Napi::Error::New(env, msg).Value());
           }));
 
     } catch (const std::exception &e) {
@@ -250,7 +238,7 @@ private:
         SessionType,                                                           \
         decltype(&SessionType::method_name)>::wrap(session_.get(),             \
                                                    &SessionType::method_name,  \
-                                                   info);                      \
+                                                   info, js_sched_);           \
   }                                                                            \
   static_assert(true, "") // Force semicolon requirement
 
@@ -263,6 +251,9 @@ private:
   std::unique_ptr<SessionType> session_;
   std::jthread loop_thread_;
   Napi::ThreadSafeFunction event_tsfn_{};
+  Napi::ThreadSafeFunction js_tsfn_{};
+  Async::JsScheduler js_sched_{};
+  bool closed_{}; // ensure idempotent shutdown
 
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports) {
@@ -282,7 +273,9 @@ public:
          InstanceMethod("Heartbeat", &SessionWrapper::Heartbeat),
          InstanceMethod("Echo", &SessionWrapper::Echo),
          // Event subscription from JS (main process)
-         InstanceMethod("OnEvent", &SessionWrapper::OnEvent)});
+         InstanceMethod("OnEvent", &SessionWrapper::OnEvent),
+         // Explicit shutdown hook for Electron main to call on quit
+         InstanceMethod("Close", &SessionWrapper::Close)});
 
     exports.Set("Session", func);
     return exports;
@@ -294,7 +287,8 @@ public:
     // Initialize logging to stderr
     initLogging();
     try {
-      auto logger = spdlog::stderr_color_mt("session-addon");
+      // Use a stable logger name to appear as component tag in logs
+      auto logger = spdlog::stderr_color_mt("ADDON");
       spdlog::set_default_logger(logger);
     } catch (...) {
       // ignore if already exists
@@ -309,6 +303,16 @@ public:
     router_ = std::make_unique<Network::ResponseRouter>();
     auto connection = ConnectionType(std::move(endpoint), *router_);
     session_ = std::make_unique<SessionType>(std::move(connection));
+
+    // Persistent TSFN for JS-thread hops used by JsScheduler
+    {
+      const auto env2 = info.Env();
+      const auto stub = Napi::Function::New(env2, [](const Napi::CallbackInfo &) {});
+      js_tsfn_ =
+          Napi::ThreadSafeFunction::New(env2, stub, "js_scheduler", 0, 1);
+      js_tsfn_.Unref(env2);
+      js_sched_ = Async::JsScheduler::from_tsfn(js_tsfn_);
+    }
 
     // Wire router broadcast to JS event callback if present
     router_->setEventCallback([this](const rfl::Generic::Object &obj) {
@@ -340,12 +344,6 @@ public:
       event_tsfn_.BlockingCall(call);
     });
 
-    // Start async loop thread
-    loop_thread_ = std::jthread([] {
-      log(::info, "Starting async loop thread");
-      Async::Loop::run();
-    });
-
     // Connect and start listening
     try {
       log(::info, "Attempting initial connection");
@@ -355,17 +353,17 @@ public:
     } catch (const std::exception &e) {
       log(error, "Failed to initialize connection: {}", e.what());
     }
+
+    // Start async loop thread
+    loop_thread_ = std::jthread([] {
+      log(::info, "Starting async loop thread");
+      Async::Loop::run();
+    });
   }
 
   ~SessionWrapper() {
     log(::info, "Destroying SessionWrapper");
-    Async::Loop::stop();
-    if (loop_thread_.joinable()) {
-      loop_thread_.join();
-    }
-    if (event_tsfn_) {
-      event_tsfn_.Release();
-    }
+    DoClose();
   }
 
 private:
@@ -383,7 +381,7 @@ private:
   // Allow JS to register an event callback; events originate from
   // server push packets (no 'id') routed via ResponseRouter::broadcast
   Napi::Value OnEvent(const Napi::CallbackInfo &info) {
-    auto env = info.Env();
+    const auto env = info.Env();
     if (info.Length() < 1 || !info[0].IsFunction()) {
       Napi::TypeError::New(env, "OnEvent expects a function")
           .ThrowAsJavaScriptException();
@@ -394,7 +392,38 @@ private:
     }
     auto cb = info[0].As<Napi::Function>();
     event_tsfn_ = Napi::ThreadSafeFunction::New(env, cb, "session_event", 0, 1);
+    event_tsfn_.Unref(env);
     return env.Undefined();
+  }
+
+  // Gracefully stop background threads, timers and release TSFN resources.
+  // Safe to call multiple times.
+  void DoClose() {
+    if (closed_) return;
+    closed_ = true;
+
+    // Stop async loop so alive_listen and pending senders stop emitting
+    Async::Loop::stop();
+    if (loop_thread_.joinable()) {
+      loop_thread_.join();
+    }
+    // Drop JS callbacks and release TSFN resources
+    if (event_tsfn_) {
+      event_tsfn_.Release();
+      event_tsfn_ = {};
+    }
+    if (js_tsfn_) {
+      js_tsfn_.Release();
+      js_tsfn_ = {};
+    }
+    // Proactively reset session and router to close sockets ASAP
+    session_.reset();
+    router_.reset();
+  }
+
+  Napi::Value Close(const Napi::CallbackInfo &info) {
+    DoClose();
+    return info.Env().Undefined();
   }
 };
 

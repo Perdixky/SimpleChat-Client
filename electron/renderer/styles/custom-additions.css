@@ -1,0 +1,167 @@
+/* Additional styles for the Tailwind implementation */
+
+/* CSS Variables for accent colors (matching the original design) */
+:root {
+  --accent: 59 130 246; /* Default blue */
+}
+
+[data-accent="emerald"] { --accent: 16 185 129; }
+[data-accent="rose"] { --accent: 244 63 94; }
+[data-accent="orange"] { --accent: 251 146 60; }
+[data-accent="violet"] { --accent: 139 92 246; }
+[data-accent="teal"] { --accent: 6 182 212; }
+
+/* Modal show/hide animations */
+.modal-visible {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.modal-visible > div {
+  transform: scale(1) !important;
+}
+
+/* Loading button states */
+.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.btn-loading .btn-text {
+  opacity: 0;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Form validation states */
+.input-error {
+  border-color: rgb(239 68 68) !important;
+  background-color: rgba(239, 68, 68, 0.05) !important;
+}
+
+.input-success {
+  border-color: rgb(34 197 94) !important;
+  background-color: rgba(34, 197, 94, 0.05) !important;
+}
+
+/* Message states */
+.message-error {
+  color: rgb(239 68 68);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.message-success {
+  color: rgb(34 197 94);
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+/* Background blobs with pure CSS */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.6;
+  animation: blob-float 20s ease-in-out infinite;
+}
+
+.bg-blob:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent 70%);
+  top: -200px;
+  left: -200px;
+  animation-delay: 0s;
+}
+
+.bg-blob:nth-child(2) {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
+  top: 40%;
+  right: -250px;
+  animation-delay: 7s;
+}
+
+.bg-blob:nth-child(3) {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent 70%);
+  bottom: -150px;
+  left: 30%;
+  animation-delay: 14s;
+}
+
+@keyframes blob-float {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px) scale(1);
+  }
+  33% {
+    transform: translateX(30px) translateY(-30px) scale(1.1);
+  }
+  66% {
+    transform: translateX(-20px) translateY(20px) scale(0.9);
+  }
+}
+
+/* Enhanced form transitions */
+.form-slide-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.form-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-out;
+}
+
+.form-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.form-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.3s ease-out;
+}
+
+/* Login container states */
+.login-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.95);
+  pointer-events: none;
+}

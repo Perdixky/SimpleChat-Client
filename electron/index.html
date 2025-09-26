@@ -9,13 +9,20 @@
   <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- App Styles -->
-  <link rel="stylesheet" href="./renderer/styles/app.css" />
+  <!-- Tailwind CSS with custom design system -->
+  <link rel="stylesheet" href="./renderer/styles/tailwind-new.css" />
+  <!-- Custom additions for enhanced functionality -->
+  <link rel="stylesheet" href="./renderer/styles/custom-additions.css" />
+  <!-- Legacy CSS for chat interface (kept for gradual migration) -->
+  <link id="legacy-css" rel="stylesheet" href="./renderer/styles/app.css" media="not all" />
 </head>
 <body>
-  <!-- Background effects -->
-  <div id="particles-js"></div>
-  <div class="aurora"></div>
+  <!-- Background effects: subtle colorful breathing blobs -->
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="bg-blob"></span>
+    <span class="bg-blob"></span>
+    <span class="bg-blob"></span>
+  </div>
 
   <!-- Theme & Accent Controls -->
   <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
@@ -31,94 +38,187 @@
   </div>
 
   <!-- Login / Register Panel -->
-  <div class="login-container">
-    <div class="login-form" id="login-form">
+  <div class="fixed inset-0 flex items-center justify-center min-h-screen px-4 sm:px-6 z-10 transition-all duration-300" id="login-container">
+    <div class="w-full max-w-md bg-white/10 backdrop-blur-glass border border-white/20 rounded-2xl shadow-glass p-8 animate-bounce-in" id="login-form">
       <!-- Login Form -->
       <div class="login-form-content" id="login-form-content">
-        <div class="logo-container">
-          <!-- Minimal brand mark; SVG previously inlined was very large -->
-          <svg id="animated-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" aria-label="SimpleChat">
-            <defs>
-              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#3b82f6"/>
-                <stop offset="100%" stop-color="#8b5cf6"/>
-              </linearGradient>
-            </defs>
-            <rect width="120" height="40" rx="10" fill="url(#g)"/>
-            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-family="Poppins, Arial, sans-serif" font-size="16" font-weight="600">SimpleChat</text>
-          </svg>
+        <div class="flex justify-center mb-6">
+          <img src="./assets/logo.svg" alt="SimpleChat" class="w-40 h-auto filter drop-shadow-lg hover:scale-105 transition-transform duration-300" />
         </div>
-        <h2>Welcome Back</h2>
-        <p>Sign in to continue to ChatApp</p>
-        <form id="auth-form">
-          <div class="input-group">
-            <input type="text" id="username" required autocomplete="username" />
-            <label for="username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+        <h2 class="text-2xl font-semibold text-white mb-2 text-center">Welcome Back</h2>
+        <p class="text-white/80 text-center mb-6">Sign in to continue to ChatApp</p>
+        <form id="auth-form" class="space-y-4">
+          <!-- Username Input -->
+          <div class="space-y-2">
+            <label for="username" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:account"></span>
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              required
+              autocomplete="username"
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Enter your username"
+            />
           </div>
-          <div class="input-group">
-            <input type="password" id="password" required autocomplete="current-password" />
-            <label for="password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+
+          <!-- Password Input -->
+          <div class="space-y-2">
+            <label for="password" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:lock"></span>
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              required
+              autocomplete="current-password"
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Enter your password"
+            />
           </div>
-          <div class="options">
-            <label class="remember-me">
-              <input type="checkbox" id="remember" />
-              <span class="checkmark"></span>
+
+          <!-- Options -->
+          <div class="flex items-center justify-between pt-2">
+            <label class="flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+              <input type="checkbox" id="remember" class="w-4 h-4 rounded border-white/30 bg-white/10 text-accent focus:ring-accent/50 focus:ring-2" />
               Remember me
             </label>
-            <a href="#" id="forgot-link" class="forgot-password">Forgot Password?</a>
+            <a href="#" id="forgot-link" class="text-sm text-accent hover:text-accent/80 transition-colors">Forgot Password?</a>
           </div>
-          <button type="submit" class="btn-login" id="login-button">
+
+          <!-- Login Button -->
+          <button type="submit" id="login-button" class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-accent to-accent/80 text-white font-semibold rounded-xl shadow-lg hover:from-accent/90 hover:to-accent/70 hover:shadow-glow hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200 flex items-center justify-center gap-2">
             <span class="btn-text">Log In</span>
-            <span class="iconify btn-icon icon-fly" data-icon="mdi:arrow-right"></span>
+            <span class="iconify transition-transform group-hover:translate-x-1" data-icon="mdi:arrow-right"></span>
           </button>
         </form>
-        <div id="message"></div>
-        <div class="social-login">
-          <p>Don't have an account? <a href="#" id="show-register-link">Sign up</a></p>
+
+        <!-- Message Area -->
+        <div id="message" class="mt-4 text-center text-sm min-h-[20px]"></div>
+
+        <!-- Sign Up Link -->
+        <div class="mt-6 text-center">
+          <p class="text-white/80">Don't have an account? <a href="#" id="show-register-link" class="text-accent hover:text-accent/80 font-medium transition-colors">Sign up</a></p>
         </div>
       </div>
 
       <!-- Registration Form -->
-      <div class="register-form-content" id="register-form-content">
-        <h2>Create Account</h2>
-        <p>Join the community</p>
-        <form id="register-form">
-          <div class="input-group">
-            <input type="text" id="invitation-code" required />
-            <label for="invitation-code"><span class="iconify" data-icon="mdi:ticket"></span>Invitation Code</label>
+      <div class="register-form-content hidden" id="register-form-content">
+        <div class="flex justify-center mb-6">
+          <img src="./assets/logo.svg" alt="SimpleChat" class="w-40 h-auto filter drop-shadow-lg hover:scale-105 transition-transform duration-300" />
+        </div>
+        <h2 class="text-2xl font-semibold text-white mb-2 text-center">Create Account</h2>
+        <p class="text-white/80 text-center mb-6">Join the community</p>
+        <form id="register-form" class="space-y-4">
+          <!-- Invitation Code -->
+          <div class="space-y-2">
+            <label for="invitation-code" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:ticket"></span>
+              Invitation Code
+            </label>
+            <input
+              type="text"
+              id="invitation-code"
+              required
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Enter invitation code"
+            />
           </div>
-          <div class="input-group">
-            <input type="text" id="register-username" required autocomplete="username" />
-            <label for="register-username"><span class="iconify" data-icon="mdi:account"></span>Username</label>
+
+          <!-- Username -->
+          <div class="space-y-2">
+            <label for="register-username" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:account"></span>
+              Username
+            </label>
+            <input
+              type="text"
+              id="register-username"
+              required
+              autocomplete="username"
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Choose a username"
+            />
           </div>
-          <div class="input-group">
-            <input type="email" id="register-email" required />
-            <label for="register-email"><span class="iconify" data-icon="mdi:email"></span>Email</label>
+
+          <!-- Email -->
+          <div class="space-y-2">
+            <label for="register-email" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:email"></span>
+              Email
+            </label>
+            <input
+              type="email"
+              id="register-email"
+              required
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Enter your email"
+            />
           </div>
-          <div class="input-group verification-code-group">
-            <input type="text" id="verification-code" required />
-            <label for="verification-code"><span class="iconify" data-icon="mdi:shield-check"></span>Verification Code</label>
-            <button type="button" id="get-code-btn"><span class="iconify" data-icon="mdi:email-fast"></span>Get Code</button>
+
+          <!-- Verification Code -->
+          <div class="space-y-2">
+            <label for="verification-code" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:shield-check"></span>
+              Verification Code
+            </label>
+            <div class="flex gap-2">
+              <input
+                type="text"
+                id="verification-code"
+                required
+                class="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+                placeholder="Enter code"
+              />
+              <button
+                type="button"
+                id="get-code-btn"
+                class="px-4 py-3 bg-white/10 border border-white/20 text-white/80 rounded-xl hover:bg-white/15 hover:text-accent transition-all duration-200 flex items-center gap-2 whitespace-nowrap"
+              >
+                <span class="iconify" data-icon="mdi:email-fast"></span>
+                Get Code
+              </button>
+            </div>
           </div>
-          <div class="input-group">
-            <input type="password" id="register-password" required />
-            <label for="register-password"><span class="iconify" data-icon="mdi:lock"></span>Password</label>
+
+          <!-- Password -->
+          <div class="space-y-2">
+            <label for="register-password" class="flex items-center gap-2 text-sm font-medium text-white/90">
+              <span class="iconify text-accent" data-icon="mdi:lock"></span>
+              Password
+            </label>
+            <input
+              type="password"
+              id="register-password"
+              required
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+              placeholder="Create a password"
+            />
           </div>
-          <button type="submit" class="btn-login" id="register-button">
+
+          <!-- Register Button -->
+          <button type="submit" id="register-button" class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-accent to-accent/80 text-white font-semibold rounded-xl shadow-lg hover:from-accent/90 hover:to-accent/70 hover:shadow-glow hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200 flex items-center justify-center gap-2">
             <span class="btn-text">Register</span>
-            <span class="iconify btn-icon" data-icon="mdi:account-plus"></span>
+            <span class="iconify" data-icon="mdi:account-plus"></span>
           </button>
         </form>
-        <div id="register-message"></div>
-        <div class="social-login">
-          <p>Already have an account? <a href="#" id="show-login-link">Sign in</a></p>
+
+        <!-- Message Area -->
+        <div id="register-message" class="mt-4 text-center text-sm min-h-[20px]"></div>
+
+        <!-- Sign In Link -->
+        <div class="mt-6 text-center">
+          <p class="text-white/80">Already have an account? <a href="#" id="show-login-link" class="text-accent hover:text-accent/80 font-medium transition-colors">Sign in</a></p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Chat Application -->
-  <div class="chat-app" id="chat-app">
+  <div class="chat-app" id="chat-app" style="display:none">
     <button class="logout-btn" id="logout-btn" title="Logout">
       <span class="iconify" data-icon="mdi:logout"></span>
     </button>
@@ -154,27 +254,58 @@
   </div>
 
   <!-- Add Friend Modal -->
-  <div class="modal-overlay" id="add-friend-modal">
-    <div class="modal-content">
-      <button class="modal-close-btn" id="add-friend-modal-close-btn" aria-label="Close"><span class="iconify" data-icon="mdi:close"></span></button>
-      <h3>Add Friend</h3>
-      <form id="add-friend-form">
-        <div class="input-group">
-          <input type="text" id="add-friend-username" required autocomplete="off" />
-          <label for="add-friend-username"><span class="iconify" data-icon="mdi:account-search"></span>Username</label>
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300" id="add-friend-modal">
+    <div class="bg-white/10 backdrop-blur-glass border border-white/20 rounded-2xl shadow-glass p-6 w-full max-w-md relative transform scale-95 transition-all duration-300">
+      <!-- Close Button -->
+      <button
+        id="add-friend-modal-close-btn"
+        class="absolute top-4 right-4 w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center text-white/60 hover:text-white transition-all duration-200"
+        aria-label="Close"
+      >
+        <span class="iconify" data-icon="mdi:close"></span>
+      </button>
+
+      <!-- Header -->
+      <h3 class="text-xl font-semibold text-white mb-6 pr-8">Add Friend</h3>
+
+      <!-- Form -->
+      <form id="add-friend-form" class="space-y-4">
+        <!-- Search Input -->
+        <div class="space-y-2">
+          <label for="add-friend-username" class="flex items-center gap-2 text-sm font-medium text-white/90">
+            <span class="iconify text-accent" data-icon="mdi:account-search"></span>
+            Search Username
+          </label>
+          <input
+            type="text"
+            id="add-friend-username"
+            required
+            autocomplete="off"
+            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
+            placeholder="Enter username to search"
+          />
         </div>
-        <div id="friend-search-results"></div>
-        <button type="submit" class="btn-login" id="add-friend-submit-btn">
+
+        <!-- Search Results -->
+        <div id="friend-search-results" class="space-y-2 max-h-48 overflow-y-auto"></div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="add-friend-submit-btn"
+          class="w-full mt-6 px-6 py-3 bg-gradient-to-r from-accent to-accent/80 text-white font-semibold rounded-xl shadow-lg hover:from-accent/90 hover:to-accent/70 hover:shadow-glow hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200 flex items-center justify-center gap-2"
+        >
           <span class="btn-text">Send Request</span>
-          <span class="iconify btn-icon" data-icon="mdi:send"></span>
+          <span class="iconify" data-icon="mdi:send"></span>
         </button>
       </form>
-      <div id="add-friend-message"></div>
+
+      <!-- Message Area -->
+      <div id="add-friend-message" class="mt-4 text-center text-sm min-h-[20px]"></div>
     </div>
   </div>
 
   <!-- Vendor and App Scripts -->
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script type="module" src="./renderer/app.js"></script>
 </body>
 </html>

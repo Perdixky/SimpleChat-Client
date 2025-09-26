@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn/ui tokens */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+
+  --radius: 0.6rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+/* Ambient colorful glow background */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(99,102,241,0.10), transparent 60%),
+              radial-gradient(1000px 500px at 90% 0%, rgba(56,189,248,0.10), transparent 60%),
+              linear-gradient(180deg, rgba(249,250,251,0.9), rgba(255,255,255,0.9));
+}
+.ambient-glow .glow {
+  position: absolute;
+  width: 42vw; height: 42vw;
+  min-width: 420px; min-height: 420px;
+  border-radius: 50%;
+  filter: blur(50px) saturate(120%);
+  opacity: .22;
+  transform: translateZ(0);
+  animation: glowFloat 22s ease-in-out infinite;
+}
+.ambient-glow .glow:nth-child(1) { left: -8vw; top: -6vw; background: radial-gradient(closest-side, rgba(99,102,241,.35), rgba(99,102,241,0) 70%); }
+.ambient-glow .glow:nth-child(2) { right: -10vw; top: 8vh; background: radial-gradient(closest-side, rgba(56,189,248,.35), rgba(56,189,248,0) 70%); animation-delay: 4s; }
+.ambient-glow .glow:nth-child(3) { left: 12vw; bottom: -12vh; background: radial-gradient(closest-side, rgba(139,92,246,.35), rgba(139,92,246,0) 70%); animation-delay: 8s; }
+
+@keyframes glowFloat {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .22; }
+  25%     { transform: translate3d(2vw, -2vh, 0) scale(1.06); opacity: .25; }
+  50%     { transform: translate3d(-1vw, 2vh, 0) scale(0.98); opacity: .18; }
+  75%     { transform: translate3d(-3vw, -1vh, 0) scale(1.03); opacity: .21; }
+}
+
+/* UI micro animations */
+.anim-pop { animation: popIn .36s cubic-bezier(.34,1.56,.64,1); }
+@keyframes popIn { 0% { transform: scale(.97); opacity: 0 } 60% { transform: scale(1.02) } 100% { transform: scale(1); opacity: 1 } }
+
+.anim-fade-up { animation: fadeUp .28s ease-out; }
+@keyframes fadeUp { from { transform: translateY(6px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+
+.btn-busy { position: relative; }
+.btn-busy::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(120% 120% at 0% 0%, rgba(255,255,255,.12), transparent 40%),
+              linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,0));
+  animation: shimmer 1.2s linear infinite;
+}
+@keyframes shimmer { from { mask-position: -200% 0 } to { mask-position: 200% 0 } }
+
+/* Floating label field */
+.field { position: relative; padding-top: 12px; }
+.field input { height: 44px; padding-top: 14px; padding-bottom: 10px; }
+.floating-label {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; color: hsl(var(--muted-foreground));
+  pointer-events: none; display: inline-flex; gap: 6px; align-items: center;
+  transition: transform .18s ease, top .18s ease, color .18s ease, font-size .18s ease;
+}
+.field:focus-within .floating-label,
+.field input:not(:placeholder-shown) + .floating-label {
+  top: 0; transform: translateY(-100%);
+  font-size: 12px; color: hsl(var(--foreground));
+  background: hsl(var(--background)); padding: 0 4px; border-radius: 6px;
+}
+.field .floating-label .icon { color: hsl(var(--muted-foreground)); transition: color .18s ease; }
+.field:focus-within .floating-label .icon { color: hsl(var(--foreground)); animation: wobble .6s ease-in-out; }
+
+/* wobble + shake */
+@keyframes wobble {
+  0% { transform: translateY(0) rotate(0); }
+  25% { transform: translateY(-0.5px) rotate(-4deg); }
+  50% { transform: translateY(0) rotate(3deg); }
+  75% { transform: translateY(-0.5px) rotate(-2deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+.shake { animation: shake .36s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}

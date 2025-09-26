@@ -54,22 +54,18 @@ export function createUI(dom, state) {
   let apiRef = null;
 
   const ui = {
+    // Smoothly resize the login card to match target content height with a gentle bounce
+    // Simplified: rely on natural layout; avoid measuring hidden content and
+    // absolute off-screen hacks that can cause flicker or overflow on some
+    // platforms. Keep bounce handled by callers if desired.
+    _resizeCardTo(_targetEl) { return; },
     // Dependency injection to use API calls in page transitions
     bindApi(api) { apiRef = api; },
 
     setLoading(button, isLoading) {
       if (!button) return;
-      button.classList.toggle('loading', isLoading);
-      if (isLoading) {
-        if (!button.querySelector('.spinner')) {
-          const sp = document.createElement('span');
-          sp.className = 'spinner';
-          button.appendChild(sp);
-        }
-      } else {
-        const sp = button.querySelector('.spinner');
-        if (sp) sp.remove();
-      }
+      button.classList.toggle('btn-loading', isLoading);
+      // The loading spinner is now handled by CSS ::after pseudo-element
     },
 
     getAvatar(obj) {
@@ -92,8 +88,9 @@ export function createUI(dom, state) {
     showMessage(element, text, type = 'info') {
       if (!element) return;
       element.textContent = text || '';
-      element.className = '';
-      if (type) element.classList.add(type);
+      element.className = 'mt-4 text-center text-sm min-h-[20px]';
+      if (type === 'error') element.classList.add('message-error');
+      if (type === 'success') element.classList.add('message-success');
     },
 
     renderConversations(conversations) {
@@ -144,27 +141,21 @@ export function createUI(dom, state) {
     },
 
     updateInputLabels() {
+      // Simplified input handling - no need for complex label animations
+      // Just ensure focus styles work properly
       document.querySelectorAll('.input-group input').forEach(input => {
-        const hasContent = input.value.trim() !== '';
-        input.parentElement.classList.toggle('has-content', hasContent);
-        if (input.value.trim() !== '') {
-          input.parentElement.classList.add('has-content');
-        }
-        input.addEventListener('input', (e) => {
-          const hasContentNow = e.target.value.trim() !== '';
-          e.target.parentElement.classList.toggle('has-content', hasContentNow);
-        });
+        // Remove any legacy animation classes
+        input.parentElement.classList.remove('has-content');
       });
     },
 
     toggleModal(modal, show) {
       if (!modal) return;
-      modal.classList.toggle('visible', show);
+      modal.classList.toggle('modal-visible', show);
       if (show) {
         const form = modal.querySelector('form');
         if (form) form.reset();
-        ui.updateInputLabels();
-        const messageEl = modal.querySelector('.success, .error');
+        const messageEl = modal.querySelector('#add-friend-message');
         if (messageEl) ui.showMessage(messageEl, '');
       }
     },
@@ -197,50 +188,51 @@ export function createUI(dom, state) {
     showChatPage() {
       const loginContainer = document.querySelector('.login-container');
       const chatApp = document.getElementById('chat-app');
-      loginContainer.classList.add('hidden');
+      // graceful scale + fade
+      loginContainer.classList.add('scale-fade-out');
       setTimeout(() => {
+        loginContainer.classList.add('hidden');
+        // fully remove from layout to avoid pushing chat below
+        loginContainer.style.display = 'none';
         chatApp.classList.add('active');
+        chatApp.classList.add('scale-fade-in');
         try { apiRef && apiRef.GetConversationList && apiRef.GetConversationList(); } catch {}
-      }, 300);
+        // Enable legacy stylesheet for chat until chat UI is migrated to Tailwind
+        try { document.getElementById('legacy-css')?.setAttribute('media','all'); } catch {}
+      }, 180);
     },
 
     showLoginPage() {
-      const loginContainer = document.querySelector('.login-container');
+      const loginContainer = document.getElementById('login-container');
       const chatApp = document.getElementById('chat-app');
       chatApp.classList.remove('active');
+      loginContainer.classList.remove('login-hidden');
       setTimeout(() => {
-        loginContainer.classList.remove('hidden');
-        dom.loginFormContent.style.display = 'block';
-        dom.registerFormContent.style.display = 'none';
-        dom.loginFormContent.classList.remove('fading-out');
-        dom.registerFormContent.classList.remove('fading-out', 'visible');
+        dom.loginFormContent.classList.remove('hidden');
+        dom.registerFormContent.classList.add('hidden');
         ui.showMessage(dom.messageBox, '');
         ui.showMessage(dom.registerMessageBox, '');
-      }, 300);
+      }, 120);
+      // Disable legacy stylesheet on login screens
+      try { document.getElementById('legacy-css')?.setAttribute('media','not all'); } catch {}
     },
 
     showRegisterForm() {
-      dom.loginFormContent.classList.add('fading-out');
+      const card = document.getElementById('login-form');
+      if (card) { card.classList.add('animate-bounce-in'); setTimeout(() => card.classList.remove('animate-bounce-in'), 420); }
       setTimeout(() => {
-        dom.loginFormContent.style.display = 'none';
-        dom.registerFormContent.style.display = 'block';
-        dom.loginForm.style.minHeight = '650px';
-        setTimeout(() => {
-          dom.registerFormContent.classList.add('visible');
-        }, 50);
-      }, 300);
+        dom.loginFormContent.classList.add('hidden');
+        dom.registerFormContent.classList.remove('hidden');
+      }, 160);
     },
 
     showLoginForm() {
-      dom.registerFormContent.classList.remove('visible');
+      const card = document.getElementById('login-form');
+      if (card) { card.classList.add('animate-bounce-in'); setTimeout(() => card.classList.remove('animate-bounce-in'), 420); }
       setTimeout(() => {
-        dom.registerFormContent.style.display = 'none';
-        dom.loginFormContent.style.display = 'block';
-        dom.loginForm.style.minHeight = '600px';
-        setTimeout(() => {
-          dom.loginFormContent.classList.remove('fading-out');
-        }, 50);
-      }, 300);
+        dom.registerFormContent.classList.add('hidden');
+        dom.loginFormContent.classList.remove('hidden');
+      }, 160);
     },
   };
 
