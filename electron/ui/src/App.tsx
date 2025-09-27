@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,10 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { callNative, subscribeNativeEvents } from '@/lib/native';
 import { LogIn, Send, User, Lock, Mail, Key, Gift, Eye, EyeOff } from 'lucide-react';
 import logoUrl from '@/assets/logo.svg';
+import Modal from '@/components/Modal';
 
 type Conversation = { id: number; title: string; lastMessage?: string };
 type Member = { id: number; name: string; email?: string; avatar?: string };
-type Message = { id: number; sender_id: number; text: string; created_at?: string };
+type Message = { id: number; sender_id: number; text: string; created_at?: string; timestamp?: Date };
 
 function useNativeAPI() {
   const signIn = (username: string, password: string) => callNative('SignIn', username, password);
@@ -40,6 +41,17 @@ function App() {
   const [membersCache, setMembersCache] = useState<Map<number, Member[]>>(new Map());
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
+  const [myUserId, setMyUserId] = useState<number | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [loadingConversation, setLoadingConversation] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showAddFriend, setShowAddFriend] = useState(false);
+  const [friendSearchQuery, setFriendSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchingFriends, setSearchingFriends] = useState(false);
+  const [addingFriend, setAddingFriend] = useState(false);
 
   // Force light theme
   useEffect(() => {
@@ -50,11 +62,78 @@ function App() {
     return subscribeNativeEvents((evt) => {
       try {
         if (evt && typeof evt === 'object' && String(evt.type || '').toLowerCase().includes('message')) {
-          if (activeId != null) api.getHistory(activeId).then((r:any) => setMessages(r.messages || []));
+          if (activeId != null) {
+            api.getHistory(activeId).then((r:any) => {
+              setMessages(r.messages || []);
+              setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            });
+          }
         }
       } catch {}
     });
   }, [activeId]);
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [messages]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus input with Ctrl/Cmd + K
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+
+      // Navigate conversations with Ctrl/Cmd + Up/Down
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+        e.preventDefault();
+        const currentIndex = convos.findIndex(c => c.id === activeId);
+        const newIndex = e.key === 'ArrowUp'
+          ? Math.max(0, currentIndex - 1)
+          : Math.min(convos.length - 1, currentIndex + 1);
+
+        if (convos[newIndex]) {
+          selectConversation(convos[newIndex].id);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [convos, activeId]);
+
+  // Real-time friend search
+  useEffect(() => {
+    if (!friendSearchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const searchFriends = async () => {
+      setSearchingFriends(true);
+      try {
+        const results = await api.findUsers(friendSearchQuery.trim());
+        setSearchResults(results?.users || []);
+      } catch (error) {
+        console.error('Failed to search users:', error);
+        setSearchResults([]);
+      } finally {
+        setSearchingFriends(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchFriends, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [friendSearchQuery]);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,17 +146,25 @@ function App() {
       const r: any = await api.signIn(username, password);
       if (r?.status === 'Success') {
         setMe({ id: r.user_id, name: username });
-        setStage('chat');
-        const list: any = await api.getConversations();
-        const convs: Conversation[] = (list?.conversations || []) as Conversation[];
-        setConvos(convs);
-        if (convs.length) {
-          setActiveId(convs[0].id);
-          const mem = await api.getMembers(convs[0].id);
-          setMembersCache(new Map([[convs[0].id, mem.members || mem || []]]));
-          const hist = await api.getHistory(convs[0].id);
-          setMessages(hist?.messages || []);
-        }
+        setMyUserId(r.user_id);
+        setIsTransitioning(true);
+
+        // Start transition animation
+        setTimeout(async () => {
+          setStage('chat');
+          const list: any = await api.getConversations();
+          const convs: Conversation[] = (list?.conversations || []) as Conversation[];
+          setConvos(convs);
+          if (convs.length) {
+            setActiveId(convs[0].id);
+            const mem = await api.getMembers(convs[0].id);
+            setMembersCache(new Map([[convs[0].id, mem.members || mem || []]]));
+            const hist = await api.getHistory(convs[0].id);
+            setMessages(hist?.messages || []);
+          }
+          // End transition after chat is loaded
+          setTimeout(() => setIsTransitioning(false), 300);
+        }, 800); // Delay to show transition effect
       } else {
         setError(r?.message || '登录失败');
         setShakeLogin(true); setTimeout(()=> setShakeLogin(false), 420);
@@ -134,22 +221,70 @@ function App() {
   }
 
   async function selectConversation(id: number) {
+    setLoadingConversation(true);
     setActiveId(id);
-    if (!membersCache.has(id)) {
-      const mem = await api.getMembers(id);
-      setMembersCache((prev: Map<number, Member[]>) => new Map(prev).set(id, mem.members || mem || []));
+    try {
+      if (!membersCache.has(id)) {
+        const mem = await api.getMembers(id);
+        setMembersCache((prev: Map<number, Member[]>) => new Map(prev).set(id, mem.members || mem || []));
+      }
+      const hist = await api.getHistory(id);
+      setMessages(hist?.messages || []);
+    } catch (error) {
+      console.error('Failed to load conversation:', error);
+    } finally {
+      setLoadingConversation(false);
     }
-    const hist = await api.getHistory(id);
-    setMessages(hist?.messages || []);
+  }
+
+  async function handleAddFriend(userId: number) {
+    setAddingFriend(true);
+    try {
+      const result = await api.addFriend(userId);
+      if (result?.success) {
+        // Close modal and show success feedback
+        setShowAddFriend(false);
+        setFriendSearchQuery('');
+        setSearchResults([]);
+        // You could show a toast notification here
+      }
+    } catch (error) {
+      console.error('Failed to add friend:', error);
+    } finally {
+      setAddingFriend(false);
+    }
+  }
+
+  function handleCloseAddFriend() {
+    setShowAddFriend(false);
+    setFriendSearchQuery('');
+    setSearchResults([]);
   }
 
   return (
-    <div className="h-screen w-screen grid" style={{gridTemplateRows: '1fr'}}>
-      <div className="ambient-glow" aria-hidden>
-        <span className="glow"></span>
-        <span className="glow"></span>
-        <span className="glow"></span>
+    <div className="h-screen w-screen grid relative overflow-hidden" style={{gridTemplateRows: '1fr'}}>
+      {/* Unified Background for All Interfaces */}
+      <div className="unified-background" aria-hidden>
+        <div className="unified-orb unified-orb-1"></div>
+        <div className="unified-orb unified-orb-2"></div>
+        <div className="unified-orb unified-orb-3"></div>
+        <div className="unified-orb unified-orb-4"></div>
+        <div className="unified-orb unified-orb-5"></div>
       </div>
+
+      {/* Transition Overlay */}
+      {isTransitioning && (
+        <div className="fixed inset-0 z-50 transition-overlay">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-purple-500/20 to-pink-400/20 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center text-white">
+              <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="text-lg font-medium">欢迎进入聊天</div>
+              <div className="text-sm opacity-80 mt-1">正在为您准备界面...</div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* No app header per request */}
       {stage === 'login' && (
         <div className="flex items-center justify-center p-6">
@@ -240,40 +375,303 @@ function App() {
         </div>
       )}
       {stage === 'chat' && (
-        <div className="grid grid-cols-[280px_1fr] h-full">
-          <aside className="border-r flex flex-col">
-            <div className="p-3 font-medium">会话</div>
-            <div className="flex-1 overflow-auto">
+        <div className={`grid grid-cols-[320px_1fr] h-full transition-all duration-700 relative z-10 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+          <aside className="border-r border-gray-200 flex flex-col bg-white/60 backdrop-blur-md" role="navigation" aria-label="会话列表">
+            <div className="p-4 border-b border-gray-200 bg-white/40">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="font-semibold text-gray-900 text-lg">会话</h2>
+                  <p className="text-sm text-gray-600 mt-1">选择一个会话开始聊天</p>
+                </div>
+                <button
+                  onClick={() => setShowAddFriend(true)}
+                  className="p-2 bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-sm rounded-lg transition-all duration-200 group"
+                  aria-label="添加好友"
+                >
+                  <User className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto p-2" role="list">
               {convos.map((c: Conversation) => (
                 <button
                   key={c.id}
                   onClick={() => selectConversation(c.id)}
-                  className={`w-full text-left px-3 py-2 border-b hover:bg-accent transition-transform ${activeId===c.id? 'bg-accent': ''}`}
+                  className={`w-full text-left p-4 mb-2 rounded-xl transition-all duration-200 group hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 ${
+                    activeId===c.id
+                      ? 'bg-blue-50 border border-blue-200 shadow-lg backdrop-blur-sm'
+                      : 'bg-white/70 border border-gray-200 hover:bg-white/90 hover:border-gray-300 backdrop-blur-sm'
+                  }`}
+                  aria-current={activeId===c.id ? 'page' : undefined}
+                  aria-label={`切换到${c.title}会话`}
                 >
-                  <div className="text-sm font-medium">{c.title}</div>
-                  {c.lastMessage && <div className="text-xs text-muted-foreground truncate">{c.lastMessage}</div>}
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold text-lg shadow-md">
+                      {c.title.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-medium truncate ${
+                        activeId===c.id ? 'text-blue-800' : 'text-gray-900'
+                      }`}>{c.title}</div>
+                      {c.lastMessage && (
+                        <div className="text-sm text-gray-600 truncate mt-1">{c.lastMessage}</div>
+                      )}
+                      <div className="flex items-center justify-between mt-1">
+                        <div className="text-xs text-gray-400">刚刚</div>
+                        {activeId !== c.id && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </button>
               ))}
-              {!convos.length && <div className="p-3 text-sm text-muted-foreground">暂无会话</div>}
+              {!convos.length && (
+                <div className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <User className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <div className="text-sm text-gray-600 mb-2">暂无会话</div>
+                  <div className="text-xs text-gray-500">等待新的对话开始</div>
+                </div>
+              )}
             </div>
           </aside>
           <main className="grid grid-rows-[auto_1fr_auto]">
-            <div className="border-b px-4 py-2 flex items-center gap-2">
-              <div className="font-medium">{convos.find(c=>c.id===activeId)?.title || '未选择会话'}</div>
+            <div className="border-b border-gray-200 px-6 py-4 bg-white/60 backdrop-blur-md flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                {activeId && (
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white font-semibold shadow-md">
+                    {(convos.find(c=>c.id===activeId)?.title || '').charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div>
+                  <div className="font-semibold text-gray-900 text-lg">
+                    {convos.find(c=>c.id===activeId)?.title || '未选择会话'}
+                  </div>
+                  {activeId && (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                      在线
+                    </div>
+                  )}
+                </div>
+              </div>
+              {activeId && (
+                <div className="flex items-center space-x-2">
+                  <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </button>
+                  <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                  <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
-            <div className="overflow-auto p-3 space-y-2">
-              {messages.map((m: Message) => (
-                <div key={m.id} className="max-w-[72ch]">{m.text}</div>
-              ))}
-              {!messages.length && <div className="text-sm text-muted-foreground">暂无消息</div>}
+            <div className="overflow-auto p-3 space-y-3" style={{scrollBehavior: 'smooth'}} role="log" aria-label="聊天消息" aria-live="polite">
+              <div className="flex flex-col space-y-3">
+                {messages.map((m: Message) => {
+                  const isMyMessage = m.sender_id === myUserId;
+                  const timestamp = m.created_at || new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+                  return (
+                    <div key={m.id} className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 duration-300`}>
+                      <div className={`group max-w-[70%] flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}`}>
+                        <div className={`px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${
+                          isMyMessage
+                            ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-900 border border-gray-200'
+                        }`}>
+                          <p className="text-sm leading-relaxed break-words">{m.text}</p>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          {timestamp}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {loadingConversation && (
+                  <div className="flex items-center justify-center h-32">
+                    <div className="text-center">
+                      <div className="w-8 h-8 border-3 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto mb-3"></div>
+                      <div className="text-sm text-muted-foreground">加载消息中...</div>
+                    </div>
+                  </div>
+                )}
+                {!loadingConversation && !messages.length && (
+                  <div className="flex items-center justify-center h-32">
+                    <div className="text-center">
+                      <div className="text-sm text-muted-foreground mb-2">暂无消息</div>
+                      <div className="text-xs text-muted-foreground">开始您的第一次对话吧！</div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
             </div>
-            <form className="border-t p-2 flex items-center gap-2" onSubmit={(e)=>{e.preventDefault(); setDraft('');}}>
-              <Input value={draft} onChange={e=>setDraft(e.target.value)} placeholder="输入消息…"/>
-              <Button type="submit" className="gap-1"><Send className="w-4 h-4"/>发送</Button>
+            <form className="border-t border-gray-200 p-4 flex items-center gap-3 bg-white/50 backdrop-blur-md" onSubmit={async (e)=>{
+              e.preventDefault();
+              if (!draft.trim() || !activeId || sendingMessage) return;
+
+              setSendingMessage(true);
+              const messageText = draft.trim();
+              const newMessage: Message = {
+                id: Date.now(),
+                sender_id: myUserId || 0,
+                text: messageText,
+                created_at: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+              };
+
+              // Optimistically add message
+              setMessages(prev => [...prev, newMessage]);
+              setDraft('');
+
+              // Simulate sending delay
+              try {
+                await new Promise(resolve => setTimeout(resolve, 500));
+                // Here you would normally send to the server
+              } catch (error) {
+                console.error('Failed to send message:', error);
+                // Remove the optimistic message on error
+                setMessages(prev => prev.filter(m => m.id !== newMessage.id));
+                setDraft(messageText); // Restore draft
+              } finally {
+                setSendingMessage(false);
+              }
+
+              // Scroll to bottom after adding message
+              setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}>
+              <div className="flex-1 relative">
+                <Input
+                  ref={inputRef}
+                  value={draft}
+                  onChange={e=>setDraft(e.target.value)}
+                  placeholder={activeId ? "输入消息… (Ctrl+K 快速聚焦)" : "请选择一个会话"}
+                  className="pr-12 h-11 rounded-full border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+                  disabled={!activeId || sendingMessage}
+                  aria-label="消息输入框"
+                  autoComplete="off"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+                  {sendingMessage ? (
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 border border-gray-300 border-t-blue-500 rounded-full animate-spin mr-1"></div>
+                      发送中
+                    </div>
+                  ) : (
+                    draft.length > 0 && `${draft.length}`
+                  )}
+                </div>
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={!draft.trim() || !activeId || sendingMessage}
+                className="h-11 px-6 rounded-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:text-gray-500 transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                {sendingMessage ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    发送中
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 mr-2"/>发送
+                  </>
+                )}
+              </Button>
             </form>
           </main>
         </div>
       )}
+
+      {/* Add Friend Modal */}
+      <Modal
+        isOpen={showAddFriend}
+        onClose={handleCloseAddFriend}
+        title="添加好友"
+        maxWidth="md"
+      >
+        <div className="relative mb-4">
+          <Input
+            value={friendSearchQuery}
+            onChange={(e) => setFriendSearchQuery(e.target.value)}
+            placeholder="搜索用户名或邮箱..."
+            className="w-full pr-10 bg-white/70 border-gray-200 text-gray-900 placeholder:text-gray-500"
+            autoFocus
+          />
+          {searchingFriends && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+          )}
+        </div>
+
+        <div className="max-h-64 overflow-y-auto">
+          {searchResults.length > 0 ? (
+            <div className="space-y-2">
+              {searchResults.map((user: any, index: number) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-all duration-200 animate-in slide-in-from-left-2 fade-in"
+                  style={{animationDelay: `${index * 100}ms`}}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold">
+                      {(user.name || user.username || 'U').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">{user.name || user.username}</div>
+                      {user.email && (
+                        <div className="text-sm text-gray-600">{user.email}</div>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => handleAddFriend(user.id)}
+                    disabled={addingFriend}
+                    size="sm"
+                    className="bg-blue-500/80 hover:bg-blue-600/80 backdrop-blur-sm"
+                  >
+                    {addingFriend ? (
+                      <>
+                        <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin mr-1"></div>
+                        添加中
+                      </>
+                    ) : (
+                      '添加好友'
+                    )}
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : friendSearchQuery.trim() && !searchingFriends ? (
+            <div className="text-center py-8 text-gray-500 animate-in fade-in duration-300">
+              <User className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <div className="font-medium">未找到用户</div>
+              <div className="text-sm">请尝试其他搜索关键词</div>
+            </div>
+          ) : !friendSearchQuery.trim() ? (
+            <div className="text-center py-8 text-gray-500 animate-in fade-in duration-300">
+              <div className="font-medium">开始搜索</div>
+              <div className="text-sm">输入用户名或邮箱来查找好友</div>
+            </div>
+          ) : null}
+        </div>
+      </Modal>
     </div>
   );
 }
