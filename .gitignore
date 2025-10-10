@@ -51,6 +51,8 @@ compile_commands.json
 
 # CLion / IntelliJ
 .idea/
+.clangd
+.claude/
 
 # Visual Studio
 .vs/
@@ -67,6 +69,9 @@ vcpkg_installed/
 *.log.*
 *.tmp
 *.swp
+*~
+*.bak
+*.orig
 
 # macOS specific files
 .DS_Store
@@ -127,3 +132,12 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
+
+# Vite cache
+.vite/
+
+# Python virtual environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
