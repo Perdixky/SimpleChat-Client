@@ -123,6 +123,18 @@
   animation-delay: 14s;
 }
 
+/* Tame blob visuals to reduce perceived flicker during theme/accent changes */
+.bg-blob { filter: blur(24px) saturate(115%) !important; opacity: 0.12 !important; animation-duration: 26s !important; }
+@keyframes blob-breathe { /* override with reduced movement */
+  0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: .12; }
+  25%     { transform: translate3d(1vw, -1vh, 0) scale(1.02); opacity: .14; }
+  50%     { transform: translate3d(-.5vw, 1vh, 0) scale(0.995); opacity: .11; }
+  75%     { transform: translate3d(-1.2vw, -.6vh, 0) scale(1.01); opacity: .13; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob { animation: none !important; }
+}
+
 @keyframes blob-float {
   0%, 100% {
     transform: translateX(0px) translateY(0px) scale(1);
@@ -164,4 +176,93 @@
   visibility: hidden;
   transform: scale(0.95);
   pointer-events: none;
+}
+
+/* Unify background between login and chat
+   When legacy chat CSS is enabled, it sets a body gradient/animation.
+   Apply this class to keep a single background (the .bg-blobs layer). */
+body.unified-bg {
+  background: transparent !important;
+  background-image: none !important;
+  animation: none !important;
+}
+
+/* Theme toggle + accent switcher (since legacy CSS is removed) */
+.theme-toggle {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  z-index: 30;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(15,23,42,0.12);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.12);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+.theme-toggle:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 10px 30px rgba(2,6,23,0.16); }
+.theme-toggle .iconify { font-size: 20px; color: rgb(var(--accent)); }
+
+.accent-switcher {
+  position: fixed;
+  right: 16px;
+  top: 64px;
+  z-index: 30;
+  display: flex;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(15,23,42,0.1);
+  backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+}
+.accent-dot { width: 16px; height: 16px; border-radius: 9999px; border: 2px solid rgba(255,255,255,0.8); cursor: pointer; box-shadow: 0 2px 6px rgba(2,6,23,0.18); transition: transform 140ms cubic-bezier(0.34,1.56,0.64,1); }
+.accent-dot:hover { transform: translateY(-1px) scale(1.05); }
+.accent-dot[aria-current="true"] { outline: 2px solid rgba(15,23,42,0.3); outline-offset: 2px; }
+
+/* Minimal motion utilities reused by UI */
+@keyframes shake-x { 0%,100% { transform: translateX(0); } 15% { transform: translateX(-10px); } 30% { transform: translateX(8px); } 45% { transform: translateX(-6px); } 60% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+.shake { animation: shake-x 420ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes bounce-in { 0% { transform: scale(.94); opacity: .0; } 60% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); } }
+.animate-bounce-in { animation: bounce-in 360ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Glass helpers used in layouts */
+.backdrop-blur-glass { backdrop-filter: blur(10px) saturate(140%); }
+.shadow-glass { box-shadow: 0 10px 30px rgba(2,6,23,0.16); }
+
+/* Smooth theme/accent swap without shadow wobble */
+.theme-animating *, .theme-animating *::before, .theme-animating *::after {
+  transition-property: background-color, color, border-color, fill, stroke, outline-color, caret-color !important;
+  transition-duration: 240ms !important;
+  transition-timing-function: ease !important;
+}
+.theme-animating .bg-blob { animation: none !important; }
+
+/* Avoid box-shadow animation globally (prevents noisy shadow wobble) */
+.btn { transition: transform 140ms cubic-bezier(0.22,1,0.36,1), background 140ms ease, color 140ms ease, filter 140ms ease !important; }
+
+/* Add Friend overlay: use pseudo-element veil so blur + dim fade in together */
+#add-friend-modal {
+  background: transparent !important;
+  transition: opacity 220ms ease, transform 220ms ease !important;
+}
+#add-friend-modal::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.56);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+#add-friend-modal.modal-visible::before { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  #add-friend-modal, #add-friend-modal::before { transition: none !important; }
 }

@@ -10,11 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS with custom design system -->
-  <link rel="stylesheet" href="./renderer/styles/tailwind-new.css" />
+  <link rel="stylesheet" href="./renderer/styles/tw.css" />
   <!-- Custom additions for enhanced functionality -->
   <link rel="stylesheet" href="./renderer/styles/custom-additions.css" />
-  <!-- Legacy CSS for chat interface (kept for gradual migration) -->
-  <link id="legacy-css" rel="stylesheet" href="./renderer/styles/app.css" media="not all" />
 </head>
 <body>
   <!-- Background effects: subtle colorful breathing blobs -->
@@ -50,33 +48,31 @@
         <form id="auth-form" class="space-y-4">
           <!-- Username Input -->
           <div class="space-y-2">
-            <label for="username" class="flex items-center gap-2 text-sm font-medium text-white/90">
-              <span class="iconify text-accent" data-icon="mdi:account"></span>
-              Username
+            <label for="username" class="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <span class="iconify" data-icon="mdi:account" style="color: rgb(var(--accent));"></span>
+              用户名
             </label>
             <input
               type="text"
               id="username"
               required
               autocomplete="username"
-              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
-              placeholder="Enter your username"
+              class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:bg-white focus:border-slate-400 focus:ring-2 focus:outline-none transition-all duration-200"
             />
           </div>
 
           <!-- Password Input -->
           <div class="space-y-2">
-            <label for="password" class="flex items-center gap-2 text-sm font-medium text-white/90">
-              <span class="iconify text-accent" data-icon="mdi:lock"></span>
-              Password
+            <label for="password" class="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <span class="iconify" data-icon="mdi:lock" style="color: rgb(var(--accent));"></span>
+              密码
             </label>
             <input
               type="password"
               id="password"
               required
               autocomplete="current-password"
-              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:bg-white/15 focus:border-accent focus:ring-2 focus:ring-accent/50 focus:outline-none transition-all duration-200"
-              placeholder="Enter your password"
+              class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:bg-white focus:border-slate-400 focus:ring-2 focus:outline-none transition-all duration-200"
             />
           </div>
 
@@ -217,44 +213,45 @@
     </div>
   </div>
 
-  <!-- Chat Application -->
-  <div class="chat-app" id="chat-app" style="display:none">
-    <button class="logout-btn" id="logout-btn" title="Logout">
-      <span class="iconify" data-icon="mdi:logout"></span>
-    </button>
-    <div class="chat-container" id="chat-container">
-      <aside class="sidebar">
-        <div class="sidebar-header">
-          <h2>Chats</h2>
-          <div class="actions">
-            <button id="add-friend-btn" title="Add Friend"><span class="iconify icon-breathe" data-icon="mdi:account-plus-outline"></span></button>
-            <button id="new-chat-btn" title="New Chat"><span class="iconify icon-breathe" data-icon="mdi:pencil"></span></button>
+  <!-- Chat Application (Tailwind-based) -->
+  <div class="chat-app" id="chat-app">
+    <div class="fixed inset-0 z-10 flex items-stretch px-4 py-6">
+      <div class="container mx-auto max-w-7xl w-full grid grid-cols-12 gap-4" id="chat-container">
+        <!-- Sidebar -->
+        <aside class="col-span-12 md:col-span-4 lg:col-span-3 bg-white/40 backdrop-blur-md border border-white/50 rounded-2xl shadow-glass p-4 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-slate-800 font-semibold">Chats</h2>
+            <div class="flex items-center gap-2">
+              <button id="add-friend-btn" class="btn btn-outline" title="Add Friend"><span class="iconify" data-icon="mdi:account-plus-outline"></span></button>
+              <button id="new-chat-btn" class="btn btn-outline" title="New Chat"><span class="iconify" data-icon="mdi:pencil"></span></button>
+            </div>
           </div>
-        </div>
-        <div class="search-bar">
-          <input type="text" id="search-input" placeholder="Search or start new chat" />
-        </div>
-        <div class="user-list" id="user-list"><!-- Conversations --></div>
-      </aside>
+          <div class="relative mb-3">
+            <input type="text" id="search-input" placeholder="Search or start new chat" class="w-full px-3 py-2 rounded-xl border border-white/60 bg-white/80 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-accent/50" />
+          </div>
+          <div id="user-list" class="flex-1 overflow-y-auto space-y-1 pr-1"></div>
+        </aside>
 
-      <main class="chat-panel">
-        <header class="chat-header" id="chat-header"><!-- Active chat header --></header>
-        <div class="message-area" id="message-area">
-          <div class="message-list" id="message-list"><!-- Messages --></div>
-        </div>
-        <div class="message-input-area">
-          <form id="message-form">
-            <button type="button" id="attach-file-btn" title="Attach File"><span class="iconify icon-fly" data-icon="mdi:attachment"></span></button>
-            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" />
-            <button type="submit" title="Send Message"><span class="iconify icon-fly icon-breathe" data-icon="mdi:send"></span></button>
-          </form>
-        </div>
-      </main>
+        <!-- Main Chat Panel -->
+        <main class="col-span-12 md:col-span-8 lg:col-span-9 bg-white/40 backdrop-blur-md border border-white/50 rounded-2xl shadow-glass flex flex-col">
+          <header class="flex items-center gap-3 px-4 py-3 border-b border-white/50" id="chat-header"></header>
+          <div class="flex-1 overflow-y-auto p-4" id="message-area">
+            <div class="flex flex-col gap-3" id="message-list"></div>
+          </div>
+          <div class="border-t border-white/50 p-3">
+            <form id="message-form" class="flex items-center gap-2">
+              <button type="button" id="attach-file-btn" class="btn btn-outline" title="Attach File"><span class="iconify" data-icon="mdi:attachment"></span></button>
+              <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" class="flex-1 px-3 py-2 rounded-xl border border-white/60 bg-white/80 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-accent/50" />
+              <button type="submit" class="btn btn-primary" title="Send Message"><span class="iconify" data-icon="mdi:send"></span><span class="hidden sm:inline">Send</span></button>
+            </form>
+          </div>
+        </main>
+      </div>
     </div>
   </div>
 
   <!-- Add Friend Modal -->
-  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300" id="add-friend-modal">
+  <div class="fixed inset-0 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300" id="add-friend-modal">
     <div class="bg-white/10 backdrop-blur-glass border border-white/20 rounded-2xl shadow-glass p-6 w-full max-w-md relative transform scale-95 transition-all duration-300">
       <!-- Close Button -->
       <button

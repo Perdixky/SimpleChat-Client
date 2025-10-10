@@ -4,6 +4,24 @@ const path = require('path');
 const fs = require('fs');
 const { printUnified, normalizeLevel } = require('./common/logger');
 
+// Auto-reload for development (watches renderer files and CSS)
+try {
+  if (process.env.NODE_ENV !== 'production') {
+    require('electron-reloader')(module, {
+      debug: false,
+      watchRenderer: true,
+      ignore: [
+        /node_modules/,
+        /build/,
+        /native\.node$/,
+        /\.log$/
+      ]
+    });
+  }
+} catch (err) {
+  // Silently fail if electron-reloader is not available
+}
+
 // Load native addon built via xmake (preferred; node-gyp fallback removed)
 let addon;
 let session;

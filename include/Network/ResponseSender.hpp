@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Logic/LogicType.hpp"
 #include "Network/Concepts.hpp"
 #include "Network/MessageType.hpp"
@@ -33,8 +34,7 @@ struct ResponseOperation {
                             &result) mutable {
       if (!result) {
         log(error, "Request failed for UUID: {} with error: {}",
-                   boost::uuids::to_string(uuid_),
-                   static_cast<int>(result.error()));
+            boost::uuids::to_string(uuid_), static_cast<int>(result.error()));
         stdexec::set_error(
             std::move(r),
             std::make_exception_ptr(std::runtime_error("Request error")));
@@ -46,8 +46,7 @@ struct ResponseOperation {
       if constexpr (requires { ResponseType::error; }) {
         if (auto err = value.get("error"); err) {
           log(warning, "Received error in response for UUID: {}, error: {}",
-                       boost::uuids::to_string(uuid_),
-                       err->to_string().value());
+              boost::uuids::to_string(uuid_), err->to_string().value());
           stdexec::set_error(std::move(r),
                              std::make_exception_ptr(
                                  std::runtime_error(err->to_string().value())));
@@ -85,9 +84,10 @@ template <RequestType T, ResponseRouterType R> struct ResponseSender {
   boost::uuids::uuid uuid_;
 
   using sender_concept = stdexec::sender_t;
-  using completion_signatures = stdexec::completion_signatures<
-      stdexec::set_value_t(typename T::Response),
-      stdexec::set_error_t(std::exception_ptr), stdexec::set_stopped_t()>;
+  using completion_signatures =
+      stdexec::completion_signatures<stdexec::set_value_t(typename T::Response),
+                                     stdexec::set_error_t(std::exception_ptr),
+                                     stdexec::set_stopped_t()>;
 
   template <stdexec::receiver Receiver> auto connect(Receiver r) noexcept {
     return ResponseOperation<Receiver, T, R>{std::move(r), router_, uuid_};

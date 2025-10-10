@@ -225,7 +225,8 @@ private:
   static auto deserializeAndCall(SessionType *session, Method method,
                                  const Napi::CallbackInfo &info,
                                  std::index_sequence<Is...>) {
-    // Direct parameter expansion without intermediate tuple
+    // 使用 index 可以展开参数包并按顺序访问 info
+    // info 是一个参数数组，info[Is] 访问第 Is 个参数
     return (session->*method)(
         deserializeArg<std::tuple_element_t<Is, ArgsType>>(info[Is])...);
   }
@@ -233,10 +234,10 @@ private:
 
 // Macro for easy method wrapping (requires semicolon)
 #define WRAP_METHOD(method_name)                                               \
-  Napi::Value method_name(const Napi::CallbackInfo &info) {                    \
+  auto method_name(const Napi::CallbackInfo &info) -> Napi::Value {            \
     return AutoMethodWrapper<                                                  \
         SessionType,                                                           \
-        decltype(&SessionType::method_name)>::wrap(session_.get(),             \
+        decltype(&SessionType::method_name)>::wrap(&session_,                  \
                                                    &SessionType::method_name,  \
                                                    info, js_sched_);           \
   }                                                                            \
@@ -247,8 +248,8 @@ private:
 // SessionWrapper class
 class SessionWrapper : public Napi::ObjectWrap<SessionWrapper> {
 private:
-  std::unique_ptr<Network::ResponseRouter> router_;
-  std::unique_ptr<SessionType> session_;
+  Network::ResponseRouter router_{};
+  SessionType session_;
   std::jthread loop_thread_;
   Napi::ThreadSafeFunction event_tsfn_{};
   Napi::ThreadSafeFunction js_tsfn_{};
@@ -257,7 +258,7 @@ private:
 
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    Napi::Function func = DefineClass(
+    const Napi::Function func = DefineClass(
         env, "Session",
         {// Expose PascalCase to match Logic::Request::<Name>::method_name
          InstanceMethod("SignIn", &SessionWrapper::SignIn),
@@ -281,8 +282,12 @@ public:
     return exports;
   }
 
-  SessionWrapper(const Napi::CallbackInfo &info)
-      : Napi::ObjectWrap<SessionWrapper>(info) {
+  SessionWrapper(const Napi::CallbackInfo &callback_info)
+      : Napi::ObjectWrap<SessionWrapper>(callback_info),
+        session_{ConnectionType(
+            boost::asio::ip::tcp::endpoint(
+                boost::asio::ip::make_address("127.0.0.1"), 8888),
+            router_)} {
 
     // Initialize logging to stderr
     initLogging();
@@ -294,75 +299,71 @@ public:
       // ignore if already exists
     }
 
-    log(::info, "Initializing SessionWrapper");
-
-    // Create connection - reuse daemon.cpp logic
-    auto endpoint = boost::asio::ip::tcp::endpoint(
-        boost::asio::ip::make_address("127.0.0.1"), 8888);
-
-    router_ = std::make_unique<Network::ResponseRouter>();
-    auto connection = ConnectionType(std::move(endpoint), *router_);
-    session_ = std::make_unique<SessionType>(std::move(connection));
+    log(info, "Initializing SessionWrapper");
 
     // Persistent TSFN for JS-thread hops used by JsScheduler
     {
-      const auto env2 = info.Env();
-      const auto stub = Napi::Function::New(env2, [](const Napi::CallbackInfo &) {});
+      const auto env2 = callback_info.Env();
+      const auto stub =
+          Napi::Function::New(env2, [](const Napi::CallbackInfo &) {});
       js_tsfn_ =
           Napi::ThreadSafeFunction::New(env2, stub, "js_scheduler", 0, 1);
       js_tsfn_.Unref(env2);
       js_sched_ = Async::JsScheduler::from_tsfn(js_tsfn_);
     }
 
-    // Wire router broadcast to JS event callback if present
-    router_->setEventCallback([this](const rfl::Generic::Object &obj) {
-      if (!event_tsfn_)
-        return;
-      // Create a small snapshot (type + raw) to JS; avoid heavy conversion for
-      // now
-      auto call = [obj](Napi::Env env, Napi::Function jsCb) {
-        Napi::Object evt = Napi::Object::New(env);
-        // try to extract 'type' if present
-        try {
-          if (auto t = obj.get("type").and_then(rfl::to_string); t) {
-            evt.Set("type", Napi::String::New(env, t.value()));
-          } else {
-            evt.Set("type", Napi::String::New(env, "broadcast"));
-          }
-          if (auto id = obj.get("id").and_then(rfl::to_string); id) {
-            evt.Set("id", Napi::String::New(env, id.value()));
-          }
-        } catch (...) {
-        }
-        // best-effort textual dump
-        try {
-          evt.Set("raw", Napi::String::New(env, rfl::json::write(obj)));
-        } catch (...) {
-        }
-        jsCb.Call({evt});
-      };
-      event_tsfn_.BlockingCall(call);
-    });
+    // Inject event callback directly into Connection so that server push
+    // messages (without an 'id') can bypass the ResponseRouter and preserve
+    // router's single responsibility.
+    session_.lowLevel().setEventCallback(
+        [this](const rfl::Generic::Object &obj) {
+          if (!event_tsfn_)
+            return;
+          // Create a small snapshot (type + raw) to JS; avoid heavy conversion
+          // for now
+          const auto call = [obj](Napi::Env env, Napi::Function jsCb) {
+            Napi::Object evt = Napi::Object::New(env);
+            // try to extract 'type' if present
+            try {
+              if (auto t = obj.get("type").and_then(rfl::to_string); t) {
+                evt.Set("type", Napi::String::New(env, t.value()));
+              } else {
+                evt.Set("type", Napi::String::New(env, "broadcast"));
+              }
+              if (auto id = obj.get("id").and_then(rfl::to_string); id) {
+                evt.Set("id", Napi::String::New(env, id.value()));
+              }
+            } catch (...) {
+            }
+            // best-effort textual dump
+            try {
+              evt.Set("raw", Napi::String::New(env, rfl::json::write(obj)));
+            } catch (...) {
+            }
+            jsCb.Call({evt});
+          };
+          event_tsfn_.BlockingCall(call);
+        });
 
     // Connect and start listening
     try {
-      log(::info, "Attempting initial connection");
-      stdexec::sync_wait(session_->lowLevel().connect());
-      log(::info, "Connection established, starting alive_listen");
-      Async::Loop::submit(session_->alive_listen());
+      log(info, "Attempting initial connection");
+      stdexec::sync_wait(session_.lowLevel().connect());
+      log(info, "Connection established, starting alive_listen");
+      Async::Loop::submit(session_.alive_listen());
     } catch (const std::exception &e) {
       log(error, "Failed to initialize connection: {}", e.what());
     }
 
     // Start async loop thread
     loop_thread_ = std::jthread([] {
-      log(::info, "Starting async loop thread");
+      log(info, "Starting async loop thread");
       Async::Loop::run();
     });
   }
 
   ~SessionWrapper() {
-    log(::info, "Destroying SessionWrapper");
+    log(info, "Destroying SessionWrapper");
     DoClose();
   }
 
@@ -379,8 +380,8 @@ private:
   WRAP_METHOD(Echo);
 
   // Allow JS to register an event callback; events originate from
-  // server push packets (no 'id') routed via ResponseRouter::broadcast
-  Napi::Value OnEvent(const Napi::CallbackInfo &info) {
+  // server push packets (no 'id') delivered by Connection's injected callback
+  auto OnEvent(const Napi::CallbackInfo &info) -> Napi::Value {
     const auto env = info.Env();
     if (info.Length() < 1 || !info[0].IsFunction()) {
       Napi::TypeError::New(env, "OnEvent expects a function")
@@ -390,8 +391,9 @@ private:
     if (event_tsfn_) {
       event_tsfn_.Release();
     }
-    auto cb = info[0].As<Napi::Function>();
-    event_tsfn_ = Napi::ThreadSafeFunction::New(env, cb, "session_event", 0, 1);
+    auto callback = info[0].As<Napi::Function>();
+    event_tsfn_ =
+        Napi::ThreadSafeFunction::New(env, callback, "session_event", 0, 1);
     event_tsfn_.Unref(env);
     return env.Undefined();
   }
@@ -399,7 +401,8 @@ private:
   // Gracefully stop background threads, timers and release TSFN resources.
   // Safe to call multiple times.
   void DoClose() {
-    if (closed_) return;
+    if (closed_)
+      return;
     closed_ = true;
 
     // Stop async loop so alive_listen and pending senders stop emitting
@@ -416,9 +419,9 @@ private:
       js_tsfn_.Release();
       js_tsfn_ = {};
     }
-    // Proactively reset session and router to close sockets ASAP
-    session_.reset();
-    router_.reset();
+    // Keep session_ and router_ alive; DoClose's responsibility here is to
+    // ensure TSFN and loop are stopped. Resources will be reclaimed on
+    // destructor or process exit.
   }
 
   Napi::Value Close(const Napi::CallbackInfo &info) {
@@ -432,4 +435,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   return SessionWrapper::Init(env, exports);
 }
 
-NODE_API_MODULE(session_addon, Init)
+NODE_API_MODULE(session_addon, Init);

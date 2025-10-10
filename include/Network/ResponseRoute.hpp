@@ -2,9 +2,7 @@
 #include "Network/ResponseError.hpp"
 #include "Utils/Logger.hpp"
 
-#include <boost/date_time.hpp>
 #include <boost/uuid.hpp>
-#include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <chrono>
 #include <expected>
@@ -21,7 +19,6 @@ class ResponseRouter {
 public:
   using Callback_t = std::function<void(
       const std::expected<rfl::Generic::Object, ResponseError> &)>;
-  using EventCallback_t = std::function<void(const rfl::Generic::Object &)>;
 
   auto registe(boost::uuids::uuid uuid, Callback_t &&callback) -> void {
     auto id = boost::uuids::to_string(uuid);
@@ -41,25 +38,6 @@ public:
       log(trace, "Callback found and executed for ID: {}", id);
     } else {
       log(warning, "No callback found for message with ID: {}", id);
-      // Fallback to event callback so push-like packets with IDs can still be observed
-      if (on_event_) {
-        on_event_(generic);
-      }
-    }
-  }
-
-  // Set a catch-all event callback for packets that are not request/response
-  // pairs (e.g., server push notifications without an 'id').
-  auto setEventCallback(EventCallback_t &&cb) -> void {
-    on_event_ = std::forward<EventCallback_t>(cb);
-  }
-
-  // Broadcast a generic object to the event callback.
-  auto broadcast(const rfl::Generic::Object &generic) -> void {
-    if (on_event_) {
-      on_event_(generic);
-    } else {
-      log(debug, "Dropping broadcast message: no event callback set.");
     }
   }
 
@@ -79,7 +57,7 @@ public:
 
   auto cancelAll(ResponseError &error) -> void {
     log(info, "Cancelling all outstanding callbacks with error: {}",
-              rfl::enum_to_string(error));
+        rfl::enum_to_string(error));
     for (auto &[id, pair] : callbacks_) {
       pair.second(std::unexpected<ResponseError>(error));
     }
@@ -87,10 +65,8 @@ public:
   }
 
 private:
-  boost::uuids::random_generator generator_;
   std::unordered_map<
       std::string, std::pair<std::chrono::steady_clock::time_point, Callback_t>>
       callbacks_;
-  EventCallback_t on_event_{};
 };
 }; // namespace Network

@@ -13,6 +13,16 @@ import { setupRendererLoggerOnce } from './logger.js';
         const root = document.documentElement;
         const STORAGE_KEY = 'sc-theme';
         const toggleBtn = document.getElementById('theme-toggle');
+        let smoothTimer = null;
+
+        function withSmoothSwap(fn) {
+          try {
+            root.classList.add('theme-animating');
+            clearTimeout(smoothTimer);
+            smoothTimer = setTimeout(() => root.classList.remove('theme-animating'), 280);
+          } catch {}
+          fn();
+        }
 
         // Determine default: user selection > system preference > dark
         const stored = localStorage.getItem(STORAGE_KEY);
@@ -27,8 +37,10 @@ import { setupRendererLoggerOnce } from './logger.js';
           mq.addEventListener('change', (e) => {
             if (!localStorage.getItem(STORAGE_KEY)) {
               const next = e.matches ? 'dark' : 'light';
-              root.setAttribute('data-theme', next);
-              updateToggleIcon(next);
+              withSmoothSwap(() => {
+                root.setAttribute('data-theme', next);
+                updateToggleIcon(next);
+              });
             }
           });
         }
@@ -36,9 +48,11 @@ import { setupRendererLoggerOnce } from './logger.js';
         toggleBtn.addEventListener('click', () => {
           const current = root.getAttribute('data-theme') || 'dark';
           const next = current === 'dark' ? 'light' : 'dark';
-          root.setAttribute('data-theme', next);
-          localStorage.setItem(STORAGE_KEY, next);
-          updateToggleIcon(next);
+          withSmoothSwap(() => {
+            root.setAttribute('data-theme', next);
+            localStorage.setItem(STORAGE_KEY, next);
+            updateToggleIcon(next);
+          });
         });
 
         function updateToggleIcon(theme) {
@@ -56,6 +70,15 @@ import { setupRendererLoggerOnce } from './logger.js';
         const defaultAccent = 'blue';
         const saved = localStorage.getItem(STORAGE_KEY) || defaultAccent;
         root.setAttribute('data-accent', saved);
+        let smoothTimer = null;
+        function withSmoothSwap(fn) {
+          try {
+            root.classList.add('theme-animating');
+            clearTimeout(smoothTimer);
+            smoothTimer = setTimeout(() => root.classList.remove('theme-animating'), 280);
+          } catch {}
+          fn();
+        }
 
         function refreshIndicators(current) {
           document.querySelectorAll('.accent-dot').forEach(btn => {
@@ -69,14 +92,19 @@ import { setupRendererLoggerOnce } from './logger.js';
           const btn = e.target.closest('.accent-dot');
           if (!btn) return;
           const value = btn.getAttribute('data-accent') || defaultAccent;
-          root.setAttribute('data-accent', value);
-          localStorage.setItem(STORAGE_KEY, value);
-          refreshIndicators(value);
+          withSmoothSwap(() => {
+            root.setAttribute('data-accent', value);
+            localStorage.setItem(STORAGE_KEY, value);
+            refreshIndicators(value);
+          });
         });
       })();
 
       // Unified logger: override console.* and forward to main
       setupRendererLoggerOnce();
+
+      // Ensure unified background across login and chat (uses .bg-blobs layer)
+      try { document.body.classList.add('unified-bg'); } catch {}
 
       // =================================================================
       // ===================== DOM & STATE MANAGEMENT ====================
@@ -257,26 +285,26 @@ import { setupRendererLoggerOnce } from './logger.js';
           // Update UI state
           document.querySelectorAll('.user-item').forEach(item => {
             const wasActive = item.classList.contains('active');
-            item.classList.remove('active');
+            item.classList.remove('active', 'bg-white/60');
             if (wasActive && item !== userItem) {
               console.debug(`[UI] Deactivated conversation: ${item.dataset.conversationId}`);
             }
           });
-          userItem.classList.add('active');
+          userItem.classList.add('active', 'bg-white/60');
           console.debug(`[UI] Activated conversation: ${conversationId}`);
 
           api.GetMessageHistory(conversationId);
         }
       });
 
-      // --- Logout Button Listener ---
-      const logoutBtn = document.getElementById('logout-btn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
+      // --- Logout Button Listener (delegated for dynamic header button) ---
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#logout-btn');
+        if (btn) {
           console.debug("[EVENT] Logout button clicked");
           ui.showLoginPage();
-        });
-      }
+        }
+      });
 
       // --- Add Friend Modal Listeners ---
       dom.addFriendBtn.addEventListener('click', () => {

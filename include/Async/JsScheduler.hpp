@@ -81,6 +81,7 @@ private:
           return;
         }
 
+        // rc 是 NonBlockingCall 的返回码，非调用结果，表示调用是否成功排入队列
         const napi_status rc = op.tsfn->NonBlockingCall(
             st, [](Napi::Env /*env*/, Napi::Function /*unused*/, state *self) {
               // Complete on JS thread then delete the heap state

@@ -18,6 +18,7 @@
 #include <expected>
 #include <rfl/msgpack.hpp>
 #include <stdexec/execution.hpp>
+#include <functional>
 
 namespace Network {
 
@@ -25,6 +26,7 @@ template <ResponseRouterType R> class Connection {
 public:
   using Stream = boost::beast::websocket::stream<
       boost::asio::ssl::stream<boost::asio::ip::tcp::socket>>;
+  using EventCallback = std::function<void(const rfl::Generic::Object &)>;
   Connection(const boost::asio::ip::tcp::endpoint endpoint, R &router_)
       : context_(boost::asio::ssl::context::tlsv13_client), endpoint_(endpoint),
         stream_(std::make_optional<Stream>(
@@ -145,9 +147,13 @@ public:
             if (id) {
               router_.route(value);
             } else {
-              // Server push / broadcast message: forward to router event callback
+              // Server push / broadcast message: deliver to injected event callback
               log(debug, "Received broadcast message without an ID.");
-              router_.broadcast(value);
+              if (event_cb_) {
+                event_cb_(value);
+              } else {
+                log(debug, "Dropping broadcast message: no event callback set.");
+              }
             }
           } else {
             log(error, "Failed to parse message: {}", generic.error().what());
@@ -173,6 +179,10 @@ private:
   std::optional<Stream> stream_;
 
   R &router_;
+  EventCallback event_cb_{};
+
+public:
+  void setEventCallback(EventCallback cb) { event_cb_ = std::move(cb); }
 };
 
 }; // namespace Network

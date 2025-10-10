@@ -97,14 +97,14 @@ export function createUI(dom, state) {
       dom.userList.innerHTML = '';
       (conversations || []).forEach(convo => {
         const userItem = document.createElement('div');
-        userItem.className = 'user-item';
+        userItem.className = 'user-item flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer hover:bg-white/50 transition-colors';
         userItem.dataset.conversationId = convo.id;
         const avatarSrc = ui.getAvatar(convo);
         userItem.innerHTML = `
-          <img src="${avatarSrc}" alt="User Avatar">
-          <div class="user-info">
-            <div class="name">${convo.title}</div>
-            <div class="last-message">${convo.lastMessage || ''}</div>
+          <img class="w-10 h-10 rounded-xl object-cover" src="${avatarSrc}" alt="Avatar">
+          <div class="min-w-0">
+            <div class="text-sm font-semibold text-slate-800 truncate">${convo.title ?? convo.name ?? 'Conversation'}</div>
+            <div class="text-xs text-slate-500 truncate">${convo.lastMessage || ''}</div>
           </div>
         `;
         dom.userList.appendChild(userItem);
@@ -117,26 +117,39 @@ export function createUI(dom, state) {
 
       const chAvatar = ui.getAvatar(conversation);
       dom.chatHeader.innerHTML = `
-        <img src="${chAvatar}" alt="Active User Avatar">
-        <div>
-          <div class="name">${conversation.name}</div>
-          <div class="status">Online</div>
+        <div class="flex items-center gap-3">
+          <img class="w-9 h-9 rounded-xl object-cover" src="${chAvatar}" alt="Avatar">
+          <div>
+            <div class="text-sm font-semibold text-slate-800">${conversation.name ?? conversation.title ?? 'Chat'}</div>
+            <div class="text-xs text-slate-500">Online</div>
+          </div>
         </div>
+        <button id="logout-btn" class="ml-auto btn btn-outline" title="Logout">
+          <span class="iconify" data-icon="mdi:logout"></span>
+          <span class="hidden sm:inline">Logout</span>
+        </button>
       `;
 
       (messages || []).forEach(msg => {
         const sender = membersMap.get(msg.sender_id);
         const isMine = msg.sender_id === state.currentUserId;
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${isMine ? 'my-message' : 'their-message'}`;
-        let content = '';
+        const row = document.createElement('div');
+        row.className = `w-full flex ${isMine ? 'justify-end' : 'justify-start'} items-end gap-2`;
+
+        let bubble = '';
         if (!isMine) {
           const avatarSrc = ui.getAvatar(sender || { id: 'unknown', name: '?' });
-          content += `<img class="avatar" src="${avatarSrc}" alt="Avatar">`;
+          bubble += `<img class="w-8 h-8 rounded-xl object-cover" src="${avatarSrc}" alt="Avatar">`;
         }
-        content += `<div class="message-content">${msg.text}</div>`;
-        messageDiv.innerHTML = content;
-        dom.messageList.appendChild(messageDiv);
+        const bubbleStyles = isMine
+          ? 'text-white rounded-2xl px-4 py-2 max-w-[70%] shadow-sm'
+          : 'bg-white/80 text-slate-900 backdrop-blur-md rounded-2xl px-4 py-2 max-w-[70%] shadow-sm';
+        const bubbleInline = isMine
+          ? 'style="background-color: rgb(var(--accent));"'
+          : '';
+        bubble += `<div class="${bubbleStyles}" ${bubbleInline}>${msg.text}</div>`;
+        row.innerHTML = bubble;
+        dom.messageList.appendChild(row);
       });
     },
 
@@ -186,7 +199,7 @@ export function createUI(dom, state) {
 
     // Page transitions (was pageManager)
     showChatPage() {
-      const loginContainer = document.querySelector('.login-container');
+      const loginContainer = document.getElementById('login-container');
       const chatApp = document.getElementById('chat-app');
       // graceful scale + fade
       loginContainer.classList.add('scale-fade-out');
@@ -197,8 +210,6 @@ export function createUI(dom, state) {
         chatApp.classList.add('active');
         chatApp.classList.add('scale-fade-in');
         try { apiRef && apiRef.GetConversationList && apiRef.GetConversationList(); } catch {}
-        // Enable legacy stylesheet for chat until chat UI is migrated to Tailwind
-        try { document.getElementById('legacy-css')?.setAttribute('media','all'); } catch {}
       }, 180);
     },
 
@@ -213,8 +224,6 @@ export function createUI(dom, state) {
         ui.showMessage(dom.messageBox, '');
         ui.showMessage(dom.registerMessageBox, '');
       }, 120);
-      // Disable legacy stylesheet on login screens
-      try { document.getElementById('legacy-css')?.setAttribute('media','not all'); } catch {}
     },
 
     showRegisterForm() {

@@ -49,6 +49,7 @@
     "autoprefixer": "^10.4.21",
     "electron": "^30",
     "electron-builder": "^24",
+    "electron-reloader": "^1.2.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17"
   }
